@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest, ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
        
@@ -25,11 +25,11 @@ jobs:
           python-version: '3.10'
           cache: 'pip'
 
-    #- name: Install Dependencies
-      #with:
-        #run: |
-          #pip install -r requirements.txt
-      #continue-on-error: true
+    - name: Install Dependencies
+      with:
+        run: |
+          pip install -r requirements.txt
+      continue-on-error: true
 
     - name: Build code
       uses: Nuitka/Nuitka-Action@main
