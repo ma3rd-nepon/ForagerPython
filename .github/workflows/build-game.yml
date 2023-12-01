@@ -26,8 +26,7 @@ jobs:
           cache: 'pip'
 
     - name: Install Dependencies
-      run: |
-          pip install -r src/requirements.txt
+      run: pip install -r src/requirements.txt
       continue-on-error: true
 
     - name: Build code
