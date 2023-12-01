@@ -4,7 +4,6 @@ from settings import *
 from imgs import *
 
 pl_pos = 6, 3
-pl_angle = 0
 pl_speed = 0.003
 pon = []
 scaling = 1
@@ -26,6 +25,7 @@ class Player(pygame.sprite.Sprite):
 
         self.index_walk = 0
         self.index_idle = 0
+        self.index_dash = 0
         self.curr_img = pl_base
 
         self.tx, self.ty = False, False
@@ -34,18 +34,18 @@ class Player(pygame.sprite.Sprite):
         speed = pl_speed * self.game.delta_time
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
-            print('space')
+        if keys[pygame.K_0]:
+            print('kek')
 
         elif keys[pygame.K_d]:
             self.tx = False
-            if self.x * 100 <= w - 50 and 315 < self.x * 100 < 930:
+            if self.x * 100 <= w - 50 and self.x * 100 < 930:
                 self.x += speed
             self.animate_walk()
 
         elif keys[pygame.K_a]:
             self.tx = True
-            if self.x * 100 > 30 and 340 < self.x * 100 < 970:
+            if self.x * 100 > 30 and 340 < self.x * 100:
                 self.x -= speed
             self.animate_walk()
 
@@ -91,3 +91,34 @@ class Player(pygame.sprite.Sprite):
 
         self.curr_img = im_i[int(self.index_idle)]
         self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
+
+    def dash(self):
+        dash_speed = pl_speed * self.game.delta_time * 50
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_d]:
+            self.tx = False
+            if self.x * 100 <= w - 50 and self.x * 100 < 930:
+                if keys[pygame.K_SPACE]:
+                    if self.tx:
+                        self.x -= dash_speed
+                    else:
+                        self.x += dash_speed
+
+        if keys[pygame.K_a]:
+            self.tx = True
+            if self.x * 100 > 30 and 340 < self.x * 100:
+                if keys[pygame.K_SPACE]:
+                    if self.tx:
+                        self.x -= dash_speed
+                    else:
+                        self.x += dash_speed
+
+        if keys[pygame.K_w]:
+            if self.y * 100 > 30:
+                if keys[pygame.K_SPACE]:
+                    self.y -= dash_speed
+
+        if keys[pygame.K_s]:
+            if self.y * 100 <= h - 80:
+                if keys[pygame.K_SPACE]:
+                    self.y += dash_speed
