@@ -34,7 +34,6 @@ jobs:
     - name: Build code
       uses: Nuitka/Nuitka-Action@main
       with:
-          run: pip install -r requirements.txt
           nuitka-version: main
           script-name: game.py
           onefile: true
