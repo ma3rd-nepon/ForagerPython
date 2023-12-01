@@ -18,6 +18,8 @@ class Game(sprite.Sprite):
         self.start_game()
         self.last = pygame.time.get_ticks()
 
+        self.spawn = False
+
     def start_game(self):
         self.map = Map(self)
         self.player = Player(self)
@@ -29,7 +31,7 @@ class Game(sprite.Sprite):
         display.set_caption(f"{self.clock.get_fps() :.1f}")
 
     def draw(self):
-        self.screen.fill('black')
+        self.screen.fill('#337bc8')
         self.map.draw()
         self.player.draw()
 
@@ -47,12 +49,18 @@ class Game(sprite.Sprite):
             if e.type == MOUSEBUTTONDOWN:
                 if e.button == 1:
                     print(m_pos)
+                if e.button == 3:
+                    self.spawn = not self.spawn
+                    self.map.rechoice()
+                    print('random blocks spawned!')
 
     def run(self):
         while True:
             self.eventss()
             self.update()
             self.draw()
+            if self.spawn == True:
+                self.map.spawn_blocks()
 
 
 if __name__ == '__main__':

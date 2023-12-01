@@ -1,37 +1,33 @@
+import random
+
 from settings import *
+from imgs import *
 import pygame
 
-_ = False
-mappp = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, _, _, 1, 1, 1, _, _, 1, 1, _, _, _, _, _, _, 1],
-    [1, 1, _, _, 1, 1, 1, _, _, _, _, _, _, _, _, _, _, 1],
-    [1, 1, _, _, 1, 1, 1, _, _, _, _, _, _, _, 1, 1, _, 1],
-    [1, 1, _, _, _, _, _, _, _, _, _, _, _, _, 1, _, _, 1],
-    [1, 1, _, _, _, _, _, _, _, _, _, _, _, _, 1, _, _, 1],
-    [1, 1, _, _, 1, 1, 1, _, _, _, _, _, _, _, 1, 1, _, 1],
-    [1, 1, _, _, 1, 1, 1, _, _, _, _, _, _, _, _, _, _, 1],
-    [1, 1, _, _, 1, 1, 1, _, _, 1, 1, _, _, _, _, _, _, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
 
-
-class Map:
+class Map(pygame.sprite.Sprite):
     def __init__(self, game):
+        super().__init__()
         self.game = game
-        self.map = mappp
-        self.w_map = {}
-        self.get_map()
 
-    def get_map(self):
-        for i, row in enumerate(self.map):
-            for j, valuev in enumerate(row):
-                if valuev:
-                    self.w_map[(j, i)] = valuev
+        self.map = island.convert_alpha()
+        self.island_hb = self.map.get_rect(center=(650, 360))
+
+        self.block = None
+        self.block_x, self.block_y = None, None
+        self.dict_pos = {}
+
+        self.rechoice()
 
     def draw(self):
-        x = 72
-        rect = pygame.rect.Rect((w // 2, h // 2, x, x))
-        pygame.draw.rect(self.game.screen, 'darkgray', rect, 1)
-        # [draw.rect(self.game.screen, 'darkgray', (pos[0] * x, pos[1] * x, x, x), 1)
-        #  for pos in self.w_map]
+        self.game.screen.blit(island.convert_alpha(), self.island_hb)
+
+    def spawn_blocks(self):
+        for i in range(10):
+            self.game.screen.blit(self.dict_pos[i][0], (self.dict_pos[i][1], self.dict_pos[i][2]))
+
+    def rechoice(self):
+        for i in range(10):
+            self.block = random.choice([cbble, coal, iron, gold])
+            self.block_x, self.block_y = random.randint(isl_b[0], isl_b[1] - 80), random.randint(isl_b[2] + 80, isl_b[3] - 80)
+            self.dict_pos[i] = (self.block, self.block_x, self.block_y)

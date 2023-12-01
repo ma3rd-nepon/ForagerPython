@@ -3,11 +3,15 @@ import pygame
 from settings import *
 from imgs import *
 
-pl_pos = 2, 6
+pl_pos = 6, 3
 pl_angle = 0
 pl_speed = 0.003
 pon = []
 scaling = 1
+
+island_x = []
+for i in range(315, 970):
+    island_x.append(i)
 
 
 class Player(pygame.sprite.Sprite):
@@ -35,13 +39,13 @@ class Player(pygame.sprite.Sprite):
 
         elif keys[pygame.K_d]:
             self.tx = False
-            if self.x * 100 <= w - 30:
+            if self.x * 100 <= w - 50 and 315 < self.x * 100 < 930:
                 self.x += speed
             self.animate_walk()
 
         elif keys[pygame.K_a]:
             self.tx = True
-            if self.x * 100 > 30:
+            if self.x * 100 > 30 and 340 < self.x * 100 < 970:
                 self.x -= speed
             self.animate_walk()
 
@@ -51,7 +55,7 @@ class Player(pygame.sprite.Sprite):
             self.animate_walk()
 
         elif keys[pygame.K_s]:
-            if self.y * 100 <= h - 30:
+            if self.y * 100 <= h - 80:
                 self.y += speed
             self.animate_walk()
         else:
