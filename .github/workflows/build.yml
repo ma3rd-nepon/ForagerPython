@@ -36,6 +36,8 @@ jobs:
           onefile: true
           standalone: true
           disable-cache: true
+          include-data-dir: sprites
+          include-plugin: pygame
       continue-on-error: true
 
     - name: Upload Artifacts
