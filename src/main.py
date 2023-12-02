@@ -12,6 +12,14 @@ class Game(pygame.sprite.Sprite):
         pygame.init()
         super().__init__()
         self.screen = pygame.display.set_mode(resolution)
+
+        self.game = False
+        self.title_image = pygame.transform.rotozoom(tilte_base, 0, 1)
+        self.current_title = tilte_base
+        self.title_hb = self.title_image.get_rect(center=(w//2, h//2))
+        self.title_i = 0
+        self.title()
+
         self.clock = pygame.time.Clock()
         self.delta_time = 1
         self.cross_im = crosshair
@@ -30,8 +38,11 @@ class Game(pygame.sprite.Sprite):
         self.tool = Tool(self)
 
     def update(self):
-        self.player.update()
-        self.tool.update()
+        if self.game:
+            self.player.update()
+            self.tool.update()
+        else:
+            self.title()
         pygame.display.flip()
         self.delta_time = self.clock.tick(fps)
         pygame.display.set_caption(f"{self.clock.get_fps() :.1f}")
@@ -57,24 +68,49 @@ class Game(pygame.sprite.Sprite):
                 if e.key == 109:
                     self.spawn = not self.spawn
                     self.map.rechoice()
-                    print('random blocks spawned!')
+                    if self.spawn:
+                        print('random blocks spawned!')
+                    else:
+                        print('random blocks removed!')
             if e.type == 768:
                 if e.key == pygame.K_SPACE:
                     self.player.dash()
+                # skip title
+                if e.key == pygame.K_ESCAPE:
+                    self.title_i = len(im_title) + 1
 
     def run(self):
         while True:
             self.eventss()
             self.update()
-            self.draw()
-            if self.spawn:
-                self.map.spawn_blocks()
+            if self.game:
+                self.draw()
+                if self.spawn:
+                    self.map.spawn_blocks()
 
     def instruct(self):
         print('WASD - ходить')
         print('SPACE - рывок')
         print('M - создать блоки')
         print('N - удар киркой')
+        print('ESC - скип титла')
+
+    def title(self):
+        self.title_i += 0.01
+
+        if self.title_i > len(im_title):
+            self.title_i = 0
+            self.current_title = pygame.transform.rotozoom(im_title[-1], 0, 1)
+            self.title_image = pygame.transform.flip(self.current_title.convert_alpha(), False, False)
+            self.game = True
+            return
+
+        self.current_title = pygame.transform.rotozoom(im_title[int(self.title_i)].convert_alpha(), 0, 1)
+        self.title_image = pygame.transform.flip(self.current_title, False, False)
+
+        self.screen.blit(self.title_image, self.title_hb)
+        self.title_hb.x = 0
+        self.title_hb.y = 0
 
 
 if __name__ == '__main__':

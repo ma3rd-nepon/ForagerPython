@@ -26,3 +26,11 @@ im_h = [pickaxe_1,
         pygame.image.load('../sprites/tools/pickaxe_1_hit1.png'),
         pygame.image.load('../sprites/tools/pickaxe_1_hit2.png'),
         pygame.image.load('../sprites/tools/pickaxe_1_hit1.png')]
+
+
+im_title = [pygame.image.load('../sprites/title/presents_1.png'), pygame.image.load('../sprites/title/presents_1.png'),
+            pygame.image.load('../sprites/title/presents_1.png'), pygame.image.load('../sprites/title/presents_2.png'),
+            pygame.image.load('../sprites/title/presents_3.png'), pygame.image.load('../sprites/title/presents_4.png'),
+            pygame.image.load('../sprites/title/ALPHAS.png')]
+
+tilte_base = pygame.image.load('../sprites/title/presents_1.png')
