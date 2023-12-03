@@ -65,7 +65,7 @@ class Tool(pygame.sprite.Sprite):
             if self.kirka == 0:
                 self.current_tool = pygame.transform.rotate(pickaxe_1, 0)
                 self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
-
+        # с этими координатами кирки в момент каждого кадра реально не просто
             if int(self.kirka) == 1:
                 self.current_tool = pygame.transform.rotate(pickaxe_1, -45)
                 self.tool_hb.x = pon[0] - 50

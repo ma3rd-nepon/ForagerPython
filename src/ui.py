@@ -57,7 +57,7 @@ class Player_UI(pygame.sprite.Sprite):
         self.fps = self.fps_font.render(f"{int(self.game.clock.get_fps())}", False, 'white', bgcolor='black')
         self.draw()
 
-    def draw_energy(self, percent: int):
+    def draw_energy(self, percent: int): # работает как часы
         """Отрисовка полоски энергии"""
         perc = float(percent / 100)
         if perc < 0:

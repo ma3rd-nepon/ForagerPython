@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_0]:
-            pass
+            pass  # не убирать
 
         elif keys[pygame.K_d]:
             self.tx = False

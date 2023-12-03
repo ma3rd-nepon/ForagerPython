@@ -184,3 +184,4 @@ if __name__ == '__main__':
         print('game off')
     except KeyboardInterrupt as e:
         print('game off by killing process')
+        # обновил инфу о управлении
