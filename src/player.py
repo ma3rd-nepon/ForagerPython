@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.hehe = 0  # я без понятия что это но для работы оно надо
         self.curr_img = pl_base
 
-        self.tx, self.ty = False, False  # поворот игрока по х и у
+        self.tx, self.ty = False, False  # поворот игрока по х у
 
     def movement(self):
         """Движение игрока по WASD"""

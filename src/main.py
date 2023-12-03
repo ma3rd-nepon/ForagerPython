@@ -102,10 +102,10 @@ class Game(pygame.sprite.Sprite):
                 if e.key in [97, 100, 115, 119]:
                     self.player.draw_particles(pon[0] - 20, pon[1] + 75)
 
-                if e.key == pygame.K_9:
+                if e.key == 61:
                     self.ui.coin_count += 1
-                    print(self.ui.coin_count)
-
+                if e.key == 45:
+                    self.ui.coin_count -= 1
                 if e.key == pygame.K_0:
                     self.ui.percentage = 100
                     print('restore energy')
@@ -128,7 +128,7 @@ Configuration
   N - hit
   ESC - pause
   ENTER - title skip
-  9 - +coin (test)
+  +/- - +/- coin (test)
   0 - set energy 100''', False, 'white')
                             self.screen.blit(self.pause_image.convert_alpha(), self.pause_hb)
                             self.screen.blit(pause_text, (w / 2 - 150, 20))
@@ -154,7 +154,7 @@ Configuration
         print('N - удар киркой')
         print('ESC - пауза')
         print('ENTER - скип титла')
-        print('9 - плюс монета (тест)')
+        print('+/- - плюс/минус монета (тест)')
         print('0 - энергия 100')
 
     def title(self):

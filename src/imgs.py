@@ -46,5 +46,3 @@ heart = pygame.image.load('../sprites/ui/heart.png')
 no_heart = pygame.image.load('../sprites/ui/heart_minus.png')
 
 coin = pygame.image.load('../sprites/ui/coin.png')
-
-# незнаю
