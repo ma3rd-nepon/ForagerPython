@@ -31,6 +31,12 @@ gold = pygame.image.load('../sprites/ores/gold.png')
 # спрайты кирки (да он один)
 pickaxe_1 = pygame.image.load('../sprites/tools/pickaxe_1.png')
 
+pickaxe_2 = pygame.image.load('../sprites/tools/pickaxe_2.png')
+
+pickaxe_3 = pygame.image.load('../sprites/tools/pickaxe_3.png')
+
+pickaxe_4 = pygame.image.load('../sprites/tools/pickaxe_4.png')
+
 
 # загрузочный екран
 im_title = [pygame.image.load('../sprites/title/presents_1.png'), pygame.image.load('../sprites/title/presents_1.png'),

@@ -1,4 +1,5 @@
 import pygame
+import threading
 
 from map import *
 from player import *
@@ -6,6 +7,7 @@ from settings import *
 from imgs import *
 from tool import *
 from ui import *
+from console import convert
 
 
 class Game(pygame.sprite.Sprite):
@@ -37,7 +39,10 @@ class Game(pygame.sprite.Sprite):
         self.pause_image = pygame.image.load('../sprites/title/presents_1.png').convert_alpha()  # пикча паузы
         self.pause_hb = self.pause_image.get_rect(center=(w // 2, h // 2))
 
-        self.instruct()  # пишет в консоль клавиши
+        self.console = False
+        self.com = []
+
+        # self.instruct()  # пишет в консоль клавиши
 
     def start_game(self):
         """Определение всех классов"""
@@ -79,6 +84,10 @@ class Game(pygame.sprite.Sprite):
             self.screen.blit(self.cross_im, self.cross)
         else:
             pygame.draw.line(self.screen, 'white', (0, h // 2), (w, h // 2))
+            if self.console:
+                pygame.draw.rect(self.screen, 'white', (0, 40, 40, 40))
+            else:
+                pygame.draw.rect(self.screen, 'black', (0, 40, 40, 40))
 
     def eventss(self):
         """Обработка событий игры"""
@@ -88,12 +97,13 @@ class Game(pygame.sprite.Sprite):
                 quit()
             if e.type == 768:
                 if e.key == 109:
-                    self.spawn = not self.spawn
-                    self.map.rechoice()
-                    if self.spawn:
-                        print('random blocks spawned!')
-                    else:
-                        print('random blocks removed!')
+                    if not self.pause:
+                        self.spawn = not self.spawn
+                        self.map.rechoice()
+                        if self.spawn:
+                            print('random blocks spawned!')
+                        else:
+                            print('random blocks removed!')
             if e.type == 768:
                 if e.key == pygame.K_SPACE:
                     if not self.pause:
@@ -102,13 +112,16 @@ class Game(pygame.sprite.Sprite):
                 if e.key in [97, 100, 115, 119]:
                     self.player.draw_particles(pon[0] - 20, pon[1] + 75)
 
-                if e.key == 61:
+                if e.key == 61 and not self.pause:
                     self.ui.coin_count += 1
-                if e.key == 45:
+                if e.key == 45 and not self.pause:
                     self.ui.coin_count -= 1
-                if e.key == pygame.K_0:
+
+                if e.key == pygame.K_0 and not self.pause:
                     self.ui.percentage = 100
                     print('restore energy')
+                if e.key == 112:
+                    self.console = True
 
                 # skip title
                 if e.key == 13:
@@ -139,6 +152,7 @@ Configuration
     def run(self):
         """Запуск игры и её главный цикл"""
         while True:
+            self.command()
             self.eventss()
             self.update()
             if self.game:
@@ -174,6 +188,36 @@ Configuration
         self.screen.blit(self.title_image, self.title_hb)
         self.title_hb.x = 0
         self.title_hb.y = 0
+
+    def command(self):
+        if self.pause:
+            if self.console:
+                key = pygame.key.get_pressed()
+                if key[13]:
+                    command = convert(self.com)
+                    print('command: ' + command)
+                    if command == 'help':
+                        self.instruct()
+
+                    if 'money' in command:
+                        command = command.replace('money ', '')
+                        try:
+                            self.ui.coin_count += int(command)
+                        except ValueError as e:
+                            print('wrong written command')
+
+                    if command == 'crash game':
+                        raise WindowsError('idk what happened')
+
+                    else:
+                        pass
+                    self.console = False
+                    self.com.clear()
+                for i in pygame.event.get():
+                    if i.type == 768:
+                        self.com.append(i.key)
+                        if i.key == 8:
+                            self.com.remove(self.com[-1])
 
 
 if __name__ == '__main__':
