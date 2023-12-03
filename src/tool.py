@@ -8,15 +8,15 @@ from player import *
 class Tool(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
-        self.anim_index = 0
+        self.anim_index = 0  # индекс анимации удара
         self.game = game
-        self.pickaxe = pygame.transform.rotozoom(pickaxe_1.convert_alpha(), 0, 1)
+        self.pickaxe = pygame.transform.rotozoom(pickaxe_1.convert_alpha(), 0, 1)  # основной пикча инструмента
         self.tool_hb = self.pickaxe.get_rect(center=pl_pos)
         self.current_tool = pickaxe_1.convert_alpha()
-        self.fx, self.fy = True, False
-        self.angle = 0
-        self.kirka = 0
-        self.animation_speed = 0.05
+        self.fx, self.fy = True, False  # поворот инструмента по х у
+        self.angle = 0  # а что это?
+        self.kirka = 0  # я непомню
+        self.animation_speed = 0.05  # скорость анимации
 
     def moving(self):
         """Передвигает инструмент в руки игроку"""

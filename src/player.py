@@ -23,17 +23,17 @@ class Player(pygame.sprite.Sprite):
         self.m_pos = pygame.mouse.get_pos()
         self.angle = 0
 
-        self.index_walk = 0
-        self.index_idle = 0
-        self.index_dash = 0
-        self.hehe = 0
+        self.index_walk = 0  # индекс анимации движения
+        self.index_idle = 0  #
+        self.index_dash = 0  # индекс анимации рывка (в будущем будет)
+        self.hehe = 0  # я без понятия что это но для работы оно надо
         self.curr_img = pl_base
 
-        self.tx, self.ty = False, False
+        self.tx, self.ty = False, False  # поворот игрока по х и у
 
     def movement(self):
         """Движение игрока по WASD"""
-        speed = pl_speed * self.game.delta_time
+        speed = pl_speed * self.game.delta_time  # скорость игрока (потом сделаю ускорением)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_0]:
@@ -131,7 +131,7 @@ class Player(pygame.sprite.Sprite):
                 if keys[pygame.K_SPACE]:
                     self.y += dash_speed
 
-    def draw_particles(self, x: int, y: int):  # not works
+    def draw_particles(self, x: int, y: int):  # да я непонимаю че там сделать
         """Рисует партиклы пыли при движении игрока"""
         self.hehe += 0.05
         xx, yy = x, y

@@ -15,28 +15,28 @@ class Game(pygame.sprite.Sprite):
         super().__init__()
         self.screen = pygame.display.set_mode(resolution)
 
-        self.game = False
-        self.title_image = pygame.transform.rotozoom(tilte_base, 0, 1)
-        self.current_title = tilte_base
+        self.game = False  # если она фолс то игра не будет работать (запустится сама после загрузочного экрана)
+        self.title_image = pygame.transform.rotozoom(tilte_base, 0, 1)  # пикча загрузочного экрана
+        self.current_title = tilte_base  # текущая пикча загрузочного экрана
         self.title_hb = self.title_image.get_rect(center=(w//2, h//2))
-        self.title_i = 0
-        self.title()
+        self.title_i = 0  # индекс анимации загрузочного экрана
+        self.title()  # функция которая этот загрузочный экран воспроизводит
 
         self.clock = pygame.time.Clock()
         self.delta_time = 1
-        self.cross_im = crosshair
+        self.cross_im = crosshair  # картинка прицела
         self.cross = self.cross_im.get_rect()
         pygame.mouse.set_visible(False)
         self.start_game()
         self.last = pygame.time.get_ticks()
 
-        self.spawn = False
+        self.spawn = False  # флаг для создания блоков в рандом месте
 
-        self.pause = False
-        self.pause_image = pygame.image.load('../sprites/title/presents_1.png').convert_alpha()
+        self.pause = False  # если тру то игра на паузе
+        self.pause_image = pygame.image.load('../sprites/title/presents_1.png').convert_alpha()  # пикча паузы
         self.pause_hb = self.pause_image.get_rect(center=(w // 2, h // 2))
 
-        self.instruct()
+        self.instruct()  # пишет в консоль клавиши
 
     def start_game(self):
         """Определение всех классов"""
@@ -69,7 +69,7 @@ class Game(pygame.sprite.Sprite):
             self.ui.draw()
 
             # draw crosshair
-            mx, my = pygame.mouse.get_pos()
+            mx, my = pygame.mouse.get_pos()  # координаты мыши
             self.cross.x = mx - 15
             self.cross.y = my - 15
             self.screen.blit(self.cross_im, self.cross)
