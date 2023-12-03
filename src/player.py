@@ -5,7 +5,7 @@ from imgs import *
 
 pl_pos = 6, 3
 pl_speed = 0.003
-pon = []
+pon = [6, 3]
 scaling = 1
 
 island_x = []
@@ -26,11 +26,13 @@ class Player(pygame.sprite.Sprite):
         self.index_walk = 0
         self.index_idle = 0
         self.index_dash = 0
+        self.hehe = 0
         self.curr_img = pl_base
 
         self.tx, self.ty = False, False
 
     def movement(self):
+        """Движение игрока по WASD"""
         speed = pl_speed * self.game.delta_time
 
         keys = pygame.key.get_pressed()
@@ -58,6 +60,7 @@ class Player(pygame.sprite.Sprite):
             if self.y * 100 <= h - 80:
                 self.y += speed
             self.animate_walk()
+
         else:
             self.animate_idle()
 
@@ -69,12 +72,15 @@ class Player(pygame.sprite.Sprite):
         self.hitbox_rect.y = pon[1] - 30
 
     def draw(self):
+        """Рисует игрока"""
         self.game.screen.blit(self.player, self.hitbox_rect)
 
     def update(self):
+        """Обновление отрисовки игрока"""
         self.movement()
 
     def animate_walk(self):
+        """Анимация при движении"""
         self.index_walk += 0.2
 
         if self.index_walk >= len(im_w) or self.index_idle < 0:
@@ -84,7 +90,8 @@ class Player(pygame.sprite.Sprite):
         self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
 
     def animate_idle(self):
-        self.index_idle += 0.05
+        """Анимация когда игрок ничего не делает"""
+        self.index_idle += 0.15
 
         if self.index_idle >= len(im_i):
             self.index_idle = 0
@@ -93,6 +100,7 @@ class Player(pygame.sprite.Sprite):
         self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
 
     def dash(self):
+        """Рывок в сторону движения"""
         dash_speed = pl_speed * self.game.delta_time * 50
         keys = pygame.key.get_pressed()
         if keys[pygame.K_d]:
@@ -122,3 +130,19 @@ class Player(pygame.sprite.Sprite):
             if self.y * 100 <= h - 80:
                 if keys[pygame.K_SPACE]:
                     self.y += dash_speed
+
+    def draw_particles(self, x: int, y: int):  # not works
+        """Рисует партиклы пыли при движении игрока"""
+        self.hehe += 0.05
+        xx, yy = x, y
+
+        if self.hehe >= 5:
+            self.hehe = 0
+        if int(self.hehe) == 1:
+            pygame.draw.circle(self.game.screen, 'red', (xx, yy), 10)
+
+        if int(self.hehe) == 2:
+            pygame.draw.circle(self.game.screen, 'red', (xx, yy), 5)
+
+        if int(self.hehe) == 3:
+            pygame.draw.circle(self.game.screen, 'red', (xx, yy), 2)

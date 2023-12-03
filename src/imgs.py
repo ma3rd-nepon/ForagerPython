@@ -1,15 +1,18 @@
 import pygame
 
-pl_base = pygame.image.load('../sprites/idle/player_idle1.png')
+pl_base = pygame.image.load('../sprites/player/idle/player_idle1.png')
 
 crosshair = pygame.image.load('../sprites/crosshair.png')
 
 
-im_w = [pygame.image.load('../sprites/idle/player_idle1.png'), pygame.image.load('../sprites/walk/player_walk1.png'),
-        pygame.image.load('../sprites/walk/player_walk2.png'), pygame.image.load('../sprites/walk/player_walk3.png')]
+im_w = [pygame.image.load('../sprites/player/idle/player_idle1.png'), pygame.image.load(
+    '../sprites/player/walk/player_walk1.png'),
+        pygame.image.load('../sprites/player/walk/player_walk2.png'), pygame.image.load(
+        '../sprites/player/walk/player_walk3.png')]
 
-im_i = [pygame.image.load('../sprites/idle/player_idle1.png'), pygame.image.load('../sprites/idle/player_idle2.png'),
-        pygame.image.load('../sprites/idle/player_idle3.png')]
+im_i = [pygame.image.load('../sprites/player/idle/player_idle1.png'), pygame.image.load(
+    '../sprites/player/idle/player_idle2.png'),
+        pygame.image.load('../sprites/player/idle/player_idle3.png')]
 
 island = pygame.image.load('../sprites/island-1-test.png')
 
@@ -22,11 +25,6 @@ gold = pygame.image.load('../sprites/ores/gold.png')
 
 pickaxe_1 = pygame.image.load('../sprites/tools/pickaxe_1.png')
 
-im_h = [pickaxe_1,
-        pygame.image.load('../sprites/tools/pickaxe_1_hit1.png'),
-        pygame.image.load('../sprites/tools/pickaxe_1_hit2.png'),
-        pygame.image.load('../sprites/tools/pickaxe_1_hit1.png')]
-
 
 im_title = [pygame.image.load('../sprites/title/presents_1.png'), pygame.image.load('../sprites/title/presents_1.png'),
             pygame.image.load('../sprites/title/presents_1.png'), pygame.image.load('../sprites/title/presents_2.png'),
@@ -34,3 +32,7 @@ im_title = [pygame.image.load('../sprites/title/presents_1.png'), pygame.image.l
             pygame.image.load('../sprites/title/ALPHAS.png')]
 
 tilte_base = pygame.image.load('../sprites/title/presents_1.png')
+
+heart = pygame.image.load('../sprites/ui/heart.png')
+no_heart = pygame.image.load('../sprites/ui/heart_minus.png')
+coin = pygame.image.load('../sprites/ui/coin.png')
