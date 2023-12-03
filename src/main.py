@@ -114,8 +114,8 @@ class Game(pygame.sprite.Sprite):
                     if self.game:
                         self.pause = not self.pause
                         if self.pause:
-                            pause_font = pygame.font.SysFont('hooge 05_54', 30)
-                            conf_font = pygame.font.SysFont('hooge 05_54', 15)
+                            pause_font = pygame.font.Font('../font/HOOG0554.TTF', 30)
+                            conf_font = pygame.font.Font('../font/HOOG0554.TTF', 15)
                             pause_text = pause_font.render('Game paused', False, 'white')
                             keys_text = conf_font.render('''
 Configuration

@@ -20,7 +20,7 @@ class Player_UI(pygame.sprite.Sprite):
         self.coin_hb.x, self.coin_hb.y = 20, h - 70
 
         self.coin_count = 0  # колво монет
-        self.coin_font = pygame.font.SysFont('hooge 05_54', 40)  # шрифт для цифры
+        self.coin_font = pygame.font.Font('../font/HOOG0554.TTF', 40)  # шрифт для цифры
         self.coin_count_text = self.coin_font.render(str(self.coin_count), False,
                                                      'white', 'black')  # рендер текста
 
