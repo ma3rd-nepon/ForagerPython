@@ -16,7 +16,8 @@ class Tool(pygame.sprite.Sprite):
         self.fx, self.fy = True, False  # поворот инструмента по х у
         self.angle = 0  # а что это?
         self.kirka = 0  # я непомню
-        self.animation_speed = 0.05  # скорость анимации
+        self.animation_speed = 0.3  # скорость анимации
+        self.remove_en_perc = False  # если тру то отнимет 1 процент от энергии, потом поумному закостылю
 
     def moving(self):
         """Передвигает инструмент в руки игроку"""
@@ -51,7 +52,7 @@ class Tool(pygame.sprite.Sprite):
             self.tool_hb.x = pon[0] - 80
 
         else:
-            if self.fx:
+            if self.fx and not key[pygame.K_n]:
                 self.tool_hb.x = pon[0] - 70
 
         self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
@@ -61,52 +62,48 @@ class Tool(pygame.sprite.Sprite):
         key = pygame.key.get_pressed()
         if not any([key[pygame.K_w], key[pygame.K_a], key[pygame.K_s], key[pygame.K_d]]):
             self.kirka += self.animation_speed
-            if int(self.kirka) <= 1:
-                self.current_tool = pygame.transform.rotate(pickaxe_1, -45)
-                if self.fx:
-                    self.tool_hb.x = pon[0]  # + 50
-                else:
-                    self.tool_hb.x = pon[0]  # - 50
-                self.tool_hb.y = pon[1] - 10
-
-            if 1.1 < int(self.kirka) <= 2:
-                self.current_tool = pygame.transform.rotate(pickaxe_1, -30)
-                if self.fx:
-                    self.tool_hb.x = pon[0]  # + 50
-                else:
-                    self.tool_hb.x = pon[0]  # - 50
-                self.tool_hb.y = pon[1] - 10
-
-            if 2.1 < int(self.kirka) <= 3:
+            if self.kirka == 0:
                 self.current_tool = pygame.transform.rotate(pickaxe_1, 0)
-                if self.fx:
-                    self.tool_hb.x = pon[0]  # + 50
-                else:
-                    self.tool_hb.x = pon[0]  # - 50
+                self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
+
+            if int(self.kirka) == 1:
+                self.current_tool = pygame.transform.rotate(pickaxe_1, -45)
+                self.tool_hb.x = pon[0] - 50
                 self.tool_hb.y = pon[1] - 10
 
-            if 3.1 < int(self.kirka) <= 4:
-                self.current_tool = pygame.transform.rotate(pickaxe_1, 45)
-                if self.fx:
-                    self.tool_hb.x = pon[0]  # + 30
-                else:
-                    self.tool_hb.x = pon[0]  # - 50
+            if int(self.kirka) == 2:
+                self.current_tool = pygame.transform.rotate(pickaxe_1, -30)
+                self.tool_hb.x = pon[0] - 50
+                self.tool_hb.y = pon[1] - 10
+
+            if int(self.kirka) == 3:
+                self.current_tool = pygame.transform.rotate(pickaxe_1, 0)
+                self.tool_hb.x = pon[0] - 50
+                self.tool_hb.y = pon[1] - 10
+
+            if int(self.kirka) == 4:
+                self.current_tool = pygame.transform.rotate(pickaxe_1, 50)
+                self.tool_hb.x = pon[0] - 50
                 self.tool_hb.y = pon[1] - 30
 
-            if 4.1 < int(self.kirka) <= 5:
+            if int(self.kirka) == 5:
                 self.current_tool = pygame.transform.rotate(pickaxe_1, 90)
                 if self.fx:
-                    self.tool_hb.x = pon[0]  # + 50
+                    self.tool_hb.x = pon[0] - 20
                 else:
-                    self.tool_hb.x = pon[0]  # - 50
+                    self.tool_hb.x = pon[0] - 50
                 self.tool_hb.y = pon[1] - 10
 
-            if int(self.kirka) >= 6:
-                self.animation_speed = -0.3
+            if int(self.kirka) > 5:
+                self.animation_speed = -self.animation_speed
+                self.remove_en_perc = True
+                if self.fx:
+                    self.tool_hb.x = pon[0] - 20
+                else:
+                    self.tool_hb.x = pon[0] - 50
+                self.tool_hb.y = pon[1] - 10
             if int(self.kirka) <= 0:
-                self.animation_speed = 0.3
-        else:
-            self.current_tool = pygame.transform.rotate(pickaxe_1, 0)
-            self.kirka = 0
-            self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
+                self.animation_speed = abs(self.animation_speed)
+                self.tool_hb.x = pon[0] - 50
+                self.tool_hb.y = pon[1] - 10
 

@@ -14,6 +14,7 @@ class Game(pygame.sprite.Sprite):
         pygame.font.init()
         super().__init__()
         self.screen = pygame.display.set_mode(resolution)
+        pygame.display.set_caption("alone marshmallow")
 
         self.game = False  # если она фолс то игра не будет работать (запустится сама после загрузочного экрана)
         self.title_image = pygame.transform.rotozoom(tilte_base, 0, 1)  # пикча загрузочного экрана
@@ -57,7 +58,10 @@ class Game(pygame.sprite.Sprite):
         pygame.display.flip()
         self.delta_time = self.clock.tick(fps)
         # pygame.display.set_caption(f"{self.clock.get_fps() :.1f}")
-        pygame.display.set_caption("alone marshmallow")
+
+        if self.tool.remove_en_perc:
+            self.ui.percentage -= 1
+            self.tool.remove_en_perc = False
 
     def draw(self):
         """Отрисовка всех штук на экране"""
@@ -102,6 +106,10 @@ class Game(pygame.sprite.Sprite):
                     self.ui.coin_count += 1
                     print(self.ui.coin_count)
 
+                if e.key == pygame.K_0:
+                    self.ui.percentage = 100
+                    print('restore energy')
+
                 # skip title
                 if e.key == 13:
                     self.title_i = len(im_title) + 1
@@ -109,8 +117,8 @@ class Game(pygame.sprite.Sprite):
                     if self.game:
                         self.pause = not self.pause
                         if self.pause:
-                            pause_font = pygame.font.SysFont('hooge 05_54', 30)
-                            conf_font = pygame.font.SysFont('hooge 05_54', 15)
+                            pause_font = pygame.font.Font(font, 30)
+                            conf_font = pygame.font.Font(font, 15)
                             pause_text = pause_font.render('Game paused', False, 'white')
                             keys_text = conf_font.render('''
 Configuration
@@ -120,7 +128,8 @@ Configuration
   N - hit
   ESC - pause
   ENTER - title skip
-  9 - +coin (test)''', False, 'white')
+  9 - +coin (test)
+  0 - set energy 100''', False, 'white')
                             self.screen.blit(self.pause_image.convert_alpha(), self.pause_hb)
                             self.screen.blit(pause_text, (w / 2 - 150, 20))
                             self.screen.blit(keys_text, (20, h // 2 + 20))
@@ -146,6 +155,7 @@ Configuration
         print('ESC - пауза')
         print('ENTER - скип титла')
         print('9 - плюс монета (тест)')
+        print('0 - энергия 100')
 
     def title(self):
         """Экран 'представляет' вначале запуска программы"""
