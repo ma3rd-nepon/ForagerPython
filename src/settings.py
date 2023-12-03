@@ -3,7 +3,7 @@ fps = 60
 
 isl_b = (300, 970, 10, 610)
 
-tilesize = 64
+tilesize = 80
 
 WORLD_MAP = [
     ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
