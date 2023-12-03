@@ -10,7 +10,7 @@ from level import Level
 # from tool import *
 
 
-class Game(pygame.sprite.Sprite):
+class Game(pygame.sprite.Spritфe):
     def __init__(self):
         pygame.init()
         super().__init__()
