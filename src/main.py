@@ -15,10 +15,15 @@ class Game(pygame.sprite.Sprite):
         super().__init__()
         self.screen = pygame.display.set_mode(resolution)
 
+        self.player = None
+        self.map = None
+        self.tool = None
+        self.ui = None
+
         self.game = False  # если она фолс то игра не будет работать (запустится сама после загрузочного экрана)
         self.title_image = pygame.transform.rotozoom(tilte_base, 0, 1)  # пикча загрузочного экрана
         self.current_title = tilte_base  # текущая пикча загрузочного экрана
-        self.title_hb = self.title_image.get_rect(center=(w//2, h//2))
+        self.title_hb = self.title_image.get_rect(center=(w // 2, h // 2))
         self.title_i = 0  # индекс анимации загрузочного экрана
         self.title()  # функция которая этот загрузочный экран воспроизводит
 

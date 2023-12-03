@@ -22,7 +22,7 @@ class Player_UI(pygame.sprite.Sprite):
         self.coin_count = 0  # колво монет
         self.coin_font = pygame.font.SysFont('hooge 05_54', 40)  # шрифт для цифры
         self.coin_count_text = self.coin_font.render(str(self.coin_count), False,
-                                                     'white', bgcolor='black')  # рендер текста
+                                                     'white', 'black')  # рендер текста
 
     def draw(self):
         """Отрисовка всех элементов интерфейса"""
