@@ -34,15 +34,15 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0
 
-    def collision(self, directn):
-        if directn == 'горизонтально':
+    def collision(self, direction):
+        if direction == 'горизонтально':
             for sprite in self.barrier_sprites:
                 if sprite.rect.colliderect(self.rect):
                     if self.direction.x > 0:  # чел движется вправо
                         self.rect.right = sprite.rect.left
                     elif self.direction.x < 0:  # чел движется влево
                         self.rect.left = sprite.rect.right
-        if directn == 'вертикально':
+        if direction == 'вертикально':
             for sprite in self.barrier_sprites:
                 if sprite.rect.colliderect(self.rect):
                     if self.direction.y > 0:  # чел движется вниз
@@ -55,7 +55,7 @@ class Player(pygame.sprite.Sprite):
             self.direction = self.direction.normalize()  # деаем его длину = 1
         self.rect.x += self.direction.x * speed
         self.collision('горизонтально')
-        self.rect.y += self.direction.x * speed
+        self.rect.y += self.direction.y * speed
         self.collision('вертикально')
         # self.rect.center += self.direction * speed
 
