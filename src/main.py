@@ -1,5 +1,4 @@
 import pygame
-import threading
 
 from map import *
 from player import *
@@ -82,6 +81,10 @@ class Game(pygame.sprite.Sprite):
             self.cross.x = mx - 15
             self.cross.y = my - 15
             self.screen.blit(self.cross_im, self.cross)
+
+            rect = pygame.rect.Rect(0, 0, 300, h)
+            if pygame.Rect.colliderect(rect, self.player.hitbox_rect):
+                print('плеер ходит там где ненадо')
         else:
             pygame.draw.line(self.screen, 'white', (0, h // 2), (w, h // 2))
             if self.console:
@@ -104,7 +107,7 @@ class Game(pygame.sprite.Sprite):
                             print('random blocks spawned!')
                         else:
                             print('random blocks removed!')
-            if e.type == 768:
+
                 if e.key == pygame.K_SPACE:
                     if not self.pause:
                         self.player.dash()
@@ -120,7 +123,7 @@ class Game(pygame.sprite.Sprite):
                 if e.key == pygame.K_0 and not self.pause:
                     self.ui.percentage = 100
                     print('restore energy')
-                if e.key == 112:
+                if e.key == 92:
                     self.console = True
 
                 # skip title
@@ -203,12 +206,18 @@ Configuration
                         command = command.replace('money ', '')
                         try:
                             self.ui.coin_count += int(command)
-                        except ValueError as e:
+                        except ValueError:
                             print('wrong written command')
 
                     if command == 'crash game':
                         raise WindowsError('idk what happened')
 
+                    if 'energy' in command:
+                        command = command.replace('energy ', '')
+                        try:
+                            self.ui.percentage = int(command)
+                        except ValueError:
+                            print('wrong written command')
                     else:
                         pass
                     self.console = False
@@ -228,4 +237,3 @@ if __name__ == '__main__':
         print('game off')
     except KeyboardInterrupt as e:
         print('game off by killing process')
-        # обновил инфу о управлении

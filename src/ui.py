@@ -37,6 +37,10 @@ class Player_UI(pygame.sprite.Sprite):
         # energy bar
         self.percentage = 100
 
+        # timer
+        self.time = [12, 00]
+        self.imdxxx = 0
+
     def draw(self):
         """Отрисовка всех элементов интерфейса"""
         self.game.screen.blit(self.heart_image, self.heart_hb)
@@ -51,8 +55,12 @@ class Player_UI(pygame.sprite.Sprite):
         pygame.draw.rect(self.game.screen, 'black', (10, 60, 105, 30))
         self.draw_energy(self.percentage)
 
+        self.draw_timer()
+
     def update(self):
         """Обновление интерфейса"""
+        if self.coin_count > 10000:
+            self.coin_count = 10000
         self.coin_count_text = self.coin_font.render(str(self.coin_count), False, 'white')
         self.fps = self.fps_font.render(f"{int(self.game.clock.get_fps())}", False, 'white', bgcolor='black')
         self.draw()
@@ -63,3 +71,20 @@ class Player_UI(pygame.sprite.Sprite):
         if perc < 0:
             perc = 0
         pygame.draw.rect(self.game.screen, '#90EE90', (15, 65, 95 * perc, 20))
+
+    def draw_timer(self):
+        """Отображает игровое время"""
+        timee = self.fps_font.render(f"{self.time[0]}:{str(self.time[1])}", False, 'white', bgcolor='black')
+        self.game.screen.blit(timee, (w - 80, 40))
+
+        self.imdxxx += 0.3  # скорость течения времени ( игровая минута != секунда реальная)
+        if int(self.imdxxx) == 60:
+            self.imdxxx = 0
+            self.time[1] += 1
+
+        if self.time[1] == 60:
+            self.time[1] = 0
+            self.time[0] += 1
+            self.imdxxx = 0
+            if self.time[0] == 24:
+                self.time[0] = 00

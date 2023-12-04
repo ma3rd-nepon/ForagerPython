@@ -47,10 +47,10 @@ class Tool(pygame.sprite.Sprite):
     def flipping(self):
         """Поворот инструмента в зависимости от поворота игрока"""
         key = pygame.key.get_pressed()
-        if key[pygame.K_a]:
+        if key[pygame.K_a] and not key[pygame.K_d]:
             self.fx = False
             self.tool_hb.x = pon[0] + 10
-        elif key[pygame.K_d]:
+        elif key[pygame.K_d] and not key[pygame.K_a]:
             self.fx = True
             self.tool_hb.x = pon[0] - 80
 

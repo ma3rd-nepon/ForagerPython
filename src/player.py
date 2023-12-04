@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 from settings import *
@@ -7,6 +9,8 @@ pl_pos = 6, 3
 pl_speed = 0.003
 pon = [6, 3]
 scaling = 1
+
+particles = []
 
 island_x = []
 for i in range(315, 970):
@@ -37,26 +41,26 @@ class Player(pygame.sprite.Sprite):
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_0]:
-            pass  # не убирать
+            pass
 
-        elif keys[pygame.K_d]:
+        elif keys[pygame.K_d] and (not keys[pygame.K_a]):
             self.tx = False
             if self.x * 100 <= w - 50 and self.x * 100 < 930:
                 self.x += speed
             self.animate_walk()
 
-        elif keys[pygame.K_a]:
+        elif keys[pygame.K_a] and (not keys[pygame.K_d]):
             self.tx = True
-            if self.x * 100 > 30 and 340 < self.x * 100:
+            if self.x * 100 > 30:  # and 340 < self.x * 100:
                 self.x -= speed
             self.animate_walk()
 
-        elif keys[pygame.K_w]:
+        elif keys[pygame.K_w] and (not keys[pygame.K_s]):
             if self.y * 100 > 30:
                 self.y -= speed
             self.animate_walk()
 
-        elif keys[pygame.K_s]:
+        elif keys[pygame.K_s] and (not keys[pygame.K_w]):
             if self.y * 100 <= h - 80:
                 self.y += speed
             self.animate_walk()
@@ -81,6 +85,10 @@ class Player(pygame.sprite.Sprite):
 
     def animate_walk(self):
         """Анимация при движении"""
+        if self.tx:
+            self.draw_particles(pon[0] + 40, pon[1] + 80)
+        else:
+            self.draw_particles(pon[0] - 20, pon[1] + 80)
         self.index_walk += 0.2
 
         if self.index_walk >= len(im_w) or self.index_idle < 0:
@@ -98,6 +106,7 @@ class Player(pygame.sprite.Sprite):
 
         self.curr_img = im_i[int(self.index_idle)]
         self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
+        particles.clear()
 
     def dash(self):
         """Рывок в сторону движения"""
@@ -133,16 +142,13 @@ class Player(pygame.sprite.Sprite):
 
     def draw_particles(self, x: int, y: int):  # да я непонимаю че там сделать
         """Рисует партиклы пыли при движении игрока"""
-        self.hehe += 0.05
-        xx, yy = x, y
+        particles.append([[x, y], [random.randint(0, 20) / 10 - 1, -1], random.randint(5, 10)])
 
-        if self.hehe >= 5:
-            self.hehe = 0
-        if int(self.hehe) == 1:
-            pygame.draw.circle(self.game.screen, 'red', (xx, yy), 10)
-
-        if int(self.hehe) == 2:
-            pygame.draw.circle(self.game.screen, 'red', (xx, yy), 5)
-
-        if int(self.hehe) == 3:
-            pygame.draw.circle(self.game.screen, 'red', (xx, yy), 2)
+        for p in particles:
+            p[0][0] += p[1][0]
+            p[0][1] += p[1][1]
+            p[2] -= 0.1
+            p[1][1] += 0.1
+            pygame.draw.circle(self.game.screen, '#dede98', p[0], int(p[2]))
+            if p[2] <= 0:
+                particles.remove(p)
