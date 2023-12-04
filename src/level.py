@@ -8,7 +8,7 @@ from debug import debug
 class Level:
     def __init__(self):
         self.screen = pygame.display.get_surface()
-        self.visible_sprites = pygame.sprite.Group()
+        self.visible_sprites = YCamera()
         self.barrier_sprites = pygame.sprite.Group()
 
         self.player = None
@@ -26,6 +26,27 @@ class Level:
                                          [self.visible_sprites], self.barrier_sprites)
 
     def run(self):
-        self.visible_sprites.draw(self.screen)
+        self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         debug(self.player.direction)
+
+
+class YCamera(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__()
+        self.displ_rect = None
+        self.screen = pygame.display.get_surface()
+        self.displacement = pygame.Vector2()
+
+        self.half_width = self.screen.get_size()[0] // 2
+        self.half_high = self.screen.get_size()[1] // 2
+
+    def custom_draw(self, player):
+        self.displacement.x = player.rect.centerx - self.half_width
+        self.displacement.y = player.rect.centery - self.half_high
+
+        for sprite in self.sprites():
+            self.displ_rect = sprite.rect.topleft - self.displacement
+            self.screen.blit(sprite.image, self.displ_rect)
+
+
