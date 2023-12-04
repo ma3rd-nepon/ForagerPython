@@ -38,8 +38,10 @@ class Player_UI(pygame.sprite.Sprite):
         self.percentage = 100
 
         # timer
-        self.time = [12, 00]
+        self.time = [12, 0]
         self.imdxxx = 0
+
+        self.hb_things = []
 
     def draw(self):
         """Отрисовка всех элементов интерфейса"""
@@ -56,6 +58,8 @@ class Player_UI(pygame.sprite.Sprite):
         self.draw_energy(self.percentage)
 
         self.draw_timer()
+
+        # self.draw_hotbar()
 
     def update(self):
         """Обновление интерфейса"""
@@ -88,3 +92,8 @@ class Player_UI(pygame.sprite.Sprite):
             self.imdxxx = 0
             if self.time[0] == 24:
                 self.time[0] = 00
+
+    def draw_light(self):
+        light_surf = pygame.Surface((w, h), pygame.SRCALPHA)
+        light_surf.fill((0, 0, 0, 0))
+        self.game.screen.blit(light_surf, (0, 0))

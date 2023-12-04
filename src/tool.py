@@ -10,7 +10,7 @@ class Tool(pygame.sprite.Sprite):
         super().__init__()
         self.anim_index = 0  # индекс анимации удара
         self.game = game
-        self.current_pic = pickaxe_3
+        self.current_pic = pickaxe_1
         self.pickaxe = pygame.transform.rotozoom(self.current_pic.convert_alpha(), 0, 1)  # основной пикча инструмента
         self.tool_hb = self.pickaxe.get_rect(center=pl_pos)
         self.current_tool = self.current_pic.convert_alpha()

@@ -35,22 +35,28 @@ class Player(pygame.sprite.Sprite):
 
         self.tx, self.ty = False, False  # поворот игрока по х у
 
+        self.a = 0.5  # ускорение игрока
+
     def movement(self):
         """Движение игрока по WASD"""
-        speed = pl_speed * self.game.delta_time  # скорость игрока (потом сделаю ускорением)
+        speed = pl_speed * self.game.delta_time * self.a  # скорость игрока (потом сделаю ускорением)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_0]:
             pass
 
         elif keys[pygame.K_d] and (not keys[pygame.K_a]):
-            self.tx = False
+            if self.tx:
+                self.tx = False
+                self.a = 0.5
             if self.x * 100 <= w - 50 and self.x * 100 < 930:
                 self.x += speed
             self.animate_walk()
 
         elif keys[pygame.K_a] and (not keys[pygame.K_d]):
-            self.tx = True
+            if not self.tx:
+                self.tx = True
+                self.a = 0.5
             if self.x * 100 > 30:  # and 340 < self.x * 100:
                 self.x -= speed
             self.animate_walk()
@@ -85,11 +91,12 @@ class Player(pygame.sprite.Sprite):
 
     def animate_walk(self):
         """Анимация при движении"""
-        if self.tx:
-            self.draw_particles(pon[0] + 40, pon[1] + 80)
-        else:
-            self.draw_particles(pon[0] - 20, pon[1] + 80)
         self.index_walk += 0.2
+
+        self.a += 0.015
+
+        if self.a > 1:
+            self.a = 1
 
         if self.index_walk >= len(im_w) or self.index_idle < 0:
             self.index_walk = 0
@@ -101,12 +108,13 @@ class Player(pygame.sprite.Sprite):
         """Анимация когда игрок ничего не делает"""
         self.index_idle += 0.15
 
+        self.a = 0.5
+
         if self.index_idle >= len(im_i):
             self.index_idle = 0
 
         self.curr_img = im_i[int(self.index_idle)]
         self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
-        particles.clear()
 
     def dash(self):
         """Рывок в сторону движения"""
@@ -140,9 +148,13 @@ class Player(pygame.sprite.Sprite):
                 if keys[pygame.K_SPACE]:
                     self.y += dash_speed
 
-    def draw_particles(self, x: int, y: int):  # да я непонимаю че там сделать
+    def draw_particles(self, x: int, y: int):
         """Рисует партиклы пыли при движении игрока"""
-        particles.append([[x, y], [random.randint(0, 20) / 10 - 1, -1], random.randint(5, 10)])
+        key = pygame.key.get_pressed()
+        if any([key[pygame.K_w], key[pygame.K_a], key[pygame.K_s], key[pygame.K_d]]) and self.a == 1:
+            particles.append([[x, y], [random.randint(0, 20) / 10 - 1, -1], random.randint(5, 10)])
+        else:
+            particles.append([[x, y], [random.randint(0, 20) / 10 - 1, -1], random.randint(0, 1)])
 
         for p in particles:
             p[0][0] += p[1][0]

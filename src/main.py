@@ -22,7 +22,10 @@ class Game(pygame.sprite.Sprite):
         self.current_title = tilte_base  # текущая пикча загрузочного экрана
         self.title_hb = self.title_image.get_rect(center=(w//2, h//2))
         self.title_i = 0  # индекс анимации загрузочного экрана
+        self.zahotel = True  # если тру то скипается загрузочный чорний экран
         self.title()  # функция которая этот загрузочный экран воспроизводит
+        if self.zahotel:
+            self.title_i = len(im_title) + 1
 
         self.clock = pygame.time.Clock()
         self.delta_time = 1
@@ -42,6 +45,8 @@ class Game(pygame.sprite.Sprite):
         self.com = []
 
         # self.instruct()  # пишет в консоль клавиши
+
+        self.ui.hb_things.append(self.tool.current_pic)
 
     def start_game(self):
         """Определение всех классов"""
@@ -72,6 +77,10 @@ class Game(pygame.sprite.Sprite):
         if not self.pause:
             self.screen.fill('#337bc8')
             self.map.draw()
+            if self.player.tx:
+                self.player.draw_particles(pon[0] + 40, pon[1] + 70)
+            else:
+                self.player.draw_particles(pon[0] - 20, pon[1] + 70)
             self.player.draw()
             self.tool.draw()
             self.ui.draw()
@@ -115,14 +124,6 @@ class Game(pygame.sprite.Sprite):
                 if e.key in [97, 100, 115, 119]:
                     self.player.draw_particles(pon[0] - 20, pon[1] + 75)
 
-                if e.key == 61 and not self.pause:
-                    self.ui.coin_count += 1
-                if e.key == 45 and not self.pause:
-                    self.ui.coin_count -= 1
-
-                if e.key == pygame.K_0 and not self.pause:
-                    self.ui.percentage = 100
-                    print('restore energy')
                 if e.key == 92:
                     self.console = True
 
