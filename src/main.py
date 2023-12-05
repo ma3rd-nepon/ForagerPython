@@ -4,6 +4,7 @@ from map import *
 from player import *
 from settings import *
 from imgs import *
+from src import config
 from tool import *
 from ui import *
 from console import convert
@@ -17,10 +18,12 @@ class Game(pygame.sprite.Sprite):
         self.screen = pygame.display.set_mode(resolution)
         pygame.display.set_caption("alone marshmallow")
 
-        self.game = False  # если она фолс то игра не будет работать (запустится сама после загрузочного экрана)
+        self.key = pygame.key.get_pressed()
+
+        self.game = True  # если она фолс то игра не будет работать (запустится сама после загрузочного экрана)
         self.title_image = pygame.transform.rotozoom(tilte_base, 0, 1)  # пикча загрузочного экрана
         self.current_title = tilte_base  # текущая пикча загрузочного экрана
-        self.title_hb = self.title_image.get_rect(center=(w//2, h//2))
+        self.title_hb = self.title_image.get_rect(center=(width // 2, height // 2))
         self.title_i = 0  # индекс анимации загрузочного экрана
         self.zahotel = True  # если тру то скипается загрузочный чорний экран
         self.title()  # функция которая этот загрузочный экран воспроизводит
@@ -39,14 +42,14 @@ class Game(pygame.sprite.Sprite):
 
         self.pause = False  # если тру то игра на паузе
         self.pause_image = pygame.image.load('../sprites/title/presents_1.png').convert_alpha()  # пикча паузы
-        self.pause_hb = self.pause_image.get_rect(center=(w // 2, h // 2))
+        self.pause_hb = self.pause_image.get_rect(center=(width // 2, height // 2))
 
         self.console = False
         self.com = []
 
         # self.instruct()  # пишет в консоль клавиши
 
-        self.ui.hb_things.append(self.tool.current_pic)
+        # self.ui.hb_things.append(self.tool.current_pic)
 
     def start_game(self):
         """Определение всех классов"""
@@ -72,15 +75,24 @@ class Game(pygame.sprite.Sprite):
             self.ui.percentage -= 1
             self.tool.remove_en_perc = False
 
+        self.key = pygame.key.get_pressed()
+
+        if self.ui.percentage == 0:
+            self.tool.can_hit = False
+        else:
+            self.tool.can_hit = True
+
     def draw(self):
         """Отрисовка всех штук на экране"""
         if not self.pause:
             self.screen.fill('#337bc8')
             self.map.draw()
+
             if self.player.tx:
-                self.player.draw_particles(pon[0] + 40, pon[1] + 70)
+                self.player.draw_particles(pl_pos[0] + 40, pl_pos[1] + 70)
             else:
-                self.player.draw_particles(pon[0] - 20, pon[1] + 70)
+                self.player.draw_particles(pl_pos[0] - 20, pl_pos[1] + 70)
+
             self.player.draw()
             self.tool.draw()
             self.ui.draw()
@@ -91,24 +103,22 @@ class Game(pygame.sprite.Sprite):
             self.cross.y = my - 15
             self.screen.blit(self.cross_im, self.cross)
 
-            rect = pygame.rect.Rect(0, 0, 300, h)
-            if pygame.Rect.colliderect(rect, self.player.hitbox_rect):
+            if any([not 0 < self.player.hitbox_rect[0] < width, not 0 < self.player.hitbox_rect[1] < height]):
                 print('плеер ходит там где ненадо')
         else:
-            pygame.draw.line(self.screen, 'white', (0, h // 2), (w, h // 2))
+            pygame.draw.line(self.screen, 'white', (0, height // 2), (w, height // 2))
             if self.console:
                 pygame.draw.rect(self.screen, 'white', (0, 40, 40, 40))
             else:
                 pygame.draw.rect(self.screen, 'black', (0, 40, 40, 40))
 
-    def eventss(self):
+    def events(self):
         """Обработка событий игры"""
         for e in pygame.event.get():
-            m_pos = pygame.mouse.get_pos()
-            if e.type == pygame.QUIT or e.type == pygame.K_ESCAPE:
+            if e.type == pygame.QUIT:
                 quit()
-            if e.type == 768:
-                if e.key == 109:
+            if e.type == 768:  # нажатие кнопки на клаватуре
+                if e.key == config.spawn_blocks:
                     if not self.pause:
                         self.spawn = not self.spawn
                         self.map.rechoice()
@@ -117,39 +127,30 @@ class Game(pygame.sprite.Sprite):
                         else:
                             print('random blocks removed!')
 
-                if e.key == pygame.K_SPACE:
+                if e.key == config.dash:
                     if not self.pause:
                         self.player.dash()
 
-                if e.key in [97, 100, 115, 119]:
-                    self.player.draw_particles(pon[0] - 20, pon[1] + 75)
-
-                if e.key == 92:
+                if e.key == config.console:
                     self.console = True
 
                 # skip title
-                if e.key == 13:
+                if e.key == config.skip_title:
                     self.title_i = len(im_title) + 1
-                if e.key == pygame.K_ESCAPE:
+
+                if e.key == config.hide_hud:
+                    self.ui.show_hud = not self.ui.show_hud
+                if e.key == config.pause:
                     if self.game:
                         self.pause = not self.pause
                         if self.pause:
                             pause_font = pygame.font.Font(font, 30)
                             conf_font = pygame.font.Font(font, 15)
                             pause_text = pause_font.render('Game paused', False, 'white')
-                            keys_text = conf_font.render('''
-Configuration
-  WASD - movement
-  SPACE - dash
-  M - create blocks (test)
-  N - hit
-  ESC - pause
-  ENTER - title skip
-  +/- - +/- coin (test)
-  0 - set energy 100''', False, 'white')
+                            keys_text = conf_font.render('config.py', False, 'white')
                             self.screen.blit(self.pause_image.convert_alpha(), self.pause_hb)
-                            self.screen.blit(pause_text, (w / 2 - 150, 20))
-                            self.screen.blit(keys_text, (20, h // 2 + 20))
+                            self.screen.blit(pause_text, (width / 2 - 150, 20))
+                            self.screen.blit(keys_text, (20, height // 2 + 20))
                         else:
                             pass
 
@@ -157,7 +158,7 @@ Configuration
         """Запуск игры и её главный цикл"""
         while True:
             self.command()
-            self.eventss()
+            self.events()
             self.update()
             if self.game:
                 self.draw()
@@ -166,14 +167,13 @@ Configuration
 
     def instruct(self):
         """Вывод всех используемых клавиш и их назначение"""
-        print('WASD - ходить')
-        print('SPACE - рывок')
-        print('M - создать блоки')
-        print('N - удар киркой')
-        print('ESC - пауза')
-        print('ENTER - скип титла')
-        print('+/- - плюс/минус монета (тест)')
-        print('0 - энергия 100')
+        print('''
+help - this list
+money (int) - set money count
+time (int) (int) - set time
+crash game - crash game 
+energy (int) - set energy
+''')
 
     def title(self):
         """Экран 'представляет' вначале запуска программы"""
@@ -196,8 +196,7 @@ Configuration
     def command(self):
         if self.pause:
             if self.console:
-                key = pygame.key.get_pressed()
-                if key[13]:
+                if self.key[13]:
                     command = convert(self.com)
                     print('command: ' + command)
                     if command == 'help':
@@ -219,6 +218,14 @@ Configuration
                             self.ui.percentage = int(command)
                         except ValueError:
                             print('wrong written command')
+
+                    if 'time' in command:
+                        command = command.replace('time ', '')
+                        command = command.split(' ')
+                        try:
+                            self.ui.time = [int(command[0]), int(command[1])]
+                        except ValueError:
+                            print('wrong time')
                     else:
                         pass
                     self.console = False
@@ -226,8 +233,6 @@ Configuration
                 for i in pygame.event.get():
                     if i.type == 768:
                         self.com.append(i.key)
-                        if i.key == 8:
-                            self.com.remove(self.com[-1])
 
 
 if __name__ == '__main__':

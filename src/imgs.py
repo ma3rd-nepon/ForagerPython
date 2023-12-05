@@ -1,15 +1,15 @@
 import pygame
 
-# кадры движения
+# кадры игрока
 pl_base = pygame.image.load('../sprites/player/idle/player_idle1.png')
 
-im_w = [pygame.image.load('../sprites/player/idle/player_idle1.png'), pygame.image.load(
-    '../sprites/player/walk/player_walk1.png'),
-        pygame.image.load('../sprites/player/walk/player_walk2.png'), pygame.image.load(
-        '../sprites/player/walk/player_walk3.png')]
+im_w = [pygame.image.load('../sprites/player/idle/player_idle1.png'),
+        pygame.image.load('../sprites/player/walk/player_walk1.png'),
+        pygame.image.load('../sprites/player/walk/player_walk2.png'),
+        pygame.image.load('../sprites/player/walk/player_walk3.png')]
 
-im_i = [pygame.image.load('../sprites/player/idle/player_idle1.png'), pygame.image.load(
-    '../sprites/player/idle/player_idle2.png'),
+im_i = [pygame.image.load('../sprites/player/idle/player_idle1.png'),
+        pygame.image.load('../sprites/player/idle/player_idle2.png'),
         pygame.image.load('../sprites/player/idle/player_idle3.png')]
 
 
@@ -28,7 +28,7 @@ iron = pygame.image.load('../sprites/ores/iron.png')
 gold = pygame.image.load('../sprites/ores/gold.png')
 
 
-# спрайты кирки (да он один)
+# спрайты кирки
 pickaxe_1 = pygame.image.load('../sprites/tools/pickaxe_1.png')
 
 pickaxe_2 = pygame.image.load('../sprites/tools/pickaxe_2.png')
