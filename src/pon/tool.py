@@ -1,8 +1,5 @@
-import pygame
-
-from settings import *
 from imgs import *
-from player import *
+from src.pon.player import *
 
 
 class Tool(pygame.sprite.Sprite):

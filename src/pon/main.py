@@ -1,9 +1,4 @@
-import pygame
-
 from map import *
-from player import *
-from settings import *
-from imgs import *
 from tool import *
 
 
