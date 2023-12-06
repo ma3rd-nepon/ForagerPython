@@ -15,6 +15,8 @@ class Player_UI(pygame.sprite.Sprite):
 
         self.title_scrn = pygame.Surface((width, height), pygame.SRCALPHA)
 
+        self.hotbar_scr = pygame.Surface((width, height), pygame.SRCALPHA)
+
         self.coin_image = pygame.transform.rotozoom(coin.convert_alpha(), 0, 0.5)
 
         self.heart_image = pygame.transform.rotozoom(heart.convert_alpha(), 0, 0.35)
@@ -69,15 +71,19 @@ class Player_UI(pygame.sprite.Sprite):
 
         self.game.screen.blit(self.fps, (width - 35, 10))
 
+        self.game.screen.blit(self.hotbar_scr, (0, 0))
+
         self.draw_energy(self.percentage)
 
         self.draw_timer()
 
         self.draw_crosshair(False)
 
+        self.draw_hotbar()
+
     def update(self):
         """Обновление интерфейса"""
-        if self.game.game:
+        if self.game.game and not self.game.pause:
             if self.coin_count > 10000:
                 self.coin_count = 10000
 
@@ -158,4 +164,18 @@ class Player_UI(pygame.sprite.Sprite):
             self.cross.x = mx - 15
             self.cross.y = my - 15
             self.game.screen.blit(self.cross_im, self.cross)
+
+    def draw_hotbar(self):
+        hb_rect = pygame.rect.Rect(width // 2 - 150, height - 50, 250, 50)
+        self.hotbar_scr.blit(hotbar, hb_rect)
+        self.hotbar_scr.set_alpha(200)
+
+        # working coords w: w // 2 - 148, h: h - 50
+        for i in range(len(self.hb_things)):
+            kolvo = 250 // len(self.hb_things)
+            rect = (width // 2 - 148 + kolvo * i, height - 50)
+            self.hotbar_scr.blit(pygame.transform.rotozoom(self.hb_things[i], 0, 0.5), rect)
+
+            if self.game.tool.current_pic == self.hb_things[i]:
+                pygame.draw.rect(self.hotbar_scr, 'white', (hb_rect[0] + kolvo * i, hb_rect[1], kolvo, 50), 2)
 

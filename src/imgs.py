@@ -37,6 +37,8 @@ pickaxe_3 = pygame.image.load('../sprites/tools/pickaxe_3.png')
 
 pickaxe_4 = pygame.image.load('../sprites/tools/pickaxe_4.png')
 
+picks = [pickaxe_1, pickaxe_2, pickaxe_3, pickaxe_4]
+
 
 # загрузочный екран
 im_title = [pygame.image.load('../sprites/title/presents_1.png'), pygame.image.load('../sprites/title/presents_1.png'),
@@ -52,3 +54,5 @@ heart = pygame.image.load('../sprites/ui/heart.png')
 no_heart = pygame.image.load('../sprites/ui/heart_minus.png')
 
 coin = pygame.image.load('../sprites/ui/coin.png')
+
+hotbar = pygame.image.load('../sprites/hotbar.png')

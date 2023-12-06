@@ -24,8 +24,7 @@ class Game(pygame.sprite.Sprite):
         self.key = pygame.key.get_pressed()
 
         self.game = True  # если она фолс то игра не будет работать (запустится сама после загрузочного экрана)
-        self.skip = False  # если тру то пропустит начальный екран
-        self.zahotel = True  # если тру то скипается загрузочный чорний экран
+        self.skip = True  # если тру то пропустит начальный екран
 
         self.clock = pygame.time.Clock()
         self.delta_time = 1
@@ -42,8 +41,6 @@ class Game(pygame.sprite.Sprite):
 
         # self.instruct()  # пишет в консоль клавиши
 
-        # self.ui.hb_things.append(self.tool.current_pic)
-
         self.start_game()
 
     def start_game(self):
@@ -54,6 +51,8 @@ class Game(pygame.sprite.Sprite):
         self.ui = Player_UI(self)
 
         self.ui.title()
+        for i in picks:
+            self.ui.hb_things.append(i)
 
     def update(self):
         """Обновление всех штук изображаемых на экране"""
@@ -107,8 +106,18 @@ class Game(pygame.sprite.Sprite):
             if e.type == pygame.QUIT:
                 quit()
             if e.type == 768:  # нажатие кнопки на клаватуре
-                if e.key == config.spawn_blocks:
-                    if not self.pause:
+                if not self.pause:
+                    if e.key == config.dash:
+                        if not self.pause:
+                            self.player.dash()
+
+                    if e.key == config.hide_hud:
+                        self.ui.show_hud = not self.ui.show_hud
+
+                    if e.key == config.skip_title:
+                        self.ui.title_index = 11
+
+                    if e.key == config.spawn_blocks:
                         self.spawn = not self.spawn
                         self.map.rechoice()
                         if self.spawn:
@@ -116,18 +125,11 @@ class Game(pygame.sprite.Sprite):
                         else:
                             print('random blocks removed!')
 
-                if e.key == config.dash:
-                    if not self.pause:
-                        self.player.dash()
+                    if e.key in config.hotbar:
+                        self.tool.current_pic = picks[config.hotbar.index(e.key)]
 
                 if e.key == config.console and self.pause:
                     self.console = True
-
-                if e.key == config.hide_hud:
-                    self.ui.show_hud = not self.ui.show_hud
-
-                if e.key == config.skip_title:
-                    self.ui.title_index = 11
 
                 if e.key == config.pause:
                     if self.game:
@@ -152,8 +154,9 @@ class Game(pygame.sprite.Sprite):
 help - this list
 money (int) - set money count
 time (int) (int) - set time
-crash game - crash game 
+crash game - crash game (bruh)
 energy (int) - set energy
+spr (int) - set tool sprite
 ''')
 
     def command(self):
@@ -189,6 +192,13 @@ energy (int) - set energy
                             self.ui.time = [int(command[0]), int(command[1])]
                         except ValueError:
                             print('wrong time')
+
+                    if 'spr' in command:
+                        command = command.replace('spr ', '')
+                        try:
+                            self.tool.current_pic = picks[int(command) - 1]
+                        except IndexError:
+                            print('error')
                     else:
                         pass
                     self.console = False
