@@ -36,10 +36,10 @@ class Player_UI(pygame.sprite.Sprite):
         self.coin_count = 0  # колво монет
         self.coin_font = pygame.font.Font(font, 40)  # шрифт для цифры
         self.coin_count_text = self.coin_font.render(str(self.coin_count), False,
-                                                     'white', bgcolor='black')  # рендер текста
+                                                     'white', 'black')  # рендер текста
 
         self.fps_font = pygame.font.Font(font, 20)
-        self.fps = self.fps_font.render(f"{self.game.clock.get_fps()}", False, 'white', bgcolor='black')
+        self.fps = self.fps_font.render(f"{self.game.clock.get_fps()}", False, 'white', 'black')
 
         # crosshair
         self.cross_im = crosshair
@@ -87,8 +87,8 @@ class Player_UI(pygame.sprite.Sprite):
             if self.coin_count > 10000:
                 self.coin_count = 10000
 
-            self.coin_count_text = self.coin_font.render(str(self.coin_count), False, 'white', bgcolor='black')
-            self.fps = self.fps_font.render(f"{int(self.game.clock.get_fps())}", False, 'white', bgcolor='black')
+            self.coin_count_text = self.coin_font.render(str(self.coin_count), False, 'white', 'black')
+            self.fps = self.fps_font.render(f"{int(self.game.clock.get_fps())}", False, 'white', 'black')
 
             if self.show_hud:
                 self.draw()
@@ -118,7 +118,7 @@ class Player_UI(pygame.sprite.Sprite):
 
     def draw_timer(self):
         """Отображает игровое время"""
-        timee = self.fps_font.render(f"{self.time[0]}:{str(self.time[1])}", False, 'white', bgcolor='black')
+        timee = self.fps_font.render(f"{self.time[0]}:{str(self.time[1])}", False, 'white', 'black')
         self.game.screen.blit(timee, (width - 80, 40))
 
     def pause(self):

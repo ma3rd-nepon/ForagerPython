@@ -23,8 +23,11 @@ class Game(pygame.sprite.Sprite):
 
         self.key = pygame.key.get_pressed()
 
-        self.game = True  # если она фолс то игра не будет работать (запустится сама после загрузочного экрана)
-        self.skip = True  # если тру то пропустит начальный екран
+        self.game = True # если она фолс то игра не будет работать (запустится сама после загрузочного экрана)
+        self.skip = True  # если тру то пропустит начальный екран\
+
+        if not self.game:
+            self.skip = False
 
         self.clock = pygame.time.Clock()
         self.delta_time = 1
@@ -105,7 +108,7 @@ class Game(pygame.sprite.Sprite):
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 quit()
-            if e.type == 768:  # нажатие кнопки на клаватуре
+            if e.type == pygame.KEYDOWN:
                 if not self.pause:
                     if e.key == config.dash:
                         if not self.pause:
@@ -125,7 +128,7 @@ class Game(pygame.sprite.Sprite):
                         else:
                             print('random blocks removed!')
 
-                    if e.key in config.hotbar:
+                    if e.key in config.hotbar and config.hotbar.index(e.key) + 1 <= len(picks):
                         self.tool.current_pic = picks[config.hotbar.index(e.key)]
 
                 if e.key == config.console and self.pause:
