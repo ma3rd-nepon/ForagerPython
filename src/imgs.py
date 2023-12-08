@@ -12,6 +12,8 @@ im_i = [pygame.image.load('../sprites/player/idle/player_idle1.png'),
         pygame.image.load('../sprites/player/idle/player_idle2.png'),
         pygame.image.load('../sprites/player/idle/player_idle3.png')]
 
+mask = pygame.image.load('../sprites/player/mask.png')
+
 
 # прочее
 crosshair = pygame.image.load('../sprites/crosshair.png')

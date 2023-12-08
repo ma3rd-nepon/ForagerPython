@@ -44,6 +44,8 @@ class Game(pygame.sprite.Sprite):
 
         # self.instruct()  # пишет в консоль клавиши
 
+        self.mask = pygame.transform.rotozoom(mask, 0, 1)
+
         self.start_game()
 
     def start_game(self):
@@ -99,6 +101,7 @@ class Game(pygame.sprite.Sprite):
 
             if any([not -5 < self.player.hitbox_rect[0] < width, not -5 < self.player.hitbox_rect[1] < height]):
                 print('плеер ходит там где ненадо')
+
         else:
             if self.console:
                 pygame.draw.rect(self.screen, 'white', (0, 40, 40, 40))

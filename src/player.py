@@ -39,6 +39,9 @@ class Player(pygame.sprite.Sprite):
         self.a = 0.5  # ускорение игрока
         self.walk_speed = 0.2  # скорость обновления спрайтов при движении
 
+        self.mask_base = mask
+        self.draw_mask = True  # если тру то рисует маску
+
     def movement(self):
         """Движение игрока по нажатию кнопок"""
         speed = pl_speed * self.game.delta_time * self.a  # скорость игрока
@@ -85,6 +88,8 @@ class Player(pygame.sprite.Sprite):
     def draw(self):
         """Рисует игрока"""
         self.game.screen.blit(self.player, self.hitbox_rect)
+        if self.draw_mask:
+            self.game.screen.blit(self.game.mask, (pl_pos[0] - 34, pl_pos[1] - 50))
 
     def update(self):
         """Обновление отрисовки игрока"""
@@ -107,6 +112,7 @@ class Player(pygame.sprite.Sprite):
 
         self.curr_img = im_w[int(self.index_walk)]
         self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
+        self.game.mask = pygame.transform.flip(self.mask_base, self.tx, self.ty)
 
     def animate_idle(self):
         """Анимация когда игрок ничего не делает"""
@@ -120,6 +126,7 @@ class Player(pygame.sprite.Sprite):
 
         self.curr_img = im_i[int(self.index_idle)]
         self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
+        self.game.mask = pygame.transform.flip(self.mask_base, self.tx, self.ty)
 
     def dash(self):
         print(self.hitbox_rect)
