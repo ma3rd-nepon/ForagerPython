@@ -27,12 +27,12 @@ class Player(pygame.sprite.Sprite):
 
     def movement(self):
         key = pygame.key.get_pressed()
-        if any(key):
-            if key[d]:
+        if any([key[w], key[a], key[s], key[d]]):
+            if key[d] and not key[a]:
                 self.tx = False
                 self.direction.x = 1
 
-            if key[a]:
+            if key[a] and not key[d]:
                 self.tx = True
                 self.direction.x = -1
 

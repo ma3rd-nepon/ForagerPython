@@ -5,7 +5,8 @@ from imgs import *
 import playerr
 import config
 
-pon = playerr.pon
+pl_pos = (w // 2, h // 2)
+w, a, s, d = config.up, config.left, config.down, config.right
 
 
 class Tool(pygame.sprite.Sprite):
@@ -13,55 +14,129 @@ class Tool(pygame.sprite.Sprite):
         super().__init__()
         self.anim_index = 0
         self.game = game
-        self.pickaxe = pygame.transform.rotozoom(pickaxe_1.convert_alpha(), 0, 1)
-        self.tool_hb = self.pickaxe.get_rect()
-        self.current_tool = pickaxe_1.convert_alpha()
+        self.current_pic = pickaxe_1
+        self.pickaxe = pygame.transform.rotozoom(self.current_pic.convert_alpha(), 0, 1)
+        self.tool_hb = self.pickaxe.get_rect(center=pl_pos)
+        self.current_tool = self.current_pic.convert_alpha()
         self.fx, self.fy = True, False
         self.angle = 0
+        self.kirka = 0
+        self.animation_speed = 0.48
+        self.remove_en_perc = False
+
+        self.pick_2 = False
+
+        self.key = pygame.key.get_pressed()
+
+        self.can_hit = True
+
+    def stop_key(self, *args):
+        if any([pygame.key.get_pressed()[arg] for arg in args]):
+            return False
+        return True
 
     def moving(self):
-        self.tool_hb.x = pon[0]
-        self.tool_hb.y = pon[1] - 10
+        """Передвигает инструмент в руки игроку"""
+        self.tool_hb.x = pl_pos[0]
+        self.tool_hb.y = pl_pos[1] - 30
 
-        key = pygame.key.get_pressed()
-        if key[config.hit]:
-            self.hit()
+        if self.key[config.hit] and self.stop_key(w, a, s, d):
+            self.hit_new()
         else:
-            self.current_tool = pickaxe_1
+            self.current_tool = self.current_pic
+            self.kirka = 0
             self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
 
     def update(self):
+        """Обновление отрисовки инструмента"""
         self.moving()
         self.flipping()
 
-        pygame.draw.rect(self.game.screen, 'red', (pon[0] // 10, pon[1] // 10, 10, 10))
+        self.key = pygame.key.get_pressed()
 
     def draw(self):
+        """Рисование инструмента"""
         self.game.screen.blit(self.pickaxe, self.tool_hb)
 
     def flipping(self):
-        key = pygame.key.get_pressed()
-        if key[playerr.a]:
+        """Поворот инструмента в зависимости от поворота игрока"""
+        if self.key[config.left] and not self.key[config.right]:
             self.fx = False
-            self.tool_hb.x = pon[0] + 10
-        elif key[playerr.d]:
+            self.tool_hb.x = pl_pos[0] + 10
+        elif self.key[config.right] and not self.key[config.left]:
             self.fx = True
-            self.tool_hb.x = pon[0] - 80
+            self.tool_hb.x = pl_pos[0] - 100
 
         else:
-            if self.fx:
-                self.tool_hb.x = pon[0] - 70
+            if self.fx and self.stop_key(config.hit):
+                self.tool_hb.x = pl_pos[0] - 90
 
         self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
 
-    def hit(self):
-        self.anim_index += 0.1
+    def hit_new(self):
+        """Новая анимация удара"""
+        if self.can_hit:
+            if self.stop_key(w, a, s, d):
+                self.kirka += self.animation_speed
+                if 0 <= self.kirka < 2:
+                    self.current_tool = pygame.transform.rotate(self.current_pic, 0)
+                    self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
 
-        if self.anim_index >= len(im_h):
-            self.anim_index = 0
+                    if self.fx:
+                        self.tool_hb.x = pl_pos[0] - 70
+                    else:
+                        self.tool_hb.x = pl_pos[0] - 20
+                    self.tool_hb.y = pl_pos[1] - 30
 
-        if not self.fx:
-            self.tool_hb.x = pon[0] - 50
-        self.current_tool = pygame.transform.rotozoom(im_h[int(self.anim_index)], 0, 1)
-        fx = not self.fx
-        self.pickaxe = pygame.transform.flip(self.current_tool, fx, self.fy)
+                if int(self.kirka) == 2:
+                    self.current_tool = pygame.transform.rotate(self.current_pic, 45)
+                    self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
+                    if self.fx:
+                        self.tool_hb.x = pl_pos[0] - 50
+                    else:
+                        self.tool_hb.x = pl_pos[0] - 75
+                    self.tool_hb.y = pl_pos[1] - 30
+
+                if int(self.kirka) == 3:
+                    self.current_tool = pygame.transform.rotate(self.current_pic, 135)
+                    if self.fx:
+                        self.tool_hb.x = pl_pos[0]
+                    else:
+                        self.tool_hb.x = pl_pos[0] - 100
+                    self.tool_hb.y = pl_pos[1] - 30
+
+                if int(self.kirka) == 4:
+                    self.current_tool = pygame.transform.rotate(self.current_pic, 90)
+                    if self.fx:
+                        self.tool_hb.x = pl_pos[0] - 20
+                    else:
+                        self.tool_hb.x = pl_pos[0] - 50
+                    self.tool_hb.y = pl_pos[1] - 30
+
+                if int(self.kirka) == 5:
+                    self.current_tool = pygame.transform.rotate(self.current_pic, 30)
+                    if self.fx:
+                        self.tool_hb.x = pl_pos[0] - 60
+                    else:
+                        self.tool_hb.x = pl_pos[0] - 40
+                    self.tool_hb.y = pl_pos[1] - 30
+
+                if int(self.kirka) == 6:
+                    self.current_tool = pygame.transform.rotate(self.current_pic, 0)
+                    self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
+
+                    if self.fx:
+                        self.tool_hb.x = pl_pos[0] - 70
+
+                if 5 < self.kirka < 12 and self.fx:
+                    self.tool_hb.x = pl_pos[0] - 70
+
+                if self.kirka > 11 or int(self.kirka) == 11:
+                    self.current_tool = pygame.transform.rotate(self.current_pic, 0)
+                    self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
+
+                    self.game.ui.percentage -= 1
+
+                    if self.fx:
+                        self.tool_hb.x = pl_pos[0] - 70
+                    self.kirka = 0

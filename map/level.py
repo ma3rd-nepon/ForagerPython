@@ -6,10 +6,12 @@ from debug import debug
 from imgs import *
 
 srpites_dict = {
-    'x': cbble,
-    'i': iron,
-    'g': grass,
-    'z': gold
+    '0': cbble,
+    '3': iron,
+    '5': grass,
+    '2': coal,
+    '1': gold,
+    '4': 'player'
 }
 
 
@@ -21,22 +23,34 @@ class Level:
 
         self.clock = pygame.time.Clock()
 
+        self.wmp = []
         self.player = None
+
         self.create_map()
 
         self.current_fps = 0
         self.grass_rect = (0, 0, 200, 200)
 
+    def load_layer(self, file):
+        with open(file, 'r') as file:
+            w_map = file.readlines()
+            for i in w_map:
+                self.wmp.append(i.rstrip().split(','))
+
     def create_map(self):
         pl = (0, 0, False)
-        for row_index, row in enumerate(WORLD_MAP):
+        self.load_layer('map.csv')
+        for row_index, row in enumerate(self.wmp):
             for col_index, col in enumerate(row):
                 # tilesize = 64
                 x, y = col_index * tilesize, row_index * tilesize
-                if col == 'p':
+                if col == '-1':
+                    continue
+                if srpites_dict[col] == 'player':
                     pl = (x, y, True)
                     continue
-                if col == ' ':
+                if col == '5':
+                    Tile((x, y), (self.visible_sprites,), srpites_dict[col])
                     continue
                 Tile((x, y), (self.visible_sprites, self.barrier_sprites), srpites_dict[col])
         if pl[2]:
@@ -45,10 +59,8 @@ class Level:
             print('player not on map')
 
     def run(self):
-        self.screen.fill('#337bc8')
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
-        pygame.draw.rect(self.screen, 'black', (0, 0, 160, 160))
         debug(self.current_fps, self.player.direction)
 
 

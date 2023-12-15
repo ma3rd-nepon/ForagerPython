@@ -8,6 +8,7 @@ from level import Level
 
 from imgs import *
 from tool import *
+from ui import *
 
 
 class Game(pygame.sprite.Sprite):
@@ -19,6 +20,7 @@ class Game(pygame.sprite.Sprite):
 
         self.level = Level()
         self.tool = Tool(self)
+        self.ui = Player_UI(self)
 
     def run(self):
         run = True
@@ -26,8 +28,14 @@ class Game(pygame.sprite.Sprite):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
                     run = False
+            self.screen.fill('#337bc8')
             self.level.run()
+
+            self.tool.draw()
+            self.ui.draw()
             self.tool.update()
+            self.ui.update()
+
             pygame.display.update()
             self.clock.tick(fps)
             self.level.current_fps = self.clock.get_fps()
