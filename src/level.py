@@ -24,6 +24,7 @@ class Level:
         self.clock = pygame.time.Clock()
 
         self.wmp = []
+        self.player_position = (0, 0, False)
         self.player = None
 
         self.create_map()
@@ -32,34 +33,41 @@ class Level:
         self.grass_rect = (0, 0, 200, 200)
 
     def load_layer(self, file):
+        wmp = []
         with open(file, 'r') as file:
             w_map = file.readlines()
             for i in w_map:
-                self.wmp.append(i.rstrip().split(','))
+                wmp.append(i.rstrip().split(','))
+        return wmp
 
     def create_map(self):
         pl = (0, 0, False)
-        self.load_layer('map.csv')
-        for row_index, row in enumerate(self.wmp):
+        level_map = self.load_layer('map.csv')
+        for row_index, row in enumerate(level_map):
             for col_index, col in enumerate(row):
                 # tilesize = 64
                 x, y = col_index * tilesize, row_index * tilesize
                 if col == '-1':
                     continue
                 if srpites_dict[col] == 'player':
-                    pl = (x, y, True)
+                    self.player_position = (x, y, True)
                     continue
                 if col == '5':
                     Tile((x, y), (self.visible_sprites,), srpites_dict[col])
                     continue
                 Tile((x, y), (self.visible_sprites, self.barrier_sprites), srpites_dict[col])
-        if pl[2]:
-            self.player = Player((pl[0], pl[1]), (self.visible_sprites,), self.barrier_sprites)
-        else:
-            print('player not on map')
 
-    def run(self):
+    def check_player_coords(self):
+        if self.player_position[2]:
+            # self.player = Player((self.player_position[0], self.player_position[1]),
+            #                      (self.visible_sprites,), self.barrier_sprites)
+            return self.player_position[0], self.player_position[1]
+        return 0, 0
+
+    def draw(self):
         self.visible_sprites.custom_draw(self.player)
+
+    def update(self):
         self.visible_sprites.update()
         debug(self.current_fps, self.player.direction)
 

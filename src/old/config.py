@@ -1,5 +1,9 @@
 import pygame
 
+# Настройки управления, я уже устал их переназначать в коде
+
+spawn_blocks = pygame.K_m
+
 dash = pygame.K_SPACE
 
 console = pygame.K_BACKSLASH

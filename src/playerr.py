@@ -1,5 +1,3 @@
-import pygame
-
 from imgs import *
 import config
 
@@ -36,10 +34,10 @@ class Player(pygame.sprite.Sprite):
                 self.tx = True
                 self.direction.x = -1
 
-            if key[w]:
+            if key[w] and not key[s]:
                 self.direction.y = -1
 
-            if key[s]:
+            if key[s] and not key[w]:
                 self.direction.y = 1
 
             self.animate_walk()

@@ -1,8 +1,7 @@
-import pygame
-
 from settings import *
 from imgs import *
-from src import config
+
+width, height = w, h
 
 
 class Player_UI(pygame.sprite.Sprite):
@@ -12,8 +11,6 @@ class Player_UI(pygame.sprite.Sprite):
         self.game = game
 
         self.pause_ui = pygame.Surface((width, height), pygame.SRCALPHA)
-
-        self.title_scrn = pygame.Surface((width, height), pygame.SRCALPHA)
 
         self.hotbar_scr = pygame.Surface((width, height), pygame.SRCALPHA)
 
@@ -83,30 +80,26 @@ class Player_UI(pygame.sprite.Sprite):
 
     def update(self):
         """Обновление интерфейса"""
-        if self.game.game and not self.game.pause:
-            if self.coin_count > 10000:
-                self.coin_count = 10000
+        if self.coin_count > 10000:
+            self.coin_count = 10000
 
-            self.coin_count_text = self.coin_font.render(str(self.coin_count), False, 'white', 'black')
-            self.fps = self.fps_font.render(f"{int(self.game.clock.get_fps())}", False, 'white', 'black')
+        self.coin_count_text = self.coin_font.render(str(self.coin_count), False, 'white', 'black')
+        self.fps = self.fps_font.render(f"{int(self.game.clock.get_fps())}", False, 'white', 'black')
 
-            if self.show_hud:
-                self.draw()
+        if self.show_hud:
+            self.draw()
 
-            self.imdxxx += 0.3  # скорость течения времени ( игровая минута != секунда реальная)
-            if int(self.imdxxx) == 60:
-                self.imdxxx = 0
-                self.time[1] += 1
+        self.imdxxx += 0.3  # скорость течения времени ( игровая минута != секунда реальная)
+        if int(self.imdxxx) == 60:
+            self.imdxxx = 0
+            self.time[1] += 1
 
-            if self.time[1] == 60:
-                self.time[1] = 0
-                self.time[0] += 1
-                self.imdxxx = 0
-                if self.time[0] == 24:
-                    self.time[0] = 0
-
-        if not self.game.game:
-            self.game.screen.blit(self.title_scrn, (0, 0))
+        if self.time[1] == 60:
+            self.time[1] = 0
+            self.time[0] += 1
+            self.imdxxx = 0
+            if self.time[0] == 24:
+                self.time[0] = 0
 
     def draw_energy(self, percent: int):
         """Отрисовка полоски энергии"""
@@ -127,36 +120,6 @@ class Player_UI(pygame.sprite.Sprite):
             name = self.coin_font.render('test pause', False, 'white')
             self.pause_ui.blit(name, ((width / 2) - 170, 20))
             self.game.screen.blit(self.pause_ui, (0, 0))
-
-    def title(self):
-        if not self.game.skip:
-            self.game.game = False
-            self.title_index += 0.01
-            text = self.fps_font.render(' ', False, 'white')
-            self.title_scrn.fill('black')
-
-            if 0 < int(self.title_index) < 1:
-                pass
-
-            if 2 < self.title_index < 3:
-                text = self.fps_font.render('aboba games', False, 'white')
-
-            if 3 < self.title_index < 4:
-                text = self.fps_font.render('pon', False, 'white')
-
-            if 5 < self.title_index < 6:
-                text = self.fps_font.render('title', False, 'white')
-
-            if 6 < self.title_index < 8:
-                text = self.fps_font.render('another title', False, 'white')
-
-            self.title_scrn.blit(text, (width / 2 - 100, height / 2 - 30))
-
-            if self.title_index > 9:
-                self.game.game = True
-
-            else:
-                pass
 
     def draw_crosshair(self, flag):
         if flag:
