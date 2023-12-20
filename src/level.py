@@ -1,7 +1,7 @@
 import pygame
 from settings import *
 from tile import Tile
-from playerr import Player
+from player import Player
 from debug import debug
 
 
@@ -15,11 +15,18 @@ class Level:
         self.create_map()
 
     def create_map(self):
-        for row_index, row in enumerate(NEW_WORLD_MAP):
+        for row_index, row in enumerate(WORLD_MAP):
             for col_index, col in enumerate(row):
                 x, y = col_index * tilesize, row_index * tilesize
-                Tile((x, y), [self.visible_sprites], col)
-                self.player = Player((10, 10), [self.visible_sprites], self.barrier_sprites)
+                if col == 'p':
+                    self.player = Player((x, y), [self.visible_sprites], self.barrier_sprites)
+                elif col == 'x':
+                    Tile((x, y), [self.visible_sprites, self.barrier_sprites])
+        # for row_index, row in enumerate(NEW_WORLD_MAP):
+        #     for col_index, col in enumerate(row):
+        #         x, y = col_index * tilesize, row_index * tilesize
+        #         Tile((x, y), [self.visible_sprites], col)
+        #         self.player = Player((10, 10), [self.visible_sprites], self.barrier_sprites)
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
@@ -41,6 +48,7 @@ class Camera(pygame.sprite.Group):
         self.displacement.x = player.rect.centerx - self.half_width
         self.displacement.y = player.rect.centery - self.half_high
 
-        for sprite in self.sprites():
+        # for sprite in self.sprites():
+        for sprite in sorted(self.sprites(), key=lambda spr: spr.rect.centery):
             self.displ_rect = sprite.rect.topleft - self.displacement
             self.screen.blit(sprite.image, self.displ_rect)

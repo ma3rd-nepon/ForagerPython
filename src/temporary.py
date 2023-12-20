@@ -25,7 +25,7 @@ class Game(pygame.sprite.Sprite):
                 if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-            self.screen.fill('black')
+            self.screen.fill('white')
             self.level.run()
             pygame.display.update()
             self.clock.tick(fps)
