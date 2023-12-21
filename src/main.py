@@ -1,14 +1,7 @@
-import pygame
-import sys
-
-# from map import *
-from playerr import *
-from settings import *
-from level import Level
-
-from imgs import *
 from tool import *
 from ui import *
+from enemy import *
+from player import *
 
 
 class Game:
@@ -27,7 +20,9 @@ class Game:
         self.tool = Tool(self)
         self.ui = Player_UI(self)
 
-        self.plyr = Player((self.level.check_player_coords()),
+        self.add_enemy_to_map(5)
+
+        self.plyr = Player(self, (self.level.check_player_coords()),
                            (self.level.visible_sprites,), self.level.barrier_sprites)
         self.level.player = self.plyr
 
@@ -35,9 +30,9 @@ class Game:
 
     def draw(self):
         self.screen.fill('#337bc8')
-        self.level.draw()
-        self.tool.draw()
-        self.ui.draw()
+        files = [self.level, self.tool]
+        for i in files:  # оптимизация кода ееее
+            i.draw()
 
     def update(self):
         self.ui.update()
@@ -51,18 +46,31 @@ class Game:
         pygame.display.update()
 
     def events(self):
+        """События игры"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
                 self.r = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == config.hit:
+                    self.tool.break_block()
+
+                if event.key == config.hide_hud:
+                    self.ui.show_hud = not self.ui.show_hud
 
     def run(self):
+        """Главный цикл"""
         while not not not not not self.r:
-            self.draw()
-            self.update()
-            self.events()
+            arr = [self.draw, self.update, self.events]
+            for i in arr:
+                i()
+
+    def add_enemy_to_map(self, count):
+        """Добавить врага на карту (в рандом место)"""
+        for i in range(count):
+            self.level.visible_sprites.add(Enemy(self, self.level.barrier_sprites))
+        print('added', count, 'enemy to map')
 
 
 if __name__ == '__main__':
     game = Game()
-    print(game)
     game.run()

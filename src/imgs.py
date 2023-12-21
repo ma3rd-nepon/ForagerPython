@@ -1,39 +1,26 @@
 import pygame
 
-pl_base = pygame.image.load('../sprites/player/idle/player_idle1.png')
+from settings import *
 
-crosshair = pygame.image.load('../sprites/crosshair.png')
+player = pygame.image.load('../sprites/player/player.png')
 
+tile = pygame.image.load('../sprites/tile.png')
 
-im_w = [pygame.image.load('../sprites/player/idle/player_idle1.png'),
-        pygame.image.load('../sprites/player/walk/player_walk1.png'),
-        pygame.image.load('../sprites/player/walk/player_walk2.png'),
-        pygame.image.load('../sprites/player/walk/player_walk3.png')]
+cbble, coal, iron, gold, grass, mask = [tile.subsurface(pygame.Rect(i * tilesize, 0, tilesize, tilesize)) for i in range(tile.get_width() // tilesize)]
 
-im_i = [pygame.image.load('../sprites/player/idle/player_idle1.png'), pygame.image.load(
-        '../sprites/player/idle/player_idle2.png'),
-        pygame.image.load('../sprites/player/idle/player_idle3.png')]
+# инструменты
+pickaxes = pygame.image.load('../sprites/tools/pickaxes.png')
 
-mask = pygame.image.load('../sprites/player/mask.png')
-
-cbble = pygame.image.load('../sprites/ores/cobblestone.png')
-coal = pygame.image.load('../sprites/ores/coal.png')
-iron = pygame.image.load('../sprites/ores/iron.png')
-gold = pygame.image.load('../sprites/ores/gold.png')
-grass = pygame.image.load('../sprites/ores/grass.png')
-
-pickaxe_1 = pygame.image.load('../sprites/tools/pickaxe_1.png')
-
-pickaxe_2 = pygame.image.load('../sprites/tools/pickaxe_2.png')
-
-pickaxe_3 = pygame.image.load('../sprites/tools/pickaxe_3.png')
-
-pickaxe_4 = pygame.image.load('../sprites/tools/pickaxe_4.png')
+pickaxe = [pickaxes.subsurface(pygame.Rect(((i * 90) + (i * 2)), 0, 90, 90)) for i in range(9)]
 
 # юзер интерфасе
-heart = pygame.image.load('../sprites/ui/heart.png')
-no_heart = pygame.image.load('../sprites/ui/heart_minus.png')
+ui = pygame.image.load('../sprites/user_interface.png')
+coin, heart, no_heart = [ui.subsurface(pygame.Rect(i * 100, 0, 100, 100)) for i in range(3)]
+hotbar = ui.subsurface(pygame.Rect(0, 100, 250, 50))
+crosshair = ui.subsurface(pygame.Rect(250, 100, 35, 35))
 
-coin = pygame.image.load('../sprites/ui/coin.png')
+# враги
 
-hotbar = pygame.image.load('../sprites/hotbar.png')
+slime = pygame.image.load('../sprites/enemy/slime/slime.png')
+
+ghost = pygame.image.load('../sprites/enemy/form-2x12.png')

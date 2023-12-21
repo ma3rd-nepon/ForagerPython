@@ -60,4 +60,4 @@ no_heart = pygame.image.load('../../sprites/ui/heart_minus.png')
 
 coin = pygame.image.load('../../sprites/ui/coin.png')
 
-hotbar = pygame.image.load('../../sprites/hotbar.png')
+hotbar = pygame.image.load('../../sprites/ui/hotbar.png')

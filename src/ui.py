@@ -1,7 +1,8 @@
 from settings import *
 from imgs import *
 
-width, height = w, h
+bgcolor = 'black'
+textcolor = 'white'
 
 
 class Player_UI(pygame.sprite.Sprite):
@@ -32,11 +33,10 @@ class Player_UI(pygame.sprite.Sprite):
 
         self.coin_count = 0  # колво монет
         self.coin_font = pygame.font.Font(font, 40)  # шрифт для цифры
-        self.coin_count_text = self.coin_font.render(str(self.coin_count), False,
-                                                     'white', 'black')  # рендер текста
+        self.coin_count_text = self.coin_font.render(str(self.coin_count), False, textcolor)  # рендер текста
 
         self.fps_font = pygame.font.Font(font, 20)
-        self.fps = self.fps_font.render(f"{self.game.clock.get_fps()}", False, 'white', 'black')
+        self.fps = self.fps_font.render(f"{self.game.clock.get_fps()}", False, textcolor)
 
         # crosshair
         self.cross_im = crosshair
@@ -55,8 +55,6 @@ class Player_UI(pygame.sprite.Sprite):
 
         self.show_hud = False
 
-        self.title_index = 0
-
     def draw(self):
         """Отрисовка всех элементов интерфейса"""
         self.game.screen.blit(self.heart_image, self.heart_hb)
@@ -74,17 +72,19 @@ class Player_UI(pygame.sprite.Sprite):
 
         self.draw_timer()
 
-        self.draw_crosshair(False)
+        self.draw_crosshair(True)
 
         self.draw_hotbar()
 
     def update(self):
         """Обновление интерфейса"""
+        pygame.mouse.set_visible(not self.show_hud)
+
         if self.coin_count > 10000:
             self.coin_count = 10000
 
-        self.coin_count_text = self.coin_font.render(str(self.coin_count), False, 'white', 'black')
-        self.fps = self.fps_font.render(f"{int(self.game.clock.get_fps())}", False, 'white', 'black')
+        self.coin_count_text = self.coin_font.render(str(self.coin_count), False, textcolor, bgcolor)
+        self.fps = self.fps_font.render(f"{int(self.game.clock.get_fps())}", False, textcolor, bgcolor)
 
         if self.show_hud:
             self.draw()
@@ -111,21 +111,12 @@ class Player_UI(pygame.sprite.Sprite):
 
     def draw_timer(self):
         """Отображает игровое время"""
-        timee = self.fps_font.render(f"{self.time[0]}:{str(self.time[1])}", False, 'white', 'black')
+        timee = self.fps_font.render(f"{self.time[0]}:{str(self.time[1])}", False, textcolor, bgcolor)
         self.game.screen.blit(timee, (width - 80, 40))
-
-    def pause(self):
-        if self.game.pause:
-            self.pause_ui.fill((0, 0, 0, 100), (0, 0, width, height))
-            name = self.coin_font.render('test pause', False, 'white')
-            self.pause_ui.blit(name, ((width / 2) - 170, 20))
-            self.game.screen.blit(self.pause_ui, (0, 0))
 
     def draw_crosshair(self, flag):
         if flag:
-            mx, my = pygame.mouse.get_pos()
-            self.cross.x = mx - 15
-            self.cross.y = my - 15
+            self.cross.center = pygame.mouse.get_pos()
             self.game.screen.blit(self.cross_im, self.cross)
 
     def draw_hotbar(self):

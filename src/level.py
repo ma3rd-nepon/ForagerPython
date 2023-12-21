@@ -1,17 +1,14 @@
-import pygame
 from settings import *
 from tile import Tile
-from playerr import Player
-from debug import debug
 from imgs import *
 
 srpites_dict = {
     '0': cbble,
-    '3': iron,
-    '5': grass,
-    '2': coal,
-    '1': gold,
-    '4': 'player'
+    '1': coal,
+    '2': iron,
+    '3': gold,
+    '4': grass,
+    '5': 'player'
 }
 
 
@@ -23,7 +20,6 @@ class Level:
 
         self.clock = pygame.time.Clock()
 
-        self.wmp = []
         self.player_position = (0, 0, False)
         self.player = None
 
@@ -33,6 +29,7 @@ class Level:
         self.grass_rect = (0, 0, 200, 200)
 
     def load_layer(self, file):
+        """Загрузить слой карты (.csv)"""
         wmp = []
         with open(file, 'r') as file:
             w_map = file.readlines()
@@ -41,11 +38,10 @@ class Level:
         return wmp
 
     def create_map(self):
-        pl = (0, 0, False)
-        level_map = self.load_layer('map.csv')
-        for row_index, row in enumerate(level_map):
+        """Определяем карту и спрайты в ней"""
+        wmp = self.load_layer('map.csv')
+        for row_index, row in enumerate(wmp):
             for col_index, col in enumerate(row):
-                # tilesize = 64
                 x, y = col_index * tilesize, row_index * tilesize
                 if col == '-1':
                     continue
@@ -59,8 +55,6 @@ class Level:
 
     def check_player_coords(self):
         if self.player_position[2]:
-            # self.player = Player((self.player_position[0], self.player_position[1]),
-            #                      (self.visible_sprites,), self.barrier_sprites)
             return self.player_position[0], self.player_position[1]
         return 0, 0
 
@@ -69,7 +63,7 @@ class Level:
 
     def update(self):
         self.visible_sprites.update()
-        debug(self.current_fps, self.player.direction)
+        # debug(self.current_fps, self.player.direction)
 
 
 class YCamera(pygame.sprite.Group):
@@ -82,9 +76,9 @@ class YCamera(pygame.sprite.Group):
         self.half_width = self.screen.get_size()[0] // 2
         self.half_high = self.screen.get_size()[1] // 2
 
-    def custom_draw(self, player):
-        self.displacement.x = player.rect.centerx - self.half_width
-        self.displacement.y = player.rect.centery - self.half_high
+    def custom_draw(self, spr):
+        self.displacement.x = spr.rect.centerx - self.half_width
+        self.displacement.y = spr.rect.centery - self.half_high
 
         for sprite in self.sprites():
             self.displ_rect = sprite.rect.topleft - self.displacement
