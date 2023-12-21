@@ -8,7 +8,8 @@ srpites_dict = {
     '2': iron,
     '3': gold,
     '4': grass,
-    '5': 'player'
+    '5': 'player',
+    '6': sea
 }
 
 

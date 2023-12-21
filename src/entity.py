@@ -1,18 +1,18 @@
 import random
-import sprite_cut
 
 from level import *
 
 
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self, game, barrier_group):
+class Entity(pygame.sprite.Sprite):
+    def __init__(self, game, barrier_group, can_attack, entity):
         super().__init__()
         self.game = game
         self.barrier_sprites = barrier_group
 
-        self.frames = sprite_cut.cut_sprite(ghost, 6, 2, 83, 87)
+        self.idle = entity[0]
+        self.walk = entity[1]
         self.cur_f = 0
-        self.image = self.frames[0]
+        self.image = self.idle[0]
         self.current_image = self.image
         self.rect = self.image.get_rect()
 
@@ -26,6 +26,8 @@ class Enemy(pygame.sprite.Sprite):
         self.action = self.definit_action()
 
         self.flipx, self.flipy = False, False
+
+        self.can_attack = can_attack  # в будущем этот класс послужит как для врагов так и для мирных челов
 
         self.def_pos()
 
@@ -44,18 +46,19 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.move()
         self.flip()
-        self.animate_idle()
 
     def move(self):
         """Движение врага"""
         cof = 2
         if self.action[0] == 'стоим':
+            self.animate_idle()
             self.index += 1
             if self.index >= 60:
                 self.index = 0
                 self.action = self.definit_action()
 
         if self.action[0] == 'идем':
+            self.animate_walk()
             self.index += 2
             if self.index == 60:
                 self.index = 0
@@ -105,8 +108,17 @@ class Enemy(pygame.sprite.Sprite):
         """Анимация врага"""
         self.cur_f += 0.2
 
-        if self.cur_f >= len(self.frames):
+        if self.cur_f >= len(self.idle):
             self.cur_f = 0
 
-        self.current_image = self.frames[int(self.cur_f)]
+        self.current_image = self.idle[int(self.cur_f)]
+        self.image = pygame.transform.flip(self.current_image, self.flipx, self.flipy)
+
+    def animate_walk(self):
+        self.cur_f += 0.2
+
+        if self.cur_f >= len(self.walk):
+            self.cur_f = 0
+
+        self.current_image = self.walk[int(self.cur_f)]
         self.image = pygame.transform.flip(self.current_image, self.flipx, self.flipy)

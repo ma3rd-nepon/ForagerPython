@@ -92,14 +92,14 @@ class Tool(pygame.sprite.Sprite):
                         self.tool_hb.x = pl_pos[0] - 50
                     else:
                         self.tool_hb.x = pl_pos[0] - 75
-                    self.tool_hb.y = pl_pos[1] - 30
+                    self.tool_hb.y = pl_pos[1] - 50
 
                 if int(self.kirka) == 5:
                     self.current_tool = pygame.transform.rotate(self.current_pic, 135)
                     if self.fx:
                         self.tool_hb.x = pl_pos[0]
                     else:
-                        self.tool_hb.x = pl_pos[0] - 100
+                        self.tool_hb.x = pl_pos[0] - 120
                     self.tool_hb.y = pl_pos[1] - 30
 
                 if int(self.kirka) == 6:
@@ -116,7 +116,7 @@ class Tool(pygame.sprite.Sprite):
                         self.tool_hb.x = pl_pos[0] - 60
                     else:
                         self.tool_hb.x = pl_pos[0] - 40
-                    self.tool_hb.y = pl_pos[1] - 30
+                    self.tool_hb.y = pl_pos[1] - 50
 
                 if int(self.kirka) == 8:
                     self.current_tool = pygame.transform.rotate(self.current_pic, 0)
@@ -124,6 +124,8 @@ class Tool(pygame.sprite.Sprite):
 
                     if self.fx:
                         self.tool_hb.x = pl_pos[0] - 70
+                    else:
+                        self.tool_hb.x = pl_pos[0] - 20
 
                 if 8 < self.kirka < 15 and self.fx:
                     self.tool_hb.x = pl_pos[0] - 70
@@ -142,9 +144,10 @@ class Tool(pygame.sprite.Sprite):
         """Не сделал пока что"""
         pom = self.game.plyr.player_on_map()
         wmp = self.game.level.load_layer('map.csv')
+
         if self.fx:
             # ломаем справа
-            print(wmp[pom[0]][pom[1] + 1], pom)
+            print(wmp[pom[0]][pom[1]], pom)
         else:
             # ломаем слева
-            print(wmp[pom[0]][pom[1] - 1], pom)
+            print(wmp[pom[0]][pom[1]], pom)

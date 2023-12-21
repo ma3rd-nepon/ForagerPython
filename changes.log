@@ -1,12 +1,2 @@
-last log:
-all sprites of the same type are combined into 1 image {
-    tile.png, tile.tsx (Tiled Map Editor)
-    player sprites added
-    Sprites of the enemy
-    user interface
-    9 picks
-}
-
-added enemies
-
+entities - universal class (for enemies and neutral)
 

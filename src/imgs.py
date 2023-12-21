@@ -1,4 +1,5 @@
 import pygame
+import sprite_cut
 
 from settings import *
 
@@ -6,7 +7,7 @@ player = pygame.image.load('../sprites/player/player.png')
 
 tile = pygame.image.load('../sprites/tile.png')
 
-cbble, coal, iron, gold, grass, mask = [tile.subsurface(pygame.Rect(i * tilesize, 0, tilesize, tilesize)) for i in range(tile.get_width() // tilesize)]
+cbble, coal, iron, gold, grass, mask, sea = [tile.subsurface(pygame.Rect(i * tilesize, 0, tilesize, tilesize)) for i in range(tile.get_width() // tilesize)]
 
 # инструменты
 pickaxes = pygame.image.load('../sprites/tools/pickaxes.png')
@@ -19,8 +20,19 @@ coin, heart, no_heart = [ui.subsurface(pygame.Rect(i * 100, 0, 100, 100)) for i 
 hotbar = ui.subsurface(pygame.Rect(0, 100, 250, 50))
 crosshair = ui.subsurface(pygame.Rect(250, 100, 35, 35))
 
-# враги
+# сущности
+slime_idle = pygame.image.load('../sprites/entity/enemies/slime_idle.png')
 
-slime = pygame.image.load('../sprites/enemy/slime/slime.png')
+slime_walk = pygame.image.load('../sprites/entity/enemies/slime_walk.png')
 
-ghost = pygame.image.load('../sprites/enemy/form-2x12.png')
+ghost_image = pygame.image.load('../sprites/entity/neutral/ghost.png')
+
+sheep_idle = pygame.image.load('../sprites/entity/neutral/sheep_idle.png')
+
+sheep_walk = pygame.image.load('../sprites/entity/neutral/sheep_walk.png')
+
+sheep = [sprite_cut.cut_sprite(sheep_idle, 5, 2, 80, 72), sprite_cut.cut_sprite(sheep_walk, 4, 2, 72, 80)]
+
+ghost = [sprite_cut.cut_sprite(ghost_image, 6, 2, 83, 87), sprite_cut.cut_sprite(ghost_image, 6, 2, 83, 87)]
+
+slime = [sprite_cut.cut_sprite(slime_idle, 5, 1, 80, 75), sprite_cut.cut_sprite(slime_walk, 5, 1, 80, 75)]

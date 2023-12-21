@@ -16,20 +16,13 @@ class Player_UI(pygame.sprite.Sprite):
         self.hotbar_scr = pygame.Surface((width, height), pygame.SRCALPHA)
 
         self.coin_image = pygame.transform.rotozoom(coin.convert_alpha(), 0, 0.5)
-
-        self.heart_image = pygame.transform.rotozoom(heart.convert_alpha(), 0, 0.35)
-        self.heart_image2 = self.heart_image
-        self.heart_image3 = self.heart_image
-
-        self.heart_hb = self.heart_image.get_rect()
-        self.heart2_hb = self.heart_image2.get_rect()
-        self.heart3_hb = self.heart_image3.get_rect()
         self.coin_hb = self.coin_image.get_rect()
-
-        self.heart_hb.x, self.heart_hb.y = 10, 10
-        self.heart2_hb.x, self.heart2_hb.y = 48, 10
-        self.heart3_hb.x, self.heart3_hb.y = 86, 10
         self.coin_hb.x, self.coin_hb.y = 20, height - 70
+
+        self.health = 100
+        self.heart_image = pygame.transform.rotozoom(heart.convert_alpha(), 0, 0.35)
+        self.heart_hb = self.heart_image.get_rect()
+        self.heart_hb.move_ip(10, 10)
 
         self.coin_count = 0  # колво монет
         self.coin_font = pygame.font.Font(font, 40)  # шрифт для цифры
@@ -58,8 +51,6 @@ class Player_UI(pygame.sprite.Sprite):
     def draw(self):
         """Отрисовка всех элементов интерфейса"""
         self.game.screen.blit(self.heart_image, self.heart_hb)
-        self.game.screen.blit(self.heart_image2, self.heart2_hb)
-        self.game.screen.blit(self.heart_image3, self.heart3_hb)
 
         self.game.screen.blit(self.coin_image, self.coin_hb)
         self.game.screen.blit(self.coin_count_text, (90, height - 55))
@@ -67,6 +58,8 @@ class Player_UI(pygame.sprite.Sprite):
         self.game.screen.blit(self.fps, (width - 35, 10))
 
         self.game.screen.blit(self.hotbar_scr, (0, 0))
+
+        self.draw_health(self.health)
 
         self.draw_energy(self.percentage)
 
@@ -100,6 +93,13 @@ class Player_UI(pygame.sprite.Sprite):
             self.imdxxx = 0
             if self.time[0] == 24:
                 self.time[0] = 0
+
+    def draw_health(self, health):
+        perc = float(health / 100)
+        if perc < 0:
+            perc = 0
+        pygame.draw.rect(self.game.screen, 'black', (50, 15, 105, 30))
+        pygame.draw.rect(self.game.screen, 'red', (55, 20, 95 * perc, 20))
 
     def draw_energy(self, percent: int):
         """Отрисовка полоски энергии"""
