@@ -1,7 +1,7 @@
 import pygame
 
 # from settings import w, h, resolution, fps
-resolution = w, h = 500, 500
+resolution = w, h = 1296, 720
 timer_event_type = 3600
 
 
