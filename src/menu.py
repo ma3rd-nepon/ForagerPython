@@ -1,25 +1,25 @@
 import sys, pygame
 
-# from settings import w, h, resolution, fps
+from settings import width, height, resolution, fps
 pygame.init()
-resolution = w, h = 1296, 720
-fps = 60
+# resolution = width, height = 1296, 720
+# fps = 60
 font = pygame.font.Font('font/custom/HOOG0554.TTF', 30)
 
 
 class Button:
-    def __init__(self, text, width, height, coords, surface, scope):
-        self.width = width
-        self.height = height
+    def __init__(self, text, w, h, coords, surface, scope):
+        self.width = w
+        self.height = h
         self.x, self.y = coords
         self.surface = surface
         self.original_scope = scope
         self.scope = scope
 
-        self.upper_bttn = pygame.Rect(coords, (width, height))
+        self.upper_bttn = pygame.Rect(coords, (w, h))
         self.upper_color = '#A2AFB8'
 
-        self.lower_bttn = pygame.Rect(coords, (width, scope))
+        self.lower_bttn = pygame.Rect(coords, (w, scope))
         self.lower_color = '#5B6974'
 
         self.text = font.render(text, 1, '#FFFFFF')
@@ -68,11 +68,11 @@ class Menu:
         self.running = True
 
         self.button1 = Button('button 1', 300, 80,
-                              (w // 2 - 150, h // 2), self.surface, 10)
+                              (width // 2 - 150, height // 2), self.surface, 10)
         self.button2 = Button('button 2', 300, 80,
-                              (w // 2 - 150, h // 2 + 100), self.surface, 10)
+                              (width // 2 - 150, height // 2 + 100), self.surface, 10)
         self.button3 = Button('button 3', 300, 80,
-                              (w // 2 - 150, h // 2 + 200), self.surface, 10)
+                              (width // 2 - 150, height // 2 + 200), self.surface, 10)
 
         title_font = pygame.font.Font('font/custom/HOOG0554.TTF', 90)
         self.title = title_font.render('MENU', 1, '#000000')
@@ -107,7 +107,7 @@ class Menu:
         self.button2.draw()
         self.button3.draw()
 
-        self.surface.blit(self.title, (w // 2 - 160, 200))
+        self.surface.blit(self.title, (width // 2 - 160, 200))
         # pygame.display.flip()
         pygame.display.update()
         self.clock.tick(fps)
