@@ -3,7 +3,8 @@ import sprite_cut
 
 from settings import *
 
-player = pygame.image.load('../sprites/player/player.png')
+player_idle = pygame.image.load('../sprites/player/player_idle.png')
+player_walk = pygame.image.load('../sprites/player/player_walk.png')
 
 tile = pygame.image.load('../sprites/tile.png')
 
@@ -31,8 +32,10 @@ sheep_idle = pygame.image.load('../sprites/entity/neutral/sheep_idle.png')
 
 sheep_walk = pygame.image.load('../sprites/entity/neutral/sheep_walk.png')
 
-sheep = [sprite_cut.cut_sprite(sheep_idle, 5, 2, 80, 72), sprite_cut.cut_sprite(sheep_walk, 4, 2, 72, 80)]
+sheep = [sprite_cut.cut_sprite(sheep_idle, 5, 2, 80, 72), sprite_cut.cut_sprite(sheep_walk, 4, 2, 72, 80), None]
 
-ghost = [sprite_cut.cut_sprite(ghost_image, 6, 2, 83, 87), sprite_cut.cut_sprite(ghost_image, 6, 2, 83, 87)]
+ghost = [sprite_cut.cut_sprite(ghost_image, 6, 2, 83, 87), sprite_cut.cut_sprite(ghost_image, 6, 2, 83, 87), None]
 
-slime = [sprite_cut.cut_sprite(slime_idle, 5, 1, 80, 75), sprite_cut.cut_sprite(slime_walk, 5, 1, 80, 75)]
+slime = [sprite_cut.cut_sprite(slime_idle, 5, 1, 80, 75), sprite_cut.cut_sprite(slime_walk, 5, 1, 80, 75), None]
+
+player = [sprite_cut.cut_sprite(player_idle, 3, 1, 80, 110), sprite_cut.cut_sprite(player_walk, 3, 1, 80, 110), None]

@@ -12,8 +12,8 @@ pon = []
 class Player(pygame.sprite.Sprite):
     def __init__(self, game, pos, groups, barrier_sprites):
         super().__init__(groups)
-        self.frames = sprite_cut.cut_sprite(player, 3, 2, 80, 110)
-        self.image = self.frames[0]
+        self.idle, self.walk, self.hit = player
+        self.image = self.idle[0]
         self.curr_img = self.image
         self.rect = self.image.get_rect(topleft=pos)
 
@@ -23,8 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = 5
         self.barrier_sprites = barrier_sprites
 
-        self.index_walk = 2
-        self.index_idle = 0
+        self.index = 0
         self.tx, self.ty = False, False
 
         self.movement()
@@ -33,6 +32,7 @@ class Player(pygame.sprite.Sprite):
         """Движение по WASD"""
         key = pygame.key.get_pressed()
         if any([key[w], key[a], key[s], key[d]]):
+            self.animate('walk')
             if key[d] and not key[a]:
                 self.tx = False
                 self.direction.x = 1
@@ -47,11 +47,10 @@ class Player(pygame.sprite.Sprite):
             if key[s] and not key[w]:
                 self.direction.y = 1
 
-            self.animate_walk()
         else:
             self.direction.y = 0
             self.direction.x = 0
-            self.animate_idle()
+            self.animate('idle')
 
         if self.direction.magnitude() != 0:  # длина вектора
             self.direction = self.direction.normalize()  # делаем его длину = 1
@@ -84,31 +83,26 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.movement()
 
-    def animate_walk(self):
-        """Анимация при движении"""
-        self.index_walk += 0.2
+    def animate(self, type_animation):
+        """Анимация игрока"""
+        self.index += 0.15
+
+        if self.index >= len(self.idle):
+            self.index = 0
+
+        if type_animation == 'idle':
+            self.curr_img = self.idle[int(self.index)]
+
+        if type_animation == 'walk':
+            self.curr_img = self.walk[int(self.index)]
+
+        self.image = pygame.transform.flip(self.curr_img, self.tx, self.ty)
 
         # self.a += 0.015
         #
         # if self.a > 1:
         #     self.walk_speed = 0.3
         #     self.a = 1
-
-        if self.index_walk >= len(self.frames) or self.index_idle < 0:
-            self.index_walk = 2
-
-        self.curr_img = self.frames[int(self.index_walk)]
-        self.image = pygame.transform.flip(self.curr_img, self.tx, self.ty)
-
-    def animate_idle(self):
-        """Анимация когда игрок ничего не делает"""
-        self.index_idle += 0.15
-
-        if self.index_idle >= len(self.frames) / 2:
-            self.index_idle = 0
-
-        self.curr_img = self.frames[int(self.index_idle)]
-        self.image = pygame.transform.flip(self.curr_img, self.tx, self.ty)
 
     def stop_key(self, *args):
         if any([pygame.key.get_pressed()[arg] for arg in args]):

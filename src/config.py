@@ -10,7 +10,7 @@ hide_hud = pygame.K_F1
 
 pause = pygame.K_ESCAPE
 
-up, left, down, right = pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d
+move = up, left, down, right = pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d
 
 hit = pygame.K_n
 

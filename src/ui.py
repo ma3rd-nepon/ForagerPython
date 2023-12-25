@@ -98,6 +98,8 @@ class Player_UI(pygame.sprite.Sprite):
         perc = float(health / 100)
         if perc < 0:
             perc = 0
+        if health >= 100:
+            perc = 1
         pygame.draw.rect(self.game.screen, 'black', (50, 15, 105, 30))
         pygame.draw.rect(self.game.screen, 'red', (55, 20, 95 * perc, 20))
 

@@ -14,6 +14,7 @@ class Game:
 
         self.key = pygame.key.get_pressed()
         self.ec = 0
+        self.lst = []
 
         self.mask = pygame.transform.rotozoom(mask, 0, 1)
 
@@ -24,6 +25,7 @@ class Game:
         self.add_enemy_to_map(5, sheep)
         self.add_enemy_to_map(5, ghost)
         self.add_enemy_to_map(5, slime)
+        self.add_enemy_to_map(5, player)
 
         self.plyr = Player(self, (self.level.check_player_coords()),
                            (self.level.visible_sprites,), self.level.barrier_sprites)
@@ -35,6 +37,10 @@ class Game:
             print('added', self.ec, 'entity to map')
             self.ec = 0
 
+        for i in pickaxe:
+            if pickaxe.index(i) > 4:
+                break
+            self.ui.hb_things.append(i)
 
     def draw(self):
         self.screen.fill('#337bc8')
@@ -59,14 +65,19 @@ class Game:
             if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
                 self.r = True
             if event.type == pygame.KEYDOWN:
-                if event.key == config.hit:
-                    self.tool.break_block()
+                if event.key == config.hit and self.tool.stop_key(*config.move):
+                    self.tool.hitting = True
 
                 if event.key == config.hide_hud:
                     self.ui.show_hud = not self.ui.show_hud
 
                 if event.key == pygame.K_MINUS:
-                    self.ui.health -= 33
+                    self.ui.health -= 10
+                if event.key == 61:  # +
+                    self.ui.health += 10
+
+                if event.key in config.hotbar and config.hotbar.index(event.key) + 1 <= len(pickaxe):
+                    self.tool.current_pic = pickaxe[config.hotbar.index(event.key)]
 
     def run(self):
         """Главный цикл"""
@@ -78,7 +89,9 @@ class Game:
     def add_enemy_to_map(self, count: int, en_type: list):
         """Добавить врага на карту (в рандом место)"""
         for i in range(count):
-            self.level.visible_sprites.add(Entity(self, self.level.barrier_sprites, False, en_type))
+            entt = Entity(self, self.level.barrier_sprites, False, en_type)
+            self.lst.append(entt.uid)
+            self.level.visible_sprites.add(entt)
         self.ec += count
 
 
