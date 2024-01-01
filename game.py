@@ -7,25 +7,24 @@ fps = 60
 
 isl_b = (300, 970, 10, 610)
 
-pl_base = pygame.image.load('sprites/idle/player_idle1.png')
+pl_base = pygame.image.load('sprites/tools/pickaxes.png')
 
-crosshair = pygame.image.load('sprites/crosshair.png')
+crosshair = pygame.image.load('sprites/tools/pickaxes.png')
 
+# im_w = [pygame.image.load('sprites/idle/player_idle1.png'), pygame.image.load('sprites/walk/player_walk1.png'),
+#         pygame.image.load('sprites/walk/player_walk2.png'), pygame.image.load('sprites/walk/player_walk3.png')]
+#
+# im_i = [pygame.image.load('sprites/idle/player_idle1.png'), pygame.image.load('sprites/idle/player_idle2.png'),
+#         pygame.image.load('sprites/idle/player_idle3.png')]
 
-im_w = [pygame.image.load('sprites/idle/player_idle1.png'), pygame.image.load('sprites/walk/player_walk1.png'),
-        pygame.image.load('sprites/walk/player_walk2.png'), pygame.image.load('sprites/walk/player_walk3.png')]
+island = pygame.image.load('map1.png')
 
-im_i = [pygame.image.load('sprites/idle/player_idle1.png'), pygame.image.load('sprites/idle/player_idle2.png'),
-        pygame.image.load('sprites/idle/player_idle3.png')]
+test_map = pygame.image.load('map1.png')
 
-island = pygame.image.load('sprites/island-1-test.png')
-
-test_map = pygame.image.load('sprites/map-demo.png')
-
-cbble = pygame.image.load('sprites/ores/cobblestone.png')
-coal = pygame.image.load('sprites/ores/coal.png')
-iron = pygame.image.load('sprites/ores/iron.png')
-gold = pygame.image.load('sprites/ores/gold.png')
+# cbble = pygame.image.load('sprites/ores/cobblestone.png')
+# coal = pygame.image.load('sprites/ores/coal.png')
+# iron = pygame.image.load('sprites/ores/iron.png')
+# gold = pygame.image.load('sprites/ores/gold.png')
 
 
 class Game(pygame.sprite.Sprite):
@@ -124,25 +123,25 @@ class Player(pygame.sprite.Sprite):
             self.tx = False
             if self.x * 100 <= w - 50 and 315 < self.x * 100 < 930:
                 self.x += speed
-            self.animate_walk()
+            # self.animate_walk()
 
         elif keys[pygame.K_a]:
             self.tx = True
             if self.x * 100 > 30 and 340 < self.x * 100 < 970:
                 self.x -= speed
-            self.animate_walk()
+            # self.animate_walk()
 
         elif keys[pygame.K_w]:
             if self.y * 100 > 30:
                 self.y -= speed
-            self.animate_walk()
+            # self.animate_walk()
 
         elif keys[pygame.K_s]:
             if self.y * 100 <= h - 80:
                 self.y += speed
-            self.animate_walk()
+            # self.animate_walk()
         else:
-            self.animate_idle()
+            # self.animate_idle()
 
         pon.clear()
         pon.append(self.x * 100)
@@ -157,23 +156,24 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.movement()
 
-    def animate_walk(self):
-        self.index_walk += 0.2
+    # def animate_walk(self):
+    #     self.index_walk += 0.2
+    #
+    #     if self.index_walk >= len(im_w) or self.index_idle < 0:
+    #         self.index_walk = 0
+    #
+    #     self.curr_img = im_w[int(self.index_walk)]
+    #     self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
 
-        if self.index_walk >= len(im_w) or self.index_idle < 0:
-            self.index_walk = 0
+    # def animate_idle(self):
+    #     self.index_idle += 0.05
+    #
+    #     if self.index_idle >= len(im_i):
+    #         self.index_idle = 0
+    #
+    #     self.curr_img = im_i[int(self.index_idle)]
+    #     self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
 
-        self.curr_img = im_w[int(self.index_walk)]
-        self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
-
-    def animate_idle(self):
-        self.index_idle += 0.05
-
-        if self.index_idle >= len(im_i):
-            self.index_idle = 0
-
-        self.curr_img = im_i[int(self.index_idle)]
-        self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
 
 class Map(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -187,7 +187,7 @@ class Map(pygame.sprite.Sprite):
         self.block_x, self.block_y = None, None
         self.dict_pos = {}
 
-        self.rechoice()
+        # self.rechoice()
 
     def draw(self):
         self.game.screen.blit(island.convert_alpha(), self.island_hb)
@@ -196,11 +196,12 @@ class Map(pygame.sprite.Sprite):
         for i in range(10):
             self.game.screen.blit(self.dict_pos[i][0], (self.dict_pos[i][1], self.dict_pos[i][2]))
 
-    def rechoice(self):
-        for i in range(10):
-            self.block = random.choice([cbble, coal, iron, gold])
-            self.block_x, self.block_y = random.randint(isl_b[0], isl_b[1] - 80), random.randint(isl_b[2] + 80, isl_b[3] - 80)
-            self.dict_pos[i] = (self.block, self.block_x, self.block_y)
+    # def rechoice(self):
+    #     for i in range(10):
+    #         self.block = random.choice([cbble, coal, iron, gold])
+    #         self.block_x, self.block_y = random.randint(isl_b[0], isl_b[1] - 80), random.randint(isl_b[2] + 80,
+    #                                                                                              isl_b[3] - 80)
+    #         self.dict_pos[i] = (self.block, self.block_x, self.block_y)
 
 
 if __name__ == '__main__':

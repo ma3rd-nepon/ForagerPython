@@ -1,6 +1,10 @@
+import pygame
+
 from settings import *
 from tile import Tile
 from imgs import *
+from support import import_csv_layout
+from player import Player
 
 srpites_dict = {
     '0': cbble,
@@ -16,7 +20,7 @@ srpites_dict = {
 class Level:
     def __init__(self):
         self.screen = pygame.display.get_surface()
-        self.visible_sprites = YCamera()
+        self.visible_sprites = Camera()
         self.barrier_sprites = pygame.sprite.Group()
 
         self.clock = pygame.time.Clock()
@@ -39,20 +43,28 @@ class Level:
         return wmp
 
     def create_map(self):
-        """Определяем карту и спрайты в ней"""
+        layouts = {
+            'border': import_csv_layout('../csv_files/map1._Barrier.csv')
+        }
+
+        # """Определяем карту и спрайты в ней"""
         wmp = self.load_layer('map.csv')
-        for row_index, row in enumerate(wmp):
-            for col_index, col in enumerate(row):
-                x, y = col_index * tilesize, row_index * tilesize
-                if col == '-1':
-                    continue
-                if srpites_dict[col] == 'player':
-                    self.player_position = (x, y, True)
-                    continue
-                if col == '5':
-                    Tile((x, y), (self.visible_sprites,), srpites_dict[col])
-                    continue
-                Tile((x, y), (self.visible_sprites, self.barrier_sprites), srpites_dict[col])
+        for key, value in layouts.items():
+            for row_index, row in enumerate(wmp):
+                for col_index, col in enumerate(row):
+                    x, y = col_index * tilesize, row_index * tilesize
+                    if key == 'border':
+                        Tile((x, y), (self.visible_sprites, self.barrier_sprites), srpites_dict[col],
+                             'invisible')
+                    # if col == '-1':
+                    #     continue
+                    # if srpites_dict[col] == 'player':
+                    #     self.player_position = (x, y, True)
+                    #     continue
+                    # if col == '5':
+                    #     Tile((x, y), (self.visible_sprites,), srpites_dict[col])
+                    #     continue
+                    # Tile((x, y), (self.visible_sprites, self.barrier_sprites), srpites_dict[col])
 
     def check_player_coords(self):
         if self.player_position[2]:
@@ -67,7 +79,7 @@ class Level:
         # debug(self.current_fps, self.player.direction)
 
 
-class YCamera(pygame.sprite.Group):
+class Camera(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
         self.displ_rect = None
@@ -77,12 +89,17 @@ class YCamera(pygame.sprite.Group):
         self.half_width = self.screen.get_size()[0] // 2
         self.half_high = self.screen.get_size()[1] // 2
 
+        self.floor_surface = pygame.image.load('../map1.png').convert()
+        self.floor_rect = self.floor_surface.get_rect(topleft=(0, 0))
+
+        """Рисуем изображение-карту"""
+        self.floor_pos = self.floor_rect.topleft - self.displacement
+        self.screen.blit(self.floor_surface, self.floor_pos)
+
     def custom_draw(self, spr):
         self.displacement.x = spr.rect.centerx - self.half_width
         self.displacement.y = spr.rect.centery - self.half_high
 
-        for sprite in self.sprites():
+        for sprite in sorted(self.sprites(), key=lambda spr: spr.rect.centery):
             self.displ_rect = sprite.rect.topleft - self.displacement
             self.screen.blit(sprite.image, self.displ_rect)
-
-
