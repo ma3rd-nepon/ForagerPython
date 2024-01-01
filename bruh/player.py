@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.idle[0]
         self.curr_img = self.image
         self.rect = self.image.get_rect(topleft=pos)
+        self.hitbox = self.rect.inflate(0, -60)
 
         self.direction = pygame.math.Vector2()
         self.speed = 5
@@ -51,11 +52,12 @@ class Player(pygame.sprite.Sprite):
             self.animate('idle')
 
         if self.direction.magnitude() != 0:  # длина вектора
-            self.direction = self.direction.normalize()  # делаем его длину = 1
-        self.rect.x += self.direction.x * self.speed
+            self.direction = self.direction.normalize()  # деаем его длину = 1
+        self.hitbox.x += self.direction.x * self.speed
         self.collision('горизонтально')
-        self.rect.y += self.direction.y * self.speed
+        self.hitbox.y += self.direction.y * self.speed
         self.collision('вертикально')
+        self.rect.center = self.hitbox.center
 
         pon.clear()
         pon.append(self.rect.x)
@@ -65,18 +67,18 @@ class Player(pygame.sprite.Sprite):
         """Коллизия с другими обьектами"""
         if direction == 'горизонтально':
             for sprite in self.barrier_sprites:
-                if sprite.rect.colliderect(self.rect):
+                if sprite.hitbox.colliderect(self.hitbox):
                     if self.direction.x > 0:  # чел движется вправо
-                        self.rect.right = sprite.rect.left
+                        self.hitbox.right = sprite.hitbox.left
                     elif self.direction.x < 0:  # чел движется влево
-                        self.rect.left = sprite.rect.right
+                        self.hitbox.left = sprite.hitbox.right
         if direction == 'вертикально':
             for sprite in self.barrier_sprites:
-                if sprite.rect.colliderect(self.rect):
+                if sprite.hitbox.colliderect(self.hitbox):
                     if self.direction.y > 0:  # чел движется вниз
-                        self.rect.bottom = sprite.rect.top
+                        self.hitbox.bottom = sprite.hitbox.top
                     elif self.direction.y < 0:  # чел движется вверх
-                        self.rect.top = sprite.rect.bottom
+                        self.hitbox.top = sprite.hitbox.bottom
 
     def update(self):
         self.movement()

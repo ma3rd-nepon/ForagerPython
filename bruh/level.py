@@ -1,22 +1,23 @@
 import pygame
+from csv import reader
+from os import walk
 
 from settings import *
 from tile import Tile
 from imgs import *
-from support import *
+# from support import *
 from player import Player
 from random import choice
 
-
-srpites_dict = {
-    '0': cbble,
-    '1': coal,
-    '2': iron,
-    '3': gold,
-    '4': grass,
-    '5': 'player',
-    '6': sea
-}
+# sprites_dict = {
+#     '0': cbble,
+#     '1': coal,
+#     '2': iron,
+#     '3': gold,
+#     '4': grass,
+#     '5': 'player',
+#     '6': sea
+# }
 
 
 class Level:
@@ -38,19 +39,30 @@ class Level:
     def load_layer(self, file):
         """Загрузить слой карты (.csv)"""
         wmp = []
-        with open(file, 'r') as file:
-            w_map = file.readlines()
-            for i in w_map:
-                wmp.append(i.rstrip().split(','))
+        with open(file, 'r') as layer:
+            layout = reader(layer, delimiter=',')
+            for row in layout:
+                wmp.append(row)
         return wmp
+
+    def load_folder(self, file):
+        """Загрузить файлы из папки"""
+        textures_list = []
+        for data in walk(file):
+            _, __, images_list = data
+            for image in images_list:
+                image_file = file + '/' + image
+                texture = pygame.image.load(image_file).convert_alpha()
+                textures_list.append(texture)
+        return textures_list
 
     def create_map(self):
         layouts = {
-            'border': import_csv_layout('../csv_files/map1._Barrier.csv'),
-            'rocks': import_csv_layout('../csv_files/map1._Rocks.csv')
+            'border': self.load_layer('../csv_files/map1._Barrier.csv'),
+            'rocks': self.load_layer('../csv_files/map1._Rocks.csv')
         }
         graphics = {
-            'rocks': import_folder('../graphics/rocks')
+            'rocks': self.load_folder('../graphics/rocks')
         }
 
         for key, value in layouts.items():
@@ -59,10 +71,12 @@ class Level:
                     if col != '-1':
                         x, y = col_index * tilesize, row_index * tilesize
                         if key == 'border':
-                            Tile((x, y), (self.barrier_sprites,), 'invisible')
+                            Tile((x, y), (self.barrier_sprites,))
                         if key == 'rocks':
+                            # texture = graphics['rocks'][int(col)]
+                            # Tile((x, y), (self.barrier_sprites, self.visible_sprites), texture)
                             Tile((x, y), (self.barrier_sprites, self.visible_sprites),
-                                 'rocks', choice(graphics['rocks']))
+                                 choice(graphics['rocks']))
         self.player = Player((4000, 4000), (self.visible_sprites,), self.barrier_sprites)
 
     def check_player_coords(self):
@@ -73,11 +87,9 @@ class Level:
     def draw(self):
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
-        # debug(self.player.direction)
 
     def update(self):
         self.visible_sprites.update()
-        # debug(self.current_fps, self.player.direction)
 
 
 class Camera(pygame.sprite.Group):

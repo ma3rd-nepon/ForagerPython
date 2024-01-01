@@ -34,6 +34,7 @@ class Entity(pygame.sprite.Sprite):
 
     def def_pos(self):
         """Определяет рандом позицию для сущности """
+        # self.x, self.y = random.randint(0, self.width - 1), random.randint(0, self.height - 1)
         self.x, self.y = random.randint(0, self.width - 1), random.randint(0, self.height - 1)
         if self.wmp[self.y][self.x] == '-1':
             self.rect.x = self.x * tilesize
