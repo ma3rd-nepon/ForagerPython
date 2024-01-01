@@ -15,6 +15,7 @@ def import_csv_layout(file):
 
 
 def import_folder(file):
+    """Загрузить файлы из папки"""
     textures_list = []
     for data in walk(file):
         _, __, images_list = data
