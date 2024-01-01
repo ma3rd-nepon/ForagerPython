@@ -27,10 +27,6 @@ class Game:
         self.add_enemy_to_map(5, slime)
         self.add_enemy_to_map(5, player)
 
-        self.plyr = Player(self, (self.level.check_player_coords()),
-                           (self.level.visible_sprites,), self.level.barrier_sprites)
-        self.level.player = self.plyr
-
         self.r = False
 
         if self.ec:

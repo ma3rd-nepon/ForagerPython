@@ -1,8 +1,10 @@
 import pygame
 from settings import *
 from tile import Tile
-from player import Player
+from playerr import Player
 from debug import debug
+from support import *
+from random import choice
 
 
 class Level:
@@ -15,18 +17,26 @@ class Level:
         self.create_map()
 
     def create_map(self):
-        for row_index, row in enumerate(WORLD_MAP):
-            for col_index, col in enumerate(row):
-                x, y = col_index * tilesize, row_index * tilesize
-                if col == 'p':
-                    self.player = Player((x, y), [self.visible_sprites], self.barrier_sprites)
-                elif col == 'x':
-                    Tile((x, y), [self.visible_sprites, self.barrier_sprites])
-        # for row_index, row in enumerate(NEW_WORLD_MAP):
-        #     for col_index, col in enumerate(row):
-        #         x, y = col_index * tilesize, row_index * tilesize
-        #         Tile((x, y), [self.visible_sprites], col)
-        #         self.player = Player((10, 10), [self.visible_sprites], self.barrier_sprites)
+        layouts = {
+            'border': import_csv_layout('../csv_files/map1._Barrier.csv'),
+            'rocks': import_csv_layout('../csv_files/map1._Rocks.csv')
+        }
+        graphics = {
+            'rocks': import_folder('../graphics/rocks')
+        }
+
+        for key, value in layouts.items():
+            for row_index, row in enumerate(value):
+                for col_index, col in enumerate(row):
+                    if col != '-1':
+                        x, y = col_index * tilesize, row_index * tilesize
+                        if key == 'border':
+                            Tile((x, y), (self.barrier_sprites,), 'invisible')
+                        if key == 'rocks':
+                            Tile((x, y), (self.barrier_sprites, self.visible_sprites),
+                                 'rocks', choice(graphics['rocks']))
+
+        self.player = Player((4000, 4000), (self.visible_sprites,), self.barrier_sprites)
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
@@ -39,16 +49,22 @@ class Camera(pygame.sprite.Group):
         super().__init__()
         self.displ_rect = None
         self.screen = pygame.display.get_surface()
-        self.displacement = pygame.Vector2()
+        self.displacement = pygame.math.Vector2()
 
         self.half_width = self.screen.get_size()[0] // 2
         self.half_high = self.screen.get_size()[1] // 2
 
-    def custom_draw(self, player):
-        self.displacement.x = player.rect.centerx - self.half_width
-        self.displacement.y = player.rect.centery - self.half_high
+        self.floor_surface = pygame.image.load('../map1.png').convert()
+        self.floor_rect = self.floor_surface.get_rect(topleft=(0, 0))
 
-        # for sprite in self.sprites():
+    def custom_draw(self, spr):
+        self.displacement.x = spr.rect.centerx - self.half_width
+        self.displacement.y = spr.rect.centery - self.half_high
+
+        """Рисуем изображение-карту"""
+        floor_pos = self.floor_rect.topleft - self.displacement
+        self.screen.blit(self.floor_surface, floor_pos)
+
         for sprite in sorted(self.sprites(), key=lambda spr: spr.rect.centery):
             self.displ_rect = sprite.rect.topleft - self.displacement
             self.screen.blit(sprite.image, self.displ_rect)

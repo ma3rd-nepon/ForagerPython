@@ -1,14 +1,6 @@
 import pygame, sys
-
-# from map import *
-# from player import *
 from settings import *
-from debug import debug
 from level import Level
-
-
-# from imgs import *
-# from tool import *
 
 
 class Game(pygame.sprite.Sprite):

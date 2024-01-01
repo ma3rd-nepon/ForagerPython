@@ -10,14 +10,12 @@ pon = []
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, pos, groups, barrier_sprites):
+    def __init__(self, pos, groups, barrier_sprites):
         super().__init__(groups)
         self.idle, self.walk, self.hit = player
         self.image = self.idle[0]
         self.curr_img = self.image
         self.rect = self.image.get_rect(topleft=pos)
-
-        self.game = game
 
         self.direction = pygame.math.Vector2()
         self.speed = 5

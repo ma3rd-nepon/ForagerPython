@@ -3,8 +3,10 @@ import pygame
 from settings import *
 from tile import Tile
 from imgs import *
-from support import import_csv_layout
+from support import *
 from player import Player
+from random import choice
+
 
 srpites_dict = {
     '0': cbble,
@@ -44,27 +46,24 @@ class Level:
 
     def create_map(self):
         layouts = {
-            'border': import_csv_layout('../csv_files/map1._Barrier.csv')
+            'border': import_csv_layout('../csv_files/map1._Barrier.csv'),
+            'rocks': import_csv_layout('../csv_files/map1._Rocks.csv')
+        }
+        graphics = {
+            'rocks': import_folder('../graphics/rocks')
         }
 
-        # """Определяем карту и спрайты в ней"""
-        wmp = self.load_layer('map.csv')
         for key, value in layouts.items():
-            for row_index, row in enumerate(wmp):
+            for row_index, row in enumerate(value):
                 for col_index, col in enumerate(row):
-                    x, y = col_index * tilesize, row_index * tilesize
-                    if key == 'border':
-                        Tile((x, y), (self.visible_sprites, self.barrier_sprites), srpites_dict[col],
-                             'invisible')
-                    # if col == '-1':
-                    #     continue
-                    # if srpites_dict[col] == 'player':
-                    #     self.player_position = (x, y, True)
-                    #     continue
-                    # if col == '5':
-                    #     Tile((x, y), (self.visible_sprites,), srpites_dict[col])
-                    #     continue
-                    # Tile((x, y), (self.visible_sprites, self.barrier_sprites), srpites_dict[col])
+                    if col != '-1':
+                        x, y = col_index * tilesize, row_index * tilesize
+                        if key == 'border':
+                            Tile((x, y), (self.barrier_sprites,), 'invisible')
+                        if key == 'rocks':
+                            Tile((x, y), (self.barrier_sprites, self.visible_sprites),
+                                 'rocks', choice(graphics['rocks']))
+        self.player = Player((4000, 4000), (self.visible_sprites,), self.barrier_sprites)
 
     def check_player_coords(self):
         if self.player_position[2]:
@@ -73,6 +72,8 @@ class Level:
 
     def draw(self):
         self.visible_sprites.custom_draw(self.player)
+        self.visible_sprites.update()
+        # debug(self.player.direction)
 
     def update(self):
         self.visible_sprites.update()
@@ -92,13 +93,13 @@ class Camera(pygame.sprite.Group):
         self.floor_surface = pygame.image.load('../map1.png').convert()
         self.floor_rect = self.floor_surface.get_rect(topleft=(0, 0))
 
-        """Рисуем изображение-карту"""
-        self.floor_pos = self.floor_rect.topleft - self.displacement
-        self.screen.blit(self.floor_surface, self.floor_pos)
-
     def custom_draw(self, spr):
         self.displacement.x = spr.rect.centerx - self.half_width
         self.displacement.y = spr.rect.centery - self.half_high
+
+        """Рисуем изображение-карту"""
+        floor_pos = self.floor_rect.topleft - self.displacement
+        self.screen.blit(self.floor_surface, floor_pos)
 
         for sprite in sorted(self.sprites(), key=lambda spr: spr.rect.centery):
             self.displ_rect = sprite.rect.topleft - self.displacement
