@@ -58,11 +58,13 @@ class Level:
 
     def create_map(self):
         layouts = {
-            'border': self.load_layer('../csv_files/map1._Barrier.csv'),
-            'rocks': self.load_layer('../csv_files/map1._Rocks.csv')
+            'border': self.load_layer('../csv_files/map_Border.csv'),
+            'rocks': self.load_layer('../csv_files/map_Rocks.csv'),
+            'trees': self.load_layer('../csv_files/map_Trees.csv')
         }
         graphics = {
-            'rocks': self.load_folder('../graphics/rocks')
+            'rocks': self.load_folder('../graphics/rocks'),
+            'trees': self.load_folder('../graphics/trees')
         }
 
         for key, value in layouts.items():
@@ -77,6 +79,11 @@ class Level:
                             # Tile((x, y), (self.barrier_sprites, self.visible_sprites), texture)
                             Tile((x, y), (self.barrier_sprites, self.visible_sprites),
                                  choice(graphics['rocks']))
+                        if key == 'trees':
+                            texture = graphics['trees'][int(col)]
+                            Tile((x, y), (self.barrier_sprites, self.visible_sprites), texture)
+                            # Tile((x, y), (self.barrier_sprites, self.visible_sprites),
+                            #      choice(graphics['rocks']))
         '''Вот здесь задаются начальные координаты персонажу'''
         self.player = Player((4000, 4000), (self.visible_sprites,), self.barrier_sprites)
 
@@ -104,7 +111,7 @@ class Camera(pygame.sprite.Group):
         self.half_width = self.screen.get_size()[0] // 2
         self.half_high = self.screen.get_size()[1] // 2
 
-        self.floor_surface = pygame.image.load('../map1.png').convert()
+        self.floor_surface = pygame.image.load('../map.png').convert()
         self.floor_rect = self.floor_surface.get_rect(topleft=(0, 0))
 
     def custom_draw(self, spr):
