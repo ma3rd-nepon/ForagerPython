@@ -77,7 +77,9 @@ class Level:
                             # Tile((x, y), (self.barrier_sprites, self.visible_sprites), texture)
                             Tile((x, y), (self.barrier_sprites, self.visible_sprites),
                                  choice(graphics['rocks']))
+        '''Вот здесь задаются начальные координаты персонажу'''
         self.player = Player((4000, 4000), (self.visible_sprites,), self.barrier_sprites)
+
 
     def check_player_coords(self):
         if self.player_position[2]:
