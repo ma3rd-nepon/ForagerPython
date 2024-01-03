@@ -1,10 +1,57 @@
-import sys, pygame
+import pygame
+import sys
 
+from game import Game
 from settings import width, height, resolution, fps
+
 pygame.init()
 # resolution = width, height = 1296, 720
 # fps = 60
 font = pygame.font.Font('font/custom/HOOG0554.TTF', 30)
+
+
+class Settings:
+    def __init__(self):
+        self.screen = pygame.display.set_mode(resolution)
+        self.clock = pygame.time.Clock()
+        pygame.display.set_caption("settings")
+
+        title_font = pygame.font.Font('font/custom/HOOG0554.TTF', 70)
+        self.title = title_font.render('settings', 1, '#000000')
+
+        self.exit_bttn = Button('exit', 300, 80,
+                                (width // 2 - 150, height // 2 + 200), self.screen, 10)
+
+        self.running = True
+
+    def run(self):
+        while self.running:
+            # self.changing()
+            # self.update()
+            self.events()
+        # pygame.display.quit()
+        pygame.quit()
+        sys.exit()
+
+    def events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
+                self.running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.exit_bttn.click(event.pos)
+            if event.type == pygame.MOUSEBUTTONUP:
+                if self.exit_bttn.no_click(event.pos):
+                    self.running = False
+                    menu.run()
+            if event.type == pygame.MOUSEMOTION:
+                self.exit_bttn.on_the_button(event.pos)
+        self.screen.fill('#dcddd8')
+        self.exit_bttn.draw()
+
+        self.screen.blit(self.title, (width // 2 - 200, 200))
+        # pygame.display.flip()
+        pygame.display.update()
+        self.clock.tick(fps)
 
 
 class Button:
@@ -43,9 +90,12 @@ class Button:
             self.pressed = True
             self.scope = 0
 
-    def no_click(self):
-        self.pressed = False
-        self.scope = self.original_scope
+    def no_click(self, pos):
+        if (self.x <= pos[0] <= self.width + self.x) and (self.y <= pos[1] <= self.height + self.y):
+            self.pressed = False
+            self.scope = self.original_scope
+            return True
+        return False
 
     def on_the_button(self, pos):
         if ((self.x <= pos[0] <= self.width + self.x)
@@ -67,12 +117,12 @@ class Menu:
         self.surface = surface
         self.running = True
 
-        self.button1 = Button('button 1', 300, 80,
-                              (width // 2 - 150, height // 2), self.surface, 10)
-        self.button2 = Button('button 2', 300, 80,
-                              (width // 2 - 150, height // 2 + 100), self.surface, 10)
-        self.button3 = Button('button 3', 300, 80,
-                              (width // 2 - 150, height // 2 + 200), self.surface, 10)
+        self.play_bttn = Button('play', 300, 80,
+                                (width // 2 - 150, height // 2), self.surface, 10)
+        self.settings_bttn = Button('settings', 300, 80,
+                                    (width // 2 - 150, height // 2 + 100), self.surface, 10)
+        self.exit_bttn = Button('exit', 300, 80,
+                                (width // 2 - 150, height // 2 + 200), self.surface, 10)
 
         title_font = pygame.font.Font('font/custom/HOOG0554.TTF', 90)
         self.title = title_font.render('MENU', 1, '#000000')
@@ -91,21 +141,27 @@ class Menu:
             if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
                 self.running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.button1.click(event.pos)
-                self.button2.click(event.pos)
-                self.button3.click(event.pos)
+                self.play_bttn.click(event.pos)
+                self.settings_bttn.click(event.pos)
+                self.exit_bttn.click(event.pos)
             if event.type == pygame.MOUSEBUTTONUP:
-                self.button1.no_click()
-                self.button2.no_click()
-                self.button3.no_click()
+                if self.play_bttn.no_click(event.pos):
+                    game = Game()
+                    game.run()
+                elif self.settings_bttn.no_click(event.pos):
+                    settings = Settings()
+                    settings.run()
+
+                elif self.exit_bttn.no_click(event.pos):
+                    self.running = False
             if event.type == pygame.MOUSEMOTION:
-                self.button1.on_the_button(event.pos)
-                self.button2.on_the_button(event.pos)
-                self.button3.on_the_button(event.pos)
+                self.play_bttn.on_the_button(event.pos)
+                self.settings_bttn.on_the_button(event.pos)
+                self.exit_bttn.on_the_button(event.pos)
         self.surface.fill('#dcddd8')
-        self.button1.draw()
-        self.button2.draw()
-        self.button3.draw()
+        self.play_bttn.draw()
+        self.settings_bttn.draw()
+        self.exit_bttn.draw()
 
         self.surface.blit(self.title, (width // 2 - 160, 200))
         # pygame.display.flip()
@@ -113,7 +169,5 @@ class Menu:
         self.clock.tick(fps)
 
 
-if __name__ == '__main__':
-    screen = pygame.display.set_mode(resolution)
-    menu = Menu(screen)
-    menu.run()
+screen = pygame.display.set_mode(resolution)
+menu = Menu(screen)

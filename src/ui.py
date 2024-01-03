@@ -1,3 +1,5 @@
+import pygame
+
 from settings import *
 from imgs import *
 
@@ -102,6 +104,8 @@ class Player_UI(pygame.sprite.Sprite):
             perc = 1
         pygame.draw.rect(self.game.screen, 'black', (50, 15, 105, 30))
         pygame.draw.rect(self.game.screen, 'red', (55, 20, 95 * perc, 20))
+        if health == 0:
+            pygame.quit()
 
     def draw_energy(self, percent: int):
         """Отрисовка полоски энергии"""

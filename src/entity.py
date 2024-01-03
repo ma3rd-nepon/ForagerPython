@@ -4,7 +4,7 @@ from level import *
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, game, barrier_group, can_attack, anims):
+    def __init__(self, game, barrier_group, can_attack, anims, coords):
         super().__init__()
         self.game = game
         self.barrier_sprites = barrier_group
@@ -22,24 +22,27 @@ class Entity(pygame.sprite.Sprite):
         self.x, self.y = None, None
 
         self.index = 0
+        self.ppp = 0
         self.action = self.action_definition()
 
         self.flipx, self.flipy = False, False
 
-        self.can_attack = can_attack  # в будущем этот класс послужит как для врагов так и для мирных челов
+        self.can_attack = can_attack
 
         self.uid = f'{self.rect.x}{self.rect.y}{self.rect.width}{self.rect.height}{"".join(random.sample("1234567890", 2))}'
 
-        self.def_pos()
+        self.def_pos(coords)
 
-    def def_pos(self):
-        """Определяет рандом позицию для сущности """
-        self.x, self.y = random.randint(0, self.width - 1), random.randint(0, self.height - 1)
+    def def_pos(self, pos: tuple):
+        """Определяет позицию для сущности """
+        self.x = random.randint(0, self.width - 1) if pos[0] == 'random' else pos[0]
+        self.y = random.randint(0, self.height - 1) if pos[1] == 'random' else pos[1]
+
         if self.wmp[self.y][self.x] == '-1':
             self.rect.x = self.x * tilesize
             self.rect.y = self.y * tilesize
             return
-        self.def_pos()
+        self.def_pos(pos)
 
     def draw(self):
         self.game.screen.blit(self.image, self.rect)
@@ -47,9 +50,10 @@ class Entity(pygame.sprite.Sprite):
     def update(self):
         self.move()
         self.flip()
+        self.chase(self.can_attack)
 
-        # if pygame.Rect.colliderect(self.rect, self.game.plyr.rect):
-        #     self.action[0] = 'кусаем'
+        if pygame.Rect.colliderect(self.rect, self.game.plyr.rect) and self.can_attack:
+            self.action[0] = 'кусаем'
 
     def move(self):
         """Движение сущности"""
@@ -69,14 +73,19 @@ class Entity(pygame.sprite.Sprite):
                 self.action = self.action_definition()
 
             self.rect.x += cof * self.action[1]
+            self.x = self.rect.x // tilesize
             self.collision('x')
             self.rect.y += cof * self.action[2]
+            self.y = self.rect.y // tilesize
             self.collision('y')
 
         if self.action[0] == 'кусаем':
             self.animate(self.hit)
             self.index += 2
             if self.index >= 120:
+                if pygame.Rect.colliderect(self.rect, self.game.plyr.rect):
+                    self.game.ui.health -= 20
+
                 self.index = 0
                 self.action = self.action_definition()
 
@@ -125,4 +134,32 @@ class Entity(pygame.sprite.Sprite):
             self.current_image = anim[int(self.cur_f)]
             self.image = pygame.transform.flip(self.current_image, self.flipx, self.flipy)
         else:
-            return
+            self.animate(self.idle)
+
+    def chase(self, is_enemy):
+        if is_enemy:
+            pp = self.game.plyr.player_on_map()
+            en = [self.x, self.y]
+            blocks = 3  # расстояние на котором видят враги
+
+            if pp[0] - blocks <= en[0] <= pp[0] + blocks and \
+                    pp[1] - blocks <= en[1] <= pp[1] + blocks and \
+                    self.action[0] != 'кусаем':
+
+                self.ppp += 1
+
+                if pp[0] < en[0]:
+                    self.action[1] = -1
+                if pp[0] > en[0]:
+                    self.action[1] = 1
+                if pp[0] == en[0]:
+                    self.action[1] = 0
+
+                if pp[1] < en[1]:
+                    self.action[2] = -1
+                if pp[1] > en[1]:
+                    self.action[2] = 1
+                if pp[1] == en[1]:
+                    self.action[2] = 0
+
+                self.action[0] = 'идем'

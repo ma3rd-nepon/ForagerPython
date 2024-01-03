@@ -1,14 +1,18 @@
 import pygame
-import sprite_cut
 
+from sprite_cut import cut_sprite
 from settings import *
 
-player_idle = pygame.image.load('../sprites/player/player_idle.png')
-player_walk = pygame.image.load('../sprites/player/player_walk.png')
+# плаер
+player_ref = pygame.image.load('../sprites/player/player.png')
+player_idle = player_ref.subsurface(pygame.Rect(0, 0, 250, 110))
+player_walk = player_ref.subsurface(pygame.Rect(0, 120, 250, 110))
 
 tile = pygame.image.load('../sprites/tile.png')
 
 cbble, coal, iron, gold, grass, mask, sea = [tile.subsurface(pygame.Rect(i * tilesize, 0, tilesize, tilesize)) for i in range(tile.get_width() // tilesize)]
+
+island = pygame.image.load('../sprites/map1.png')
 
 # инструменты
 pickaxes = pygame.image.load('../sprites/tools/pickaxes.png')
@@ -32,10 +36,17 @@ sheep_idle = pygame.image.load('../sprites/entity/neutral/sheep_idle.png')
 
 sheep_walk = pygame.image.load('../sprites/entity/neutral/sheep_walk.png')
 
-sheep = [sprite_cut.cut_sprite(sheep_idle, 5, 2, 80, 72), sprite_cut.cut_sprite(sheep_walk, 4, 2, 72, 80), None]
+demon_ref = pygame.image.load('../sprites/entity/enemies/demon.png')
+demon_walk = demon_ref.subsurface(pygame.Rect(0, 0, 505, 83))
+demon_idle = demon_ref.subsurface(pygame.Rect(0, 93, 505, 83))
+demon_hit = demon_ref.subsurface(pygame.Rect(0, 186, 505, 176))
 
-ghost = [sprite_cut.cut_sprite(ghost_image, 6, 2, 83, 87), sprite_cut.cut_sprite(ghost_image, 6, 2, 83, 87), None]
+sheep = [cut_sprite(sheep_idle, 5, 2, 80, 72), cut_sprite(sheep_walk, 4, 2, 72, 80), None]
 
-slime = [sprite_cut.cut_sprite(slime_idle, 5, 1, 80, 75), sprite_cut.cut_sprite(slime_walk, 5, 1, 80, 75), None]
+ghost = [cut_sprite(ghost_image, 6, 2, 83, 87), cut_sprite(ghost_image, 6, 2, 83, 87), None]
 
-player = [sprite_cut.cut_sprite(player_idle, 3, 1, 80, 110), sprite_cut.cut_sprite(player_walk, 3, 1, 80, 110), None]
+slime = [cut_sprite(slime_idle, 5, 1, 80, 75), cut_sprite(slime_walk, 5, 1, 80, 75), None]
+
+player = [cut_sprite(player_idle, 3, 1, 80, 110), cut_sprite(player_walk, 3, 1, 80, 110), None]
+
+demon = [cut_sprite(demon_idle, 6, 1, 80, 83), cut_sprite(demon_walk, 6, 1, 80, 83), cut_sprite(demon_hit, 6, 2, 80, 83)]
