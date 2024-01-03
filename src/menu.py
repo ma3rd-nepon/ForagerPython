@@ -140,14 +140,17 @@ class Menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
                 self.running = False
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.play_bttn.click(event.pos)
                 self.settings_bttn.click(event.pos)
                 self.exit_bttn.click(event.pos)
+
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.play_bttn.no_click(event.pos):
                     game = Game()
                     game.run()
+
                 elif self.settings_bttn.no_click(event.pos):
                     settings = Settings()
                     settings.run()

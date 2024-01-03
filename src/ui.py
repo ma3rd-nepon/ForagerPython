@@ -112,6 +112,7 @@ class Player_UI(pygame.sprite.Sprite):
         perc = float(percent / 100)
         if perc < 0:
             perc = 0
+
         pygame.draw.rect(self.game.screen, 'black', (10, 60, 105, 30))
         pygame.draw.rect(self.game.screen, '#90EE90', (15, 65, 95 * perc, 20))
 

@@ -93,6 +93,7 @@ class Game:
             entt = Entity(self, self.level.barrier_sprites, is_enemy, entity_anims, coords)
             self.lst.append(entt.uid)
             self.level.visible_sprites.add(entt)
+
         self.ec += count
 
 

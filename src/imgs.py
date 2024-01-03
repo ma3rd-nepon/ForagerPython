@@ -49,4 +49,5 @@ slime = [cut_sprite(slime_idle, 5, 1, 80, 75), cut_sprite(slime_walk, 5, 1, 80, 
 
 player = [cut_sprite(player_idle, 3, 1, 80, 110), cut_sprite(player_walk, 3, 1, 80, 110), None]
 
+
 demon = [cut_sprite(demon_idle, 6, 1, 80, 83), cut_sprite(demon_walk, 6, 1, 80, 83), cut_sprite(demon_hit, 6, 2, 80, 83)]

@@ -1,7 +1,7 @@
 import pygame
+
 from csv import reader
 from os import walk
-
 from settings import *
 from tile import Tile
 from imgs import *

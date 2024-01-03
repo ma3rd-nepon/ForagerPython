@@ -98,7 +98,7 @@ class Entity(pygame.sprite.Sprite):
         if self.action[1] == -1:
             self.flipx = True
         elif self.action[1] == 1:
-            self.flipx = False
+            self.flipx = False  # asjfk
     
     def collision(self, direct):
         """Коллизия с обьектами"""

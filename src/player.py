@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.game = game
 
         self.direction = pygame.math.Vector2()
-        self.speed = 5
+        self.speed = 4
         self.barrier_sprites = barrier_sprites
 
         self.index = 0
