@@ -1,28 +1,28 @@
-from csv import reader
-from os import walk
-
 import pygame
+from settings import resolution
+
+pygame.init()
 
 
-def import_csv_layout(file):
-    """Загрузить слой карты (.csv)"""
-    map = []
-    with open(file, 'r') as layer:
-        layout = reader(layer, delimiter=',')
-        for row in layout:
-            map.append(row)
-        return map
+def transformation(screen):
+    running = True
+    alpha = 0
+    while running:
+        for event in pygame.event.get():
+            '''выход'''
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+        surface = pygame.Surface(resolution)
+        surface.fill((0, 0, 0))
+        surface.set_alpha(alpha)
+        screen.blit(surface, (0, 0))
 
+        alpha += 5
+        if alpha >= 255:
+            alpha = 255
+            running = False
 
-def import_folder(file):
-    textures_list = []
-    for data in walk(file):
-        _, __, images_list = data
-        for image in images_list:
-            image_file = file + '/' + image
-            texture = pygame.image.load(image_file).convert_alpha()
-            textures_list.append(texture)
-    return textures_list
-
-
-
+        pygame.display.flip()

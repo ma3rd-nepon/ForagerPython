@@ -41,6 +41,8 @@ class Button:
 
     def click(self, pos):
         if (self.x <= pos[0] <= self.width + self.x) and (self.y <= pos[1] <= self.height + self.y):
+            if self.sound:
+                self.sound.play()
             self.pressed = True
             self.scope = 0
 
@@ -48,8 +50,8 @@ class Button:
         if (self.x <= pos[0] <= self.width + self.x) and (self.y <= pos[1] <= self.height + self.y):
             self.pressed = False
             self.scope = self.original_scope
-            if self.sound:
-                self.sound.play()
+            # if self.sound:
+            #     self.sound.play()
             return True
         return False
 
