@@ -1,5 +1,6 @@
 import pygame
 
+from settings import width
 
 pygame.init()
 font = pygame.font.Font('font/custom/HOOG0554.TTF', 30)
@@ -65,3 +66,26 @@ class Button:
 
     def debug(self):
         print(self.pressed)
+
+
+class KeyButton:
+    def __init__(self, surface):
+        self.surface = surface
+        self.key_bttns_list = []
+        self.button_rect_color = '#5B5C5E'
+    #     self.create_bttn()
+    #
+    # def create_bttn(self):
+        x, y = width // 2 - 200, 160
+        for _ in range(5):
+            self.key_bttns_list.append(pygame.Rect((x, y), (50, 50)))
+            y += 71
+
+        x, y = width // 2 + 450, 160
+        for _ in range(5):
+            self.key_bttns_list.append(pygame.Rect((x, y), (50, 50)))
+            y += 71
+
+    def draw_bttns(self):
+        for btn in self.key_bttns_list:
+            pygame.draw.rect(self.surface, self.button_rect_color, btn, border_radius=10)

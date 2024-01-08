@@ -2,7 +2,7 @@ import pygame
 
 from settings import width, height, resolution, fps
 from support import transformation
-from Button import Button
+from Button import Button, KeyButton
 
 pygame.init()
 
@@ -22,22 +22,34 @@ class KeyboardSettings:
         title_font = pygame.font.Font(font_name, 70)
         self.title = title_font.render('settings', 1, '#000000')
 
-        self.rect = pygame.Rect((width // 2 - 550, 130), (1100, 420))
-        self.rect_color = '#D2D2D2'
+        self.main_rect = pygame.Rect((width // 2 - 550, 130), (1100, 400))
+        self.main_rect_color = '#D2D2D2'
 
         text_font = pygame.font.Font(font_name, 30)
+
         self.up_text = text_font.render('up:', 1, '#000000')
         self.down_text = text_font.render('down:', 1, '#000000')
         self.left_text = text_font.render('left:', 1, '#000000')
         self.right_text = text_font.render('right:', 1, '#000000')
         self.action_text = text_font.render('action:', 1, '#000000')
-        self.inventory_text = text_font.render('inventory:', 1, '#000000')
+
+        self.dash_text = text_font.render('dash:', 1, '#000000')
+        self.interface_text = text_font.render('interface:', 1, '#000000')
+        self.hotbar_text = text_font.render('hotbar:', 1, '#000000')
+        self.console_text = text_font.render('console:', 1, '#000000')
         self.pause_text = text_font.render('pause:', 1, '#000000')
 
         self.text_list = [self.up_text, self.down_text, self.left_text, self.right_text,
-                          self.action_text, self.inventory_text, self.pause_text]
+                          self.action_text, self.dash_text, self.interface_text,
+                          self.hotbar_text, self.console_text, self.pause_text]
+
+        self.key_buttons = KeyButton(self.surface)
+        # self.key_bttns_list = []
+
         self.ok_bttn = Button('ok!', 300, 80,
-                              (width // 2 - 150, height // 2 + 220), self.surface, 10, click_sound)
+                              (width // 2 - 310, height // 2 + 200), self.surface, 10, click_sound)
+        self.exit_bttn = Button('exit', 300, 80,
+                                (width // 2 + 10, height // 2 + 200), self.surface, 10, click_sound)
         # self.keyboard_bttn = Button('keyboard', 300, 80,
         #                             (width // 2 - 150, height // 2 + 100), self.surface, 10, click_sound)
         # self.music_bttn = Button('music', 300, 80,
@@ -59,32 +71,47 @@ class KeyboardSettings:
                 transformation(self.surface)
                 self.running = False
             if event.type == pygame.KEYDOWN:
+                print(event.key)
                 if event.key == pygame.K_ESCAPE:
                     transformation(self.surface)
                     self.running = False
             '''нажатие на кнопки'''
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.ok_bttn.click(event.pos)
+                self.exit_bttn.click(event.pos)
             '''обработка событий после нажатия на кнопки'''
             if event.type == pygame.MOUSEBUTTONUP:
-                self.ok_bttn.no_click(event.pos)
-                transformation(self.surface)
-                self.running = False
+                # print(self.key_bttns_list)
+                if self.ok_bttn.no_click(event.pos):
+                    transformation(self.surface)
+                    self.running = False
+                if self.exit_bttn.no_click(event.pos):
+                    transformation(self.surface)
+                    self.running = False
             '''обработка событий движения курсора'''
             if event.type == pygame.MOUSEMOTION:
                 self.ok_bttn.on_the_button(event.pos)
+                self.exit_bttn.on_the_button(event.pos)
 
     def update(self):
         self.surface.fill('#FFFFFF')
-        pygame.draw.rect(self.surface, self.rect_color, self.rect, border_radius=10)
+        pygame.draw.rect(self.surface, self.main_rect_color, self.main_rect, border_radius=10)
         self.surface.blit(self.title, (width // 2 - 200, 50))
 
         x, y = width // 2 - 500, 180
-        for text in self.text_list:
+        for text in self.text_list[:5:]:
             self.surface.blit(text, (x, y))
-            y += 50
+            y += 70
 
+        x, y = width // 2 + 50, 180
+        for text in self.text_list[5::]:
+            self.surface.blit(text, (x, y))
+            y += 70
+
+        self.key_buttons.draw_bttns()
         self.ok_bttn.draw()
+        self.exit_bttn.draw()
+
         # pygame.display.flip()
         pygame.display.update()
         self.clock.tick(fps)
