@@ -1,10 +1,11 @@
 import pygame
-from settings import resolution
+from settings import resolution, fps
 
 pygame.init()
 
 
 def transformation(screen):
+    clock = pygame.time.Clock()
     running = True
     alpha = 0
     while running:
@@ -21,8 +22,10 @@ def transformation(screen):
         screen.blit(surface, (0, 0))
 
         alpha += 5
-        if alpha >= 255:
+        if alpha >= 120:
             alpha = 255
             running = False
 
         pygame.display.flip()
+        clock.tick(fps)
+

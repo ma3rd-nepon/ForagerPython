@@ -9,8 +9,9 @@ from main import Game
 
 pygame.init()
 font = pygame.font.Font('font/custom/HOOG0554.TTF', 30)
-click_sound = '../sounds/menu_sounds/click2.mp3'
-im = pygame.image.load('../sprites/menu.jpg')
+click_sound = '../sounds/menu_sounds/click.mp3'
+back_music = '../sounds/menu_sounds/background.wav'
+background1 = pygame.image.load('../sprites/menu/game_title.png')
 
 
 class MainMenu:
@@ -21,19 +22,24 @@ class MainMenu:
         self.surface = surface
         self.running = True
 
-        self.play_bttn = Button('play', 300, 80,
-                                (width // 2 - 150, height // 2), self.surface, 10, click_sound)
-        self.settings_bttn = Button('settings', 300, 80,
-                                    (width // 2 - 150, height // 2 + 100), self.surface, 10, click_sound)
-        self.exit_bttn = Button('exit', 300, 80,
-                                (width // 2 - 150, height // 2 + 200), self.surface, 10, click_sound)
-        self.buttons_list = [self.play_bttn, self.settings_bttn, self.exit_bttn]
+        self.play_bttn = Button('play', 250, 80,
+                                (width // 2 - 535, height // 2 + 200), self.surface, 10, click_sound)
+        self.settings_bttn = Button('settings', 250, 80,
+                                    (width // 2 - 255, height // 2 + 200), self.surface, 10, click_sound)
+        self.support_bttn = Button('support', 250, 80,
+                                   (width // 2 + 25, height // 2 + 200), self.surface, 10, click_sound)
 
-        title_font = pygame.font.Font('font/custom/HOOG0554.TTF', 90)
-        self.title = title_font.render('menu', 1, '#000000')
+        self.exit_bttn = Button('exit', 250, 80,
+                                (width // 2 + 305, height // 2 + 200), self.surface, 10, click_sound)
+        self.buttons_list = [self.play_bttn, self.settings_bttn, self.exit_bttn, self.support_bttn]
+
+        self.music = pygame.mixer.Sound(back_music)
+        # title_font = pygame.font.Font('font/custom/HOOG0554.TTF', 90)
+        # self.title = title_font.render('menu', 1, '#000000')
 
     def run(self):
         while self.running:
+            # self.music.play()
             self.update()
             self.events()
         # pygame.display.quit()
@@ -70,11 +76,11 @@ class MainMenu:
                     bttn.on_the_button(event.pos)
 
     def update(self):
-        self.surface.fill('#dcddd8')
-        # self.surface.blit(im, (-400, -100))
+        self.surface.fill('#FFFFFF')
+        self.surface.blit(background1, (0, 0))
         for bttn in self.buttons_list:
             bttn.draw()
-        self.surface.blit(self.title, (width // 2 - 160, 200))
+        # self.surface.blit(self.title, (width // 2 - 160, 200))
         pygame.display.update()
         self.clock.tick(fps)
 

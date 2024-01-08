@@ -16,12 +16,12 @@ class Button:
         self.scope = scope
 
         self.upper_bttn = pygame.Rect(coords, (w, h))
-        self.upper_color = '#A2AFB8'
+        self.upper_color = '#D2D2D2'
 
         self.lower_bttn = pygame.Rect(coords, (w, scope))
-        self.lower_color = '#5B6974'
+        self.lower_color = '#5B5C5E'
 
-        self.text = font.render(text, 1, '#FFFFFF')
+        self.text = font.render(text, 1, '#000000')
         self.text_rect = self.text.get_rect(center=self.upper_bttn.center)
         if sound:
             self.sound = pygame.mixer.Sound(sound)
@@ -35,8 +35,8 @@ class Button:
         self.lower_bttn.midtop = self.upper_bttn.midtop
         self.lower_bttn.height = self.upper_bttn.height + self.scope
 
-        pygame.draw.rect(self.surface, self.lower_color, self.lower_bttn, border_radius=20)
-        pygame.draw.rect(self.surface, self.upper_color, self.upper_bttn, border_radius=20)
+        pygame.draw.rect(self.surface, self.lower_color, self.lower_bttn, border_radius=10)
+        pygame.draw.rect(self.surface, self.upper_color, self.upper_bttn, border_radius=10)
         self.surface.blit(self.text, self.text_rect)
 
     def click(self, pos):
@@ -61,7 +61,7 @@ class Button:
             self.upper_color = '#90D71D'
         else:
             self.scope = self.original_scope  # можно и убрать
-            self.upper_color = '#A2AFB8'
+            self.upper_color = '#D2D2D2'
 
     def debug(self):
         print(self.pressed)
