@@ -51,8 +51,6 @@ class Button:
         if (self.x <= pos[0] <= self.width + self.x) and (self.y <= pos[1] <= self.height + self.y):
             self.pressed = False
             self.scope = self.original_scope
-            # if self.sound:
-            #     self.sound.play()
             return True
         return False
 
@@ -68,14 +66,14 @@ class Button:
         print(self.pressed)
 
 
-class KeyButton:
-    def __init__(self, surface):
+class KeyButtons:
+    def __init__(self, surface, sound=None):
         self.surface = surface
         self.key_bttns_list = []
         self.button_rect_color = '#5B5C5E'
-    #     self.create_bttn()
-    #
-    # def create_bttn(self):
+        if sound:
+            self.sound = pygame.mixer.Sound(sound)
+
         x, y = width // 2 - 200, 160
         for _ in range(5):
             self.key_bttns_list.append(pygame.Rect((x, y), (50, 50)))
@@ -85,7 +83,24 @@ class KeyButton:
         for _ in range(5):
             self.key_bttns_list.append(pygame.Rect((x, y), (50, 50)))
             y += 71
+        # print(self.key_bttns_list)
 
-    def draw_bttns(self):
-        for btn in self.key_bttns_list:
-            pygame.draw.rect(self.surface, self.button_rect_color, btn, border_radius=10)
+    def draw(self):
+        for button in self.key_bttns_list:
+            pygame.draw.rect(self.surface, self.button_rect_color, button, border_radius=10)
+
+    def click(self, pos):
+        for num, button in enumerate(self.key_bttns_list):
+            if (button.x <= pos[0] <= button.width + button.x) and (button.y <= pos[1] <= button.height + button.y):
+                self.button_rect_color = '#5B5C5E'
+                if self.sound:
+                    self.sound.play()
+                print(num + 1)
+
+    def no_click(self, pos):
+        for num, button in enumerate(self.key_bttns_list):
+            if (button.x <= pos[0] <= button.width + button.x) and (button.y <= pos[1] <= button.height + button.y):
+                pass
+                # self.button_rect_color = '#406500'
+            #     return True
+            # return False

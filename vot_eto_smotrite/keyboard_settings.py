@@ -2,15 +2,12 @@ import pygame
 
 from settings import width, height, resolution, fps
 from support import transformation
-from Button import Button, KeyButton
+from Button import Button, KeyButtons
 
 pygame.init()
 
 font_name = 'font/custom/HOOG0554.TTF'
 click_sound = '../sounds/menu_sounds/click.mp3'
-
-
-# background2 = pygame.image.load('../sprites/menu/background2.png')
 
 
 class KeyboardSettings:
@@ -26,7 +23,6 @@ class KeyboardSettings:
         self.main_rect_color = '#D2D2D2'
 
         text_font = pygame.font.Font(font_name, 30)
-
         self.up_text = text_font.render('up:', 1, '#000000')
         self.down_text = text_font.render('down:', 1, '#000000')
         self.left_text = text_font.render('left:', 1, '#000000')
@@ -43,19 +39,11 @@ class KeyboardSettings:
                           self.action_text, self.dash_text, self.interface_text,
                           self.hotbar_text, self.console_text, self.pause_text]
 
-        self.key_buttons = KeyButton(self.surface)
-        # self.key_bttns_list = []
-
+        self.key_bttns = KeyButtons(self.surface, click_sound)
         self.ok_bttn = Button('ok!', 300, 80,
                               (width // 2 - 310, height // 2 + 200), self.surface, 10, click_sound)
         self.exit_bttn = Button('exit', 300, 80,
                                 (width // 2 + 10, height // 2 + 200), self.surface, 10, click_sound)
-        # self.keyboard_bttn = Button('keyboard', 300, 80,
-        #                             (width // 2 - 150, height // 2 + 100), self.surface, 10, click_sound)
-        # self.music_bttn = Button('music', 300, 80,
-        #                          (width // 2 - 150, height // 2), self.surface, 10, click_sound)
-        #
-        # self.buttons_list = [self.music_bttn, self.keyboard_bttn, self.exit_bttn]
 
         self.running = True
 
@@ -77,17 +65,18 @@ class KeyboardSettings:
                     self.running = False
             '''нажатие на кнопки'''
             if event.type == pygame.MOUSEBUTTONDOWN:
+                self.key_bttns.click(event.pos)
                 self.ok_bttn.click(event.pos)
                 self.exit_bttn.click(event.pos)
             '''обработка событий после нажатия на кнопки'''
             if event.type == pygame.MOUSEBUTTONUP:
-                # print(self.key_bttns_list)
                 if self.ok_bttn.no_click(event.pos):
                     transformation(self.surface)
                     self.running = False
                 if self.exit_bttn.no_click(event.pos):
                     transformation(self.surface)
                     self.running = False
+                self.key_bttns.no_click(event.pos)
             '''обработка событий движения курсора'''
             if event.type == pygame.MOUSEMOTION:
                 self.ok_bttn.on_the_button(event.pos)
@@ -102,13 +91,12 @@ class KeyboardSettings:
         for text in self.text_list[:5:]:
             self.surface.blit(text, (x, y))
             y += 70
-
         x, y = width // 2 + 50, 180
         for text in self.text_list[5::]:
             self.surface.blit(text, (x, y))
             y += 70
 
-        self.key_buttons.draw_bttns()
+        self.key_bttns.draw()
         self.ok_bttn.draw()
         self.exit_bttn.draw()
 
