@@ -95,18 +95,18 @@ class Entity(pygame.sprite.Sprite):
     def collision(self, direct):
         """Коллизия с обьектами"""
         for sprite in self.barrier_sprites:
-            if sprite.main_rect.colliderect(self.rect):
+            if sprite.rect.colliderect(self.rect):
                 if direct == 'x':
                     if self.action[1] == -1:
-                        self.rect.left = sprite.main_rect.right
+                        self.rect.left = sprite.rect.right
                     if self.action[1] == 1:
-                        self.rect.right = sprite.main_rect.left
+                        self.rect.right = sprite.rect.left
 
                 if direct == 'y':
                     if self.action[2] == -1:
-                        self.rect.top = sprite.main_rect.bottom
+                        self.rect.top = sprite.rect.bottom
                     if self.action[2] == 1:
-                        self.rect.bottom = sprite.main_rect.top
+                        self.rect.bottom = sprite.rect.top
 
     def enemy_on_screen(self):
         """Проверить есть ли сущность на экране"""

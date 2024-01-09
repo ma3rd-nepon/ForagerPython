@@ -1,17 +1,24 @@
 import pygame
 
-dash = pygame.K_SPACE
+with open('keyboard.txt') as file:
+    keys = [(x.rstrip().rsplit(' ', 1)) for x in file.readlines()[:9:] if x]
 
-console = pygame.K_BACKSLASH
+print(keys)
+
+move = up, left, down, right = (eval(f'pygame.{keys[0][1]}'), eval(f'pygame.{keys[2][1]}'),
+                                eval(f'pygame.{keys[1][1]}'), eval(f'pygame.{keys[3][1]}'))
+
+hit = eval(f'pygame.{keys[4][1]}')
+
+dash = eval(f'pygame.{keys[5][1]}')
+
+hide_hud = eval(f'pygame.{keys[6][1]}')
+
+console = eval(f'pygame.{keys[7][1]}')
+
+pause = eval(f'pygame.{keys[8][1]}')
 
 skip_title = 13  # enter
 
-hide_hud = pygame.K_F1
-
-pause = pygame.K_ESCAPE
-
-move = up, left, down, right = pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d
-
-hit = pygame.K_n
-
 hotbar = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5]
+

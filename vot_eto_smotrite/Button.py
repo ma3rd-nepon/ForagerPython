@@ -1,6 +1,6 @@
 import pygame
 
-from settings import width
+from settings import width, ALL_KEYS
 
 pygame.init()
 font = pygame.font.Font('font/custom/HOOG0554.TTF', 30)
@@ -70,37 +70,73 @@ class KeyButtons:
     def __init__(self, surface, sound=None):
         self.surface = surface
         self.key_bttns_list = []
+        self.key_text_list = []
         self.button_rect_color = '#5B5C5E'
+        self.num = -1
+        self.colored = False
         if sound:
             self.sound = pygame.mixer.Sound(sound)
 
-        x, y = width // 2 - 200, 160
+        x, y = width // 2 - 270, 160
         for _ in range(5):
-            self.key_bttns_list.append(pygame.Rect((x, y), (50, 50)))
+            self.key_bttns_list.append(pygame.Rect((x, y), (170, 50)))
             y += 71
 
-        x, y = width // 2 + 450, 160
-        for _ in range(5):
-            self.key_bttns_list.append(pygame.Rect((x, y), (50, 50)))
+        x, y = width // 2 + 350, 160
+        for _ in range(4):
+            self.key_bttns_list.append(pygame.Rect((x, y), (170, 50)))
             y += 71
-        # print(self.key_bttns_list)
+        self.get_keys_text()
+
+    def get_keys_text(self):
+        with open('keyboard.txt') as file:
+            key_font = pygame.font.Font('font/custom/HOOG0554.TTF', 20)
+            keys = [(x.rstrip().rsplit(' ', 1)) for x in file.readlines()[:9:] if x]
+            for num, button in enumerate(self.key_bttns_list):
+                text = key_font.render(keys[num][1].split('_')[1].upper(), 1, '#FFFFFF')
+                text_rect = text.get_rect(center=button.center)
+                self.key_text_list.append((text, text_rect))
 
     def draw(self):
-        for button in self.key_bttns_list:
-            pygame.draw.rect(self.surface, self.button_rect_color, button, border_radius=10)
+        for num, button in enumerate(self.key_bttns_list):
+            if self.num == num:
+                pygame.draw.rect(self.surface, '#5F9600', button, border_radius=10)
+            else:
+                pygame.draw.rect(self.surface, self.button_rect_color, button, border_radius=10)
+        for text_params in self.key_text_list:
+            self.surface.blit(text_params[0], text_params[1])
 
     def click(self, pos):
-        for num, button in enumerate(self.key_bttns_list):
+        if self.num >= 0:
+            # print('if click')
+            button = self.key_bttns_list[self.num]
             if (button.x <= pos[0] <= button.width + button.x) and (button.y <= pos[1] <= button.height + button.y):
-                self.button_rect_color = '#5B5C5E'
                 if self.sound:
                     self.sound.play()
-                print(num + 1)
+        else:
+            # print('else click')
+            for num, button in enumerate(self.key_bttns_list):
+                if (button.x <= pos[0] <= button.width + button.x) and (button.y <= pos[1] <= button.height + button.y):
+                    if self.sound:
+                        self.sound.play()
+                # print(num + 1)
 
     def no_click(self, pos):
-        for num, button in enumerate(self.key_bttns_list):
+        # print('no click')
+        if self.num == -1:
+            for num, button in enumerate(self.key_bttns_list):
+                if (button.x <= pos[0] <= button.width + button.x) and (button.y <= pos[1] <= button.height + button.y):
+                    if not self.colored:
+                        self.num = num
+                        self.colored = True
+                    else:
+                        self.num = -1
+                        self.colored = False
+        else:
+            button = self.key_bttns_list[self.num]
             if (button.x <= pos[0] <= button.width + button.x) and (button.y <= pos[1] <= button.height + button.y):
-                pass
+                self.num = -1
+                self.colored = False
                 # self.button_rect_color = '#406500'
             #     return True
-            # return False
+        # return False

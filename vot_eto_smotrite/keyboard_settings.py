@@ -14,12 +14,12 @@ class KeyboardSettings:
     def __init__(self):
         self.surface = pygame.display.set_mode(resolution)
         self.clock = pygame.time.Clock()
-        pygame.display.set_caption("keyboard")
+        pygame.display.set_caption("keyboard.txt")
 
         title_font = pygame.font.Font(font_name, 70)
         self.title = title_font.render('settings', 1, '#000000')
 
-        self.main_rect = pygame.Rect((width // 2 - 550, 130), (1100, 400))
+        self.main_rect = pygame.Rect((width // 2 - 600, 130), (1200, 400))
         self.main_rect_color = '#D2D2D2'
 
         text_font = pygame.font.Font(font_name, 30)
@@ -31,13 +31,12 @@ class KeyboardSettings:
 
         self.dash_text = text_font.render('dash:', 1, '#000000')
         self.interface_text = text_font.render('interface:', 1, '#000000')
-        self.hotbar_text = text_font.render('hotbar:', 1, '#000000')
+        # self.hotbar_text = text_font.render('hotbar:', 1, '#000000')
         self.console_text = text_font.render('console:', 1, '#000000')
         self.pause_text = text_font.render('pause:', 1, '#000000')
 
         self.text_list = [self.up_text, self.down_text, self.left_text, self.right_text,
-                          self.action_text, self.dash_text, self.interface_text,
-                          self.hotbar_text, self.console_text, self.pause_text]
+                          self.action_text, self.dash_text, self.interface_text, self.console_text, self.pause_text]
 
         self.key_bttns = KeyButtons(self.surface, click_sound)
         self.ok_bttn = Button('ok!', 300, 80,

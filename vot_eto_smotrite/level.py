@@ -9,6 +9,7 @@ from imgs import *
 from player import Player
 from random import choice
 
+
 # sprites_dict = {
 #     '0': cbble,
 #     '1': coal,
@@ -87,7 +88,6 @@ class Level:
         '''Вот здесь задаются начальные координаты персонажу'''
         self.player = Player((4000, 4000), (self.visible_sprites,), self.barrier_sprites)
 
-
     def check_player_coords(self):
         if self.player_position[2]:
             return self.player_position[0], self.player_position[1]
@@ -115,13 +115,13 @@ class Camera(pygame.sprite.Group):
         self.floor_rect = self.floor_surface.get_rect(topleft=(0, 0))
 
     def custom_draw(self, spr):
-        self.displacement.x = spr.main_rect.centerx - self.half_width
-        self.displacement.y = spr.main_rect.centery - self.half_high
+        self.displacement.x = spr.rect.centerx - self.half_width
+        self.displacement.y = spr.rect.centery - self.half_high
 
         """Рисуем изображение-карту"""
         floor_pos = self.floor_rect.topleft - self.displacement
         self.screen.blit(self.floor_surface, floor_pos)
 
-        for sprite in sorted(self.sprites(), key=lambda spr: spr.main_rect.centery):
+        for sprite in sorted(self.sprites(), key=lambda spr: spr.rect.centery):
             self.displ_rect = sprite.rect.topleft - self.displacement
             self.screen.blit(sprite.image, self.displ_rect)
