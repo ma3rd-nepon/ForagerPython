@@ -127,7 +127,7 @@ class KeyButtons:
                 # print(num + 1)
 
     def key_change(self, event):
-        self.get_keys_text()
+        # self.get_keys_text()
         for key in ALL_KEYS:
             if event == eval(f'pygame.{key}'):
                 self.keyboard[self.num][1] = str(key)

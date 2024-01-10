@@ -4,6 +4,7 @@ from settings import width, height, resolution, fps
 from support import transformation
 from Button import Button
 from keyboard_settings import KeyboardSettings
+from music_settings import MusicSettings
 
 pygame.init()
 
@@ -62,6 +63,10 @@ class Settings:
                     transformation(self.surface)
                     keyboard = KeyboardSettings()
                     keyboard.run()
+                if self.music_bttn.no_click(event.pos):
+                    transformation(self.surface)
+                    music = MusicSettings()
+                    music.run()
             '''обработка событий движения курсора'''
             if event.type == pygame.MOUSEMOTION:
                 for bttn in self.buttons_list:

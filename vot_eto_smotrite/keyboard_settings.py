@@ -14,10 +14,10 @@ class KeyboardSettings:
     def __init__(self):
         self.surface = pygame.display.set_mode(resolution)
         self.clock = pygame.time.Clock()
-        pygame.display.set_caption("keyboard.txt")
+        pygame.display.set_caption("keyboard")
 
         title_font = pygame.font.Font(font_name, 70)
-        self.title = title_font.render('settings', 1, '#000000')
+        self.title = title_font.render('keyboard', 1, '#000000')
 
         self.main_rect = pygame.Rect((width // 2 - 600, 130), (1200, 400))
         self.main_rect_color = '#D2D2D2'
@@ -59,12 +59,10 @@ class KeyboardSettings:
                 self.running = False
             if event.type == pygame.KEYDOWN:
                 if self.key_bttns.num >= 0:
-                    self.key_bttns.key_change(event.type)
+                    self.key_bttns.key_change(event.key)
                 if event.key == pygame.K_ESCAPE:
                     transformation(self.surface)
                     self.running = False
-                else:
-                    self.key_bttns.key_change(event.key)
             '''нажатие на кнопки'''
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.key_bttns.click(event.pos)
