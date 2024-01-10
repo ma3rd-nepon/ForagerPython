@@ -26,3 +26,4 @@ ALL_KEYS = ['K_BACKSPACE', 'K_TAB', 'K_CLEAR', 'K_RETURN', 'K_PAUSE', 'K_ESCAPE'
             'K_LCTRL', 'K_RALT', 'K_LALT', 'K_RMETA', 'K_LMETA', 'K_LSUPER', 'K_RSUPER',
             'K_MODE', 'K_HELP', 'K_PRINT', 'K_SYSREQ', 'K_BREAK', 'K_MENU', 'K_POWER', 'K_EURO']
 
+

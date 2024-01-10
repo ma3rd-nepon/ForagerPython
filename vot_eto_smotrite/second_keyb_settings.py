@@ -39,10 +39,21 @@ class KeyboardSettings:
                           self.action_text, self.dash_text, self.interface_text, self.console_text, self.pause_text]
 
         self.key_bttns = KeyButtons(self.surface, click_sound)
-        self.ok_bttn = Button('ok!', 300, 80,
+        self.up_bttn = Button('ok!', 300, 80,
                               (width // 2 - 310, height // 2 + 200), self.surface, 10, click_sound)
-        self.exit_bttn = Button('exit', 300, 80,
+        self.down_bttn = Button('exit', 300, 80,
                                 (width // 2 + 10, height // 2 + 200), self.surface, 10, click_sound)
+
+        self.play_bttn = Button('play', 250, 80,
+                                (width // 2 - 535, height // 2 + 200), self.surface, 10, click_sound)
+        self.settings_bttn = Button('settings', 250, 80,
+                                    (width // 2 - 255, height // 2 + 200), self.surface, 10, click_sound)
+        self.support_bttn = Button('support', 250, 80,
+                                   (width // 2 + 25, height // 2 + 200), self.surface, 10, click_sound)
+
+        self.exit_bttn = Button('exit', 250, 80,
+                                (width // 2 + 305, height // 2 + 200), self.surface, 10, click_sound)
+        self.buttons_list = [self.play_bttn, self.settings_bttn, self.exit_bttn, self.support_bttn]
 
         self.running = True
 
@@ -58,8 +69,7 @@ class KeyboardSettings:
                 transformation(self.surface)
                 self.running = False
             if event.type == pygame.KEYDOWN:
-                if self.key_bttns.num >= 0:
-                    self.key_bttns.key_change(event.type)
+                print(event.key)
                 if event.key == pygame.K_ESCAPE:
                     transformation(self.surface)
                     self.running = False
@@ -74,7 +84,6 @@ class KeyboardSettings:
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.ok_bttn.no_click(event.pos):
                     transformation(self.surface)
-                    self.key_bttns.save()
                     self.running = False
                 if self.exit_bttn.no_click(event.pos):
                     transformation(self.surface)

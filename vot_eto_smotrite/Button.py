@@ -71,6 +71,7 @@ class KeyButtons:
         self.surface = surface
         self.key_bttns_list = []
         self.key_text_list = []
+        self.keyboard = []
         self.button_rect_color = '#5B5C5E'
         self.num = -1
         self.colored = False
@@ -87,17 +88,21 @@ class KeyButtons:
             self.key_bttns_list.append(pygame.Rect((x, y), (170, 50)))
             y += 71
         self.get_keys_text()
+        self.update_keys()
 
     def get_keys_text(self):
-        with open('keyboard.txt') as file:
-            key_font = pygame.font.Font('font/custom/HOOG0554.TTF', 20)
-            keys = [(x.rstrip().rsplit(' ', 1)) for x in file.readlines()[:9:] if x]
-            for num, button in enumerate(self.key_bttns_list):
-                text = key_font.render(keys[num][1].split('_')[1].upper(), 1, '#FFFFFF')
-                text_rect = text.get_rect(center=button.center)
-                self.key_text_list.append((text, text_rect))
+        with open('keyboard.txt', 'r') as file:
+            self.keyboard = [(x.rstrip().rsplit(' ', 1)) for x in file.readlines()[:9:] if x]
+
+    def update_keys(self):
+        key_font = pygame.font.Font('font/custom/HOOG0554.TTF', 20)
+        for num, button in enumerate(self.key_bttns_list):
+            text = key_font.render(self.keyboard[num][1].split('_')[1].upper(), 1, '#FFFFFF')
+            text_rect = text.get_rect(center=button.center)
+            self.key_text_list.append((text, text_rect))
 
     def draw(self):
+        self.update_keys()
         for num, button in enumerate(self.key_bttns_list):
             if self.num == num:
                 pygame.draw.rect(self.surface, '#5F9600', button, border_radius=10)
@@ -121,6 +126,13 @@ class KeyButtons:
                         self.sound.play()
                 # print(num + 1)
 
+    def key_change(self, event):
+        self.get_keys_text()
+        for key in ALL_KEYS:
+            if event == eval(f'pygame.{key}'):
+                self.keyboard[self.num][1] = str(key)
+        self.key_text_list = []
+
     def no_click(self, pos):
         # print('no click')
         if self.num == -1:
@@ -132,11 +144,17 @@ class KeyButtons:
                     else:
                         self.num = -1
                         self.colored = False
+                    # return True
         else:
             button = self.key_bttns_list[self.num]
             if (button.x <= pos[0] <= button.width + button.x) and (button.y <= pos[1] <= button.height + button.y):
                 self.num = -1
                 self.colored = False
                 # self.button_rect_color = '#406500'
-            #     return True
+        #         return True
         # return False
+
+    def save(self):
+        with open('keyboard.txt', 'w') as file:
+            for row in self.keyboard:
+                file.write(f'{row[0]} {row[1]}\n')
