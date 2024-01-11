@@ -15,3 +15,5 @@ move = up, left, down, right = pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d
 hit = pygame.K_n
 
 hotbar = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5]
+
+inventory = 9  # tab

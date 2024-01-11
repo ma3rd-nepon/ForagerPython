@@ -8,16 +8,6 @@ from imgs import *
 from player import Player
 from random import choice
 
-sprites_dict = {
-    '0': cbble,
-    '1': coal,
-    '2': iron,
-    '3': gold,
-    '4': grass,
-    '5': 'player',
-    '6': sea
-}
-
 
 class Level:
     def __init__(self):
@@ -62,13 +52,13 @@ class Level:
                 x, y = col_index * tilesize, row_index * tilesize
                 if col == '-1':
                     continue
-                if sprites_dict[col] == 'player':
+                if col == '9':
                     self.player_position = (x, y, True)
                     continue
-                if col == '5':
-                    Tile((x, y), (self.visible_sprites,), sprites_dict[col])
+                if col == '4':
+                    Tile((x, y), (self.barrier_sprites,), sprites[col])
                     continue
-                Tile((x, y), (self.visible_sprites, self.barrier_sprites), sprites_dict[col])
+                Tile((x, y), (self.visible_sprites, self.barrier_sprites), sprites[col])
 
     def check_player_coords(self):
         if self.player_position[2]:

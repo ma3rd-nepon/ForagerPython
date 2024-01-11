@@ -1,4 +1,5 @@
 import random
+import config
 
 from level import *
 
@@ -6,6 +7,7 @@ from level import *
 class Entity(pygame.sprite.Sprite):
     def __init__(self, game, barrier_group, can_attack, anims, coords):
         super().__init__()
+        pygame.mixer.init()
         self.game = game
         self.barrier_sprites = barrier_group
 
@@ -48,12 +50,13 @@ class Entity(pygame.sprite.Sprite):
         self.game.screen.blit(self.image, self.rect)
 
     def update(self):
-        self.move()
-        self.flip()
-        self.chase(self.can_attack)
+        if not self.game.ui.show[1]:
+            self.move()
+            self.flip()
+            self.chase(self.can_attack)
 
-        if pygame.Rect.colliderect(self.rect, self.game.plyr.rect) and self.can_attack:
-            self.action[0] = 'кусаем'
+            if pygame.Rect.colliderect(self.rect, self.game.plyr.rect) and self.can_attack:
+                self.action[0] = 'кусаем'
 
     def move(self):
         """Движение сущности"""
@@ -163,3 +166,31 @@ class Entity(pygame.sprite.Sprite):
                     self.action[2] = 0
 
                 self.action[0] = 'идем'
+
+
+class Object(pygame.sprite.Sprite):
+    def __init__(self, game, text: str, action, id: int, draw: bool, coords: tuple):
+        super().__init__()
+        self.x, self.y = coords
+        self.game = game
+        self.text = text
+        self.action = action
+        self.image = sprites[id]
+        self.rect = self.image.get_rect
+        self.draw_m = draw
+
+    def draw(self):
+        if self.draw_m:
+            self.rect.x = self.x * tilesize
+            self.rect.y = self.y * tilesize
+
+    def update(self):
+        if self.rect.colliderect(self.game.plyr.rect):
+            self.draw_text()
+
+        if pygame.key.get_pressed()[config.hit]:
+            self.action()
+
+    def draw_text(self):
+        if self.game.plyr.rect.colliderect(self.rect):
+            pygame.draw.rect(self.game.screen, 'black', (width // 2, height // 2, 100, 20))

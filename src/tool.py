@@ -9,12 +9,13 @@ w, a, s, d = config.up, config.left, config.down, config.right
 class Tool(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
+        pygame.mixer.init()
         self.game = game
-        self.current_pic = pickaxe[1]
+        self.current_pic = none
         self.pickaxe = pygame.transform.rotozoom(self.current_pic.convert_alpha(), 0, 1)
         self.tool_hb = self.pickaxe.get_rect()
         self.current_tool = self.current_pic.convert_alpha()
-        self.fx, self.fy = True, False
+        self.fx, self.fy = not self.game.plyr.tx, self.game.plyr.ty
 
         self.hit_index = 0
         self.animation_speed = 0.48
@@ -33,10 +34,19 @@ class Tool(pygame.sprite.Sprite):
         """Обновление отрисовки инструмента"""
         self.moving()
         self.flipping()
-        self.hit()
-        self.what()
+        if not self.game.ui.show[1]:
+            if self.current_pic in pickaxe:
+                self.hit_pickaxe()
+                self.what()
+            else:
+                self.udar_rukoy()
+        if self.game.ui.percentage > 0:
+            self.can_hit = True
+        else:
+            self.can_hit = False
 
         self.key = pygame.key.get_pressed()
+        self.fx, self.fy = not self.game.plyr.tx, self.game.plyr.ty
 
     def draw(self):
         """Рисование инструмента"""
@@ -51,17 +61,37 @@ class Tool(pygame.sprite.Sprite):
 
     def flipping(self):
         """Поворот инструмента в зависимости от поворота игрока"""
-        if self.key[config.left] and not self.key[config.right]:
-            self.fx = False
-            self.tool_hb.x = pl_pos[0] + 10
-        if self.key[config.right] and not self.key[config.left]:
-            self.fx = True
-            self.tool_hb.x = pl_pos[0] - 100
+        if not self.game.ui.show[1]:
+            if self.key[config.left] and not self.key[config.right]:
+                self.tool_hb.x = pl_pos[0] + 10
+            if self.key[config.right] and not self.key[config.left]:
+                self.tool_hb.x = pl_pos[0] - 100
 
         self.pickaxe = pygame.transform.flip(self.current_tool, self.fx, self.fy)
 
-    def hit(self):
+    def udar_rukoy(self):
+        if self.hitting:
+            self.hit_index += 0.5
+
+            if self.hit_index >= len(hit_none):
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound('../sound/player/hit.wav'))
+                self.hit_index = 0
+                self.hitting = False
+                return
+
+            self.current_pic = hit_none[int(self.hit_index)]
+            self.pickaxe = pygame.transform.flip(self.current_pic, not self.fx, self.fy)
+
+            self.tool_hb.y = (height // 2) - 10
+            if not self.fx:
+                kek = 70
+            else:
+                kek = 0
+            self.tool_hb.x = (width // 2) - kek
+
+    def hit_pickaxe(self):
         if self.hitting and self.can_hit:
+            pygame.mixer.Channel(1).play(pygame.mixer.Sound('../sound/player/hit.wav'))
             if self.can_hit and self.stop_key(w, a, s, d):
                 self.hit_index += self.animation_speed
                 i = 2

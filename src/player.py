@@ -1,3 +1,5 @@
+import pygame.mixer
+
 from imgs import *
 from settings import *
 
@@ -12,6 +14,7 @@ pon = []
 class Player(pygame.sprite.Sprite):
     def __init__(self, game, pos, groups, barrier_sprites):
         super().__init__(groups)
+        pygame.mixer.init()
         self.idle, self.walk, self.hit = player
         self.image = self.idle[0]
         self.curr_img = self.image
@@ -20,18 +23,21 @@ class Player(pygame.sprite.Sprite):
         self.game = game
 
         self.direction = pygame.math.Vector2()
-        self.speed = 4
+        self.speed = 5
         self.barrier_sprites = barrier_sprites
 
         self.index = 0
         self.tx, self.ty = False, False
+        self.sound_wait = 0
+
+        self.can_animate = True
 
         self.movement()
 
     def movement(self):
         """Движение по WASD"""
         key = pygame.key.get_pressed()
-        if any([key[w], key[a], key[s], key[d]]):
+        if any([key[w], key[a], key[s], key[d]]) and not self.game.ui.show[1]:
             self.animate('walk')
             if key[d] and not key[a]:
                 self.tx = False
@@ -65,44 +71,54 @@ class Player(pygame.sprite.Sprite):
 
     def collision(self, direction):
         """Коллизия с другими обьектами"""
+        rect = pygame.Rect(self.rect.topleft[0], self.rect.midleft[1], 80, 55)
+
         if direction == 'горизонтально':
             for sprite in self.barrier_sprites:
-                if sprite.rect.colliderect(self.rect):
+                if sprite.rect.colliderect(rect):
                     if self.direction.x > 0:  # чел движется вправо
                         self.rect.right = sprite.rect.left
                     elif self.direction.x < 0:  # чел движется влево
                         self.rect.left = sprite.rect.right
         if direction == 'вертикально':
             for sprite in self.barrier_sprites:
-                if sprite.rect.colliderect(self.rect):
+                if sprite.rect.colliderect(rect):
                     if self.direction.y > 0:  # чел движется вниз
                         self.rect.bottom = sprite.rect.top
                     elif self.direction.y < 0:  # чел движется вверх
-                        self.rect.top = sprite.rect.bottom
+                        if sprite.rect.top <= self.rect.centery <= sprite.rect.bottom:
+                            print('aslkd')
+                            self.rect.centery = sprite.rect.bottom
 
     def update(self):
         self.movement()
 
     def animate(self, type_animation):
         """Анимация игрока"""
-        self.index += 0.15
+        if self.can_animate:
+            self.index += 0.15
+            self.sound_wait += 0.05
 
-        if self.index >= len(self.idle):
-            self.index = 0
+            if self.index >= len(self.idle):
+                self.index = 0
 
-        if type_animation == 'idle':
-            self.curr_img = self.idle[int(self.index)]
+            if int(self.sound_wait) >= 1 and type_animation == 'walk':
+                self.sound_wait = 0
+                pygame.mixer.Channel(0).play(pygame.mixer.Sound('../sound/player/03_Step_grass_03.wav'))
 
-        if type_animation == 'walk':
-            self.curr_img = self.walk[int(self.index)]
+            if type_animation == 'idle':
+                self.curr_img = self.idle[int(self.index)]
 
-        self.image = pygame.transform.flip(self.curr_img, self.tx, self.ty)
+            if type_animation == 'walk':
+                self.curr_img = self.walk[int(self.index)]
 
-        # self.a += 0.015
-        #
-        # if self.a > 1:
-        #     self.walk_speed = 0.3
-        #     self.a = 1
+            self.image = pygame.transform.flip(self.curr_img, self.tx, self.ty)
+
+            # self.a += 0.015
+            #
+            # if self.a > 1:
+            #     self.walk_speed = 0.3
+            #     self.a = 1
 
     def stop_key(self, *args):
         if any([pygame.key.get_pressed()[arg] for arg in args]):
