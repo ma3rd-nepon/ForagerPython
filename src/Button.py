@@ -149,3 +149,41 @@ class KeyButtons:
         with open('keyboard.txt', 'w') as file:
             for row in self.keyboard:
                 file.write(f'{row[0]} {row[1]}\n')
+
+
+class Slider:
+    def __init__(self, w, h, coords, surface, initial_val, mi, ma):
+        self.width, self.height = w, h
+        self.x, self.y = coords
+        self.surface = surface
+        self.mi, self.ma = mi, ma
+
+        self.slider_left = self.x - (self.width // 2)
+        self.slider_right = self.x + (self.width // 2)
+        self.slider_top = self.y - (self.height // 2)
+        self.slider_bottom = self.y + (self.height // 2)
+
+        self.initial_val = (self.slider_right - self.slider_left) * initial_val  # процент
+
+        # self.container_color = '#D2D2D2'
+        self.container_color = '#5B5C5E'
+        # self.button_color = '#90D71D'
+        self.button_color = '#5F9600'
+
+        self.container_rect = pygame.Rect((self.slider_left, self.slider_top), (self.width, self.height))
+        self.button_rect = pygame.Rect((self.slider_left + self.initial_val - 9, self.slider_top), (18, self.height))
+
+    def draw(self):
+        pygame.draw.rect(self.surface, self.container_color, self.container_rect, border_radius=10)
+        pygame.draw.rect(self.surface, self.button_color, self.button_rect, border_radius=6)
+
+    def move_slider(self, pos):
+        if ((self.container_rect.x <= pos[0] <= self.container_rect.width + self.container_rect.x)
+                and (self.container_rect.y <= pos[1] <= self.container_rect.height + self.container_rect.y)):
+            self.button_rect.centerx = pos[0]
+
+    def get_value(self):
+        value_range = self.slider_right - self.slider_left
+        bttn_value = self.button_rect.centerx - self.slider_left
+
+        return ((bttn_value / value_range) * (self.ma - self.mi) + self.mi) / 100

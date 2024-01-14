@@ -21,3 +21,11 @@ skip_title = 13  # enter
 hotbar = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5]
 
 inventory = 9
+
+
+with open('sounds_value.txt') as file:
+    sound_values = [x.rstrip() for x in file.readlines() if x]
+
+menu_mus_val = float(sound_values[0])
+game_mus_val = float(sound_values[1])
+sound_ef_val = float(sound_values[2])

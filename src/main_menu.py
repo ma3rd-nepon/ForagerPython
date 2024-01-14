@@ -5,7 +5,8 @@ from settings import width, height, resolution, fps
 from support import transformation
 from Button import Button
 from settings_menu import Settings
-from main import Game
+from game import Game
+from config import menu_mus_val
 
 pygame.init()
 font = pygame.font.Font('font/custom/HOOG0554.TTF', 30)
@@ -34,7 +35,7 @@ class MainMenu:
         self.buttons_list = [self.play_bttn, self.settings_bttn, self.exit_bttn, self.support_bttn]
 
         self.menu_music = pygame.mixer.Sound(back_music)
-        self.menu_music.set_volume(0.5)
+        self.menu_music.set_volume(menu_mus_val)
         # self.menu_music.play(loops= -1)
         # title_font = pygame.font.Font('font/custom/HOOG0554.TTF', 90)
         # self.title = title_font.render('menu', 1, '#000000')
@@ -90,7 +91,7 @@ class MainMenu:
         self.clock.tick(fps)
 
 
-if __name__ == '__main__':
-    screen = pygame.display.set_mode(resolution)
-    menu = MainMenu(screen)
-    menu.run()
+# if __name__ == '__main__':
+#     screen = pygame.display.set_mode(resolution)
+#     menu = MainMenu(screen)
+#     menu.run()

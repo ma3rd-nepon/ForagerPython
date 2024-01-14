@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.tx, self.ty = False, False
         self.sound_wait = 0
         self.step_sound = pygame.mixer.Sound('../sound/player/03_Step_grass_03.wav')
+        self.step_sound.set_volume(config.sound_ef_val)
 
         self.can_animate = True
 

@@ -21,6 +21,7 @@ class Tool(pygame.sprite.Sprite):
         self.animation_speed = 0.48
         self.hitting = False
         self.hit_sound = pygame.mixer.Sound('../sound/player/hit.wav')
+        self.hit_sound.set_volume(config.sound_ef_val)
 
         self.key = pygame.key.get_pressed()
 

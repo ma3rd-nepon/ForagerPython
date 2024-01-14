@@ -6,6 +6,7 @@ from ui import *
 from entity import *
 from player import *
 from day_night_time import *
+from config import game_mus_val
 
 
 class Game:
@@ -48,7 +49,7 @@ class Game:
             self.ec = 0
 
         self.background_music = pygame.mixer.Sound('../sound/game/day.wav')
-        self.background_music.set_volume(0.3)
+        self.background_music.set_volume(game_mus_val)
         # for i in pickaxe:
         #     if pickaxe.index(i) > 4:
         #         break
