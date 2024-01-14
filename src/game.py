@@ -1,9 +1,11 @@
 import pygame.transform
+import sys
 
 from tool import *
 from ui import *
 from entity import *
 from player import *
+from day_night_time import *
 
 
 class Game:
@@ -13,6 +15,7 @@ class Game:
         pygame.mixer.init()
         self.screen = pygame.display.set_mode(resolution)
         self.clock = pygame.time.Clock()
+        self.deltatime = 0.025
         pygame.display.set_caption("marshmallow")
 
         self.key = pygame.key.get_pressed()
@@ -27,6 +30,7 @@ class Game:
         self.level.player = self.plyr
         self.tool = Tool(self)
         self.ui = Player_UI(self)
+        self.sky = Sky()
 
         self.time_d = 0
         self.ubiraem = False
@@ -43,6 +47,8 @@ class Game:
             print('added', self.ec, 'entity to map')
             self.ec = 0
 
+        self.background_music = pygame.mixer.Sound('../sound/game/day.wav')
+        self.background_music.set_volume(0.3)
         # for i in pickaxe:
         #     if pickaxe.index(i) > 4:
         #         break
@@ -59,6 +65,12 @@ class Game:
         ae = [self.ui, self.level, self.tool]
         for i in ae:
             i.update()
+
+        # смена дня и ночи
+        if not self.sky.back:
+            self.sky.display(self.deltatime)
+        else:
+            self.sky.display_back(self.deltatime)
 
         self.clock.tick(fps)
         self.level.current_fps = self.clock.get_fps()
@@ -93,7 +105,8 @@ class Game:
                     for i in loot:
                         for item in i:
                             if item[0] is None:
-                                loot[loot.index(i)][i.index(item)] = (random.choice([wood, charcoal, iron_piece, gold_ingot, mask]), random.randint(1, 100))
+                                loot[loot.index(i)][i.index(item)] = (
+                                random.choice([wood, charcoal, iron_piece, gold_ingot, mask]), random.randint(1, 100))
                                 return
 
                 if event.key in config.hotbar and config.hotbar.index(event.key) + 1 <= len(self.ui.hb_things):
@@ -102,10 +115,13 @@ class Game:
 
     def run(self):
         """Главный цикл"""
+        self.background_music.play(loops=-1)
         while not not not not not self.r:
             arr = [self.draw, self.update, self.events]
             for i in arr:
                 i()
+        pygame.quit()
+        sys.exit()
 
     def add_entity_to_map(self, count: int, entity_anims: list, coords=('random', 'random'), is_enemy=False):
         """Добавить врага на карту"""
@@ -132,6 +148,6 @@ class Game:
         self.time_d += count * aga
         surf = pygame.Surface((width, height), pygame.SRCALPHA)
         surf.set_alpha(int(self.time_d))
-        pygame.draw.rect(surf, 'black', (0, 0, width, height))
+        pygame.draw.rect(surf, (38, 101, 189), (0, 0, width, height))
 
         self.screen.blit(surf, (0, 0))

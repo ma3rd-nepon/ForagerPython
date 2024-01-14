@@ -1,0 +1,9 @@
+up K_w
+down K_s
+left K_a
+right K_d
+action K_n
+dash K_SPACE
+interface K_F1
+console K_BACKSLASH
+pause K_ESCAPE

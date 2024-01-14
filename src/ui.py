@@ -92,7 +92,7 @@ class Player_UI:
         if self.show[0]:
             self.draw()
 
-        self.imdxxx += 1  # скорость течения времени ( игровая минута != секунда реальная)
+        self.imdxxx += 10  # скорость течения времени ( игровая минута != секунда реальная)
         if int(self.imdxxx) == 60:
             self.imdxxx = 0
             self.time[1] += 1

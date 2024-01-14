@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.index = 0
         self.tx, self.ty = False, False
         self.sound_wait = 0
+        self.step_sound = pygame.mixer.Sound('../sound/player/03_Step_grass_03.wav')
 
         self.can_animate = True
 
@@ -104,7 +105,7 @@ class Player(pygame.sprite.Sprite):
 
             if int(self.sound_wait) >= 1 and type_animation == 'walk':
                 self.sound_wait = 0
-                pygame.mixer.Channel(0).play(pygame.mixer.Sound('../sound/player/03_Step_grass_03.wav'))
+                self.step_sound.play()
 
             if type_animation == 'idle':
                 self.curr_img = self.idle[int(self.index)]
