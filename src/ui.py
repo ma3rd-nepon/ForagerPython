@@ -7,8 +7,8 @@ bgcolor = 'black'
 textcolor = 'white'
 none = None
 
-loot = [[(sprites['6'], 1), (sprites['8'], 6), (sprites['5'], 4), (none, 1), (none, 1)],
-        [(none, 1), (none, 1), (none, 1), (sprites['7'], 15), (none, 1)]]
+loot = [[[none, 1], [none, 1], [none, 1], [none, 1], [none, 1]],
+        [[none, 1], [none, 1], [none, 1], [none, 1], [none, 1]]]  # пакет с пакетами
 
 
 class Player_UI:
@@ -92,7 +92,7 @@ class Player_UI:
         if self.show[0]:
             self.draw()
 
-        self.imdxxx += 1  # скорость течения времени ( игровая минута != секунда реальная)
+        self.imdxxx += 10  # скорость течения времени
         if int(self.imdxxx) == 60:
             self.imdxxx = 0
             self.time[1] += 1
@@ -197,7 +197,7 @@ class Player_UI:
                         cw = 115 + coff * 90 + wid  # cell width
                         ssize = 80  # item sprites size
 
-                        self.inv.blit(img, (cw, ch, ssize, ssize))  # i[0] not int type pycharm stupid
+                        self.inv.blit(img, (cw, ch, ssize, ssize))  # img not int type pycharm stupid
                         if img != none:
                             self.inv.blit(text, (cw + 10, ch + 10))
 
@@ -205,8 +205,7 @@ class Player_UI:
                     for rect in arr_rect:
                         if rect.collidepoint(mos):
                             da = arr_imgs[arr_rect.index(rect)]
-                            print(f"{arr_rect.index(rect) + 1} клетка, в ней {da}")
-                            print('в клетке пикча' if da is not None else 'немаэ' )
+                            print(f"{arr_rect.index(rect) + 1} клетка")
 
             if self.animate_player >= len(player[0]):
                 self.animate_player = 0

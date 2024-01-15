@@ -29,6 +29,8 @@ class Player(pygame.sprite.Sprite):
         self.index = 0
         self.tx, self.ty = False, False
         self.sound_wait = 0
+        self.step_sound = pygame.mixer.Sound('../sound/player/03_Step_grass_03.wav')
+        self.step_sound.set_volume(config.sound_ef_val)
 
         self.can_animate = True
 
@@ -87,7 +89,6 @@ class Player(pygame.sprite.Sprite):
                         self.rect.bottom = sprite.rect.top
                     elif self.direction.y < 0:  # чел движется вверх
                         if sprite.rect.top <= self.rect.centery <= sprite.rect.bottom:
-                            print('aslkd')
                             self.rect.centery = sprite.rect.bottom
 
     def update(self):
@@ -104,7 +105,7 @@ class Player(pygame.sprite.Sprite):
 
             if int(self.sound_wait) >= 1 and type_animation == 'walk':
                 self.sound_wait = 0
-                pygame.mixer.Channel(0).play(pygame.mixer.Sound('../sound/player/03_Step_grass_03.wav'))
+                pygame.mixer.Channel(1).play(self.step_sound)
 
             if type_animation == 'idle':
                 self.curr_img = self.idle[int(self.index)]

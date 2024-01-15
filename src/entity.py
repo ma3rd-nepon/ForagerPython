@@ -169,28 +169,33 @@ class Entity(pygame.sprite.Sprite):
 
 
 class Object(pygame.sprite.Sprite):
-    def __init__(self, game, text: str, action, id: int, draw: bool, coords: tuple):
+    def __init__(self, game, text: str, action, id, draw: bool, coords: tuple):
         super().__init__()
         self.x, self.y = coords
         self.game = game
         self.text = text
         self.action = action
-        self.image = sprites[id]
-        self.rect = self.image.get_rect
+        self.image = id
+        self.rect = self.image.get_rect()
         self.draw_m = draw
 
     def draw(self):
         if self.draw_m:
-            self.rect.x = self.x * tilesize
-            self.rect.y = self.y * tilesize
+            self.game.screen.blit(self.image, self.rect)
 
     def update(self):
-        if self.rect.colliderect(self.game.plyr.rect):
-            self.draw_text()
-
-        if pygame.key.get_pressed()[config.hit]:
-            self.action()
+        if self.draw_m:
+            self.rect.x = self.x * tilesize
+            self.rect.y = self.y * tilesize
+            if self.rect.colliderect(self.game.plyr.rect):
+                self.draw_text()
+                if pygame.key.get_pressed()[config.hit]:
+                    self.action(self.image)
+                    self.rect.x, self.rect.y = 2147483646, 2147483646
+                    self.draw_m = False
 
     def draw_text(self):
-        if self.game.plyr.rect.colliderect(self.rect):
-            pygame.draw.rect(self.game.screen, 'black', (width // 2, height // 2, 100, 20))
+        rect = pygame.rect.Rect(width // 2 - 50, height // 2 - 50, 100, 20)
+        fon = pygame.font.Font(None, 25)
+        text = fon.render(self.text, False, 'white', 'black')
+        self.game.screen.blit(text, rect)
