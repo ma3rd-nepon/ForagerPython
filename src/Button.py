@@ -91,7 +91,7 @@ class KeyButtons:
         self.update_keys()
 
     def get_keys_text(self):
-        with open('keyboard.txt', 'r') as file:
+        with open('special_txt_files/keyboard.txt', 'r') as file:
             self.keyboard = [(x.rstrip().rsplit(' ', 1)) for x in file.readlines()[:9:] if x]
 
     def update_keys(self):
@@ -146,7 +146,7 @@ class KeyButtons:
                 self.colored = False
 
     def save(self):
-        with open('keyboard.txt', 'w') as file:
+        with open('special_txt_files/keyboard.txt', 'w') as file:
             for row in self.keyboard:
                 file.write(f'{row[0]} {row[1]}\n')
 

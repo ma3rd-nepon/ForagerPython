@@ -31,7 +31,8 @@ class Entity(pygame.sprite.Sprite):
 
         self.can_attack = can_attack
 
-        self.uid = f'{self.rect.x}{self.rect.y}{self.rect.width}{self.rect.height}{"".join(random.sample("1234567890", 2))}'
+        self.uid = (f'{self.rect.x}{self.rect.y}{self.rect.width}'
+                    f'{self.rect.height}{"".join(random.sample("1234567890", 2))}')
 
         self.def_pos(coords)
 
@@ -102,7 +103,7 @@ class Entity(pygame.sprite.Sprite):
             self.flipx = True
         elif self.action[1] == 1:
             self.flipx = False  # asjfk
-    
+
     def collision(self, direct):
         """Коллизия с обьектами"""
         for sprite in self.barrier_sprites:

@@ -12,10 +12,10 @@ class Configuration:
         self.update_values()
 
     def update_values(self):
-        with open('sounds_value.txt') as file:
+        with open('special_txt_files/sounds_value.txt') as file:
             sound_values = [x.rstrip() for x in file.readlines() if x]
 
-        with open('keyboard.txt') as file:
+        with open('special_txt_files/keyboard.txt') as file:
             keys = [(x.rstrip().rsplit(' ', 1)) for x in file.readlines()[:9:] if x]
 
         self.menu_mus_val = float(sound_values[0])

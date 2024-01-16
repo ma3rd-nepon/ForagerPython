@@ -1,12 +1,7 @@
-import pygame
-
 from csv import reader
 from os import walk
-from settings import *
 from tile import Tile
 from imgs import *
-from player import Player
-from random import choice
 
 
 class Level:
@@ -46,7 +41,8 @@ class Level:
         return textures_list
 
     def create_map(self):
-        wmp = self.load_layer('map.csv')
+        wmp = self.load_layer('../sprites/tiles/items.csv')
+
         for row_index, row in enumerate(wmp):
             for col_index, col in enumerate(row):
                 x, y = col_index * tilesize, row_index * tilesize
@@ -59,6 +55,14 @@ class Level:
                     Tile((x, y), (self.barrier_sprites,), sprites[col])
                     continue
                 Tile((x, y), (self.visible_sprites, self.barrier_sprites), sprites[col])
+
+        trwmp = self.load_layer('../sprites/tiles/trees.csv')
+        for row_index, row in enumerate(trwmp):
+            for col_index, col in enumerate(row):
+                x, y = col_index * tilesize, row_index * tilesize
+                if col == '-1':
+                    continue
+                Tile((x, y), (self.visible_sprites, self.barrier_sprites), tree_sprites[col])
 
     def check_player_coords(self):
         if self.player_position[2]:

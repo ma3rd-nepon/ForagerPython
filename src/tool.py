@@ -183,7 +183,7 @@ class Tool(pygame.sprite.Sprite):
     def break_block(self):
         """Не сделал пока что"""
         pom = self.game.plyr.player_on_map()
-        wmp = self.game.level.load_layer('map.csv')
+        wmp = self.game.level.load_layer('../sprites/mapa.csv')
 
         if self.fx:
             print(wmp[pom[0]][pom[1]], pom)

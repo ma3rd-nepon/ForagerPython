@@ -93,7 +93,7 @@ class MusicSettings:
         for slider in self.sliders_list:
             sound_values.append(slider.get_value())
 
-        with open('sounds_value.txt', 'w') as file:
+        with open('special_txt_files/sounds_value.txt', 'w') as file:
             for val in sound_values:
                 file.write(f'{val}\n')
         self.config.update_values()

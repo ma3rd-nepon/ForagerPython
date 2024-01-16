@@ -11,20 +11,38 @@ player_idle = player_ref.subsurface(pygame.Rect(0, 0, 250, 110))
 player_walk = player_ref.subsurface(pygame.Rect(0, 120, 250, 110))
 
 tile = pygame.image.load('../sprites/tiles/items.png')
+tree_tile = pygame.image.load('../sprites/tiles/trees.png')
 
 tile_list = []
 h = 0
 for i in range(tile.get_height() // tilesize):
     if h > tile.get_height():
         break
-    t = [tile.subsurface(pygame.Rect(i * tilesize, h, tilesize, tilesize)) for i in range(tile.get_width() // tilesize)]
+    t = [tile.subsurface(pygame.Rect(i * tilesize, h, tilesize, tilesize))
+         for i in range(tile.get_width() // tilesize)]
     tile_list.append(t)
+    h += tilesize
+
+tile_tree_list = []
+h = 0
+for i in range(tree_tile.get_height() // tilesize):
+    if h > tree_tile.get_height():
+        break
+    t = [tree_tile.subsurface(pygame.Rect(i * tilesize, h, tilesize, tilesize))
+         for i in range(tree_tile.get_width() // tilesize)]
+    tile_tree_list.append(t)
     h += tilesize
 
 cbble, coal, iron, gold, barrier = tile_list[0]
 wood, charcoal, iron_piece, gold_ingot, mask = tile_list[1]
 
+first_top, second_top, third_top, fourth_top, fifth_top, sixs_top, sevens_top = tile_tree_list[0]
+first_bottom, second_bottom, third_bottom, fourth_bottom, fifth_bottom, sixs_bottom, sevens_bottom = tile_tree_list[1]
+
 bruh = [cbble, coal, iron, gold, barrier, wood, charcoal, iron_piece, gold_ingot, mask]
+
+trees = [first_top, second_top, third_top, fourth_top, fifth_top, sixs_top, sevens_top,
+         first_bottom, second_bottom, third_bottom, fourth_bottom, fifth_bottom, sixs_bottom, sevens_bottom]
 
 sprites = dict()
 ids = [str(i) for i in range(0, 10)]
@@ -32,7 +50,14 @@ ids = [str(i) for i in range(0, 10)]
 for i in range(len(ids)):
     sprites.setdefault(ids[i], bruh[i])
 
-island = pygame.image.load('../sprites/map.png')
+tree_sprites = dict()
+ids = [str(i) for i in range(0, 14)]
+
+for i in range(len(ids)):
+    tree_sprites.setdefault(ids[i], trees[i])
+
+# island = pygame.image.load('../sprites/map.png')
+island = pygame.image.load('../sprites/new_map.png')
 
 # инструменты
 pickaxes = pygame.image.load('../sprites/tools/pickaxes.png')

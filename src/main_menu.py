@@ -26,13 +26,10 @@ class MainMenu:
         self.play_bttn = Button('play', 250, 80,
                                 (width // 2 - 535, height // 2 + 200), self.surface, 10, click_sound)
         self.settings_bttn = Button('settings', 250, 80,
-                                    (width // 2 - 255, height // 2 + 200), self.surface, 10, click_sound)
-        self.support_bttn = Button('support', 250, 80,
-                                   (width // 2 + 25, height // 2 + 200), self.surface, 10, click_sound)
-
+                                    (width // 2 - 100, height // 2 + 200), self.surface, 10, click_sound)
         self.exit_bttn = Button('exit', 250, 80,
                                 (width // 2 + 305, height // 2 + 200), self.surface, 10, click_sound)
-        self.buttons_list = [self.play_bttn, self.settings_bttn, self.exit_bttn, self.support_bttn]
+        self.buttons_list = [self.play_bttn, self.settings_bttn, self.exit_bttn]
 
         self.config = Configuration()
         self.menu_mus_val = self.config.menu_mus_val
