@@ -6,7 +6,9 @@ from ui import *
 from entity import *
 from player import *
 from day_night_time import *
-from config import game_mus_val
+from config import Configuration
+from settings_menu import Settings
+from settings import chanel0
 
 
 class Game:
@@ -25,9 +27,11 @@ class Game:
 
         self.mask = pygame.transform.rotozoom(mask, 0, 1)
 
+        self.config = Configuration()
+
         self.level = Level()
-        self.plyr = Player(self, (self.level.check_player_coords()),
-                           (self.level.visible_sprites,), self.level.barrier_sprites)
+        self.plyr = Player(self, (self.level.check_player_coords()), (self.level.visible_sprites,),
+                           self.level.barrier_sprites)
         self.level.player = self.plyr
         self.tool = Tool(self)
         self.ui = Player_UI(self)
@@ -42,7 +46,7 @@ class Game:
         # self.add_entity_to_map(1, player)
         self.add_entity_to_map(4, demon, is_enemy=True, coords=(29, 15))
 
-        vzyat = f'{pygame.key.name(config.hit).upper()} Взять'
+        vzyat = f'{pygame.key.name(self.config.hit).upper()} Взять'
         for _ in range(5):
             self.add_object(1, (random.randint(0, 100), random.randint(0, 100)), wood, vzyat)
             self.add_object(1, (random.randint(0, 100), random.randint(0, 100)), iron_piece, vzyat)
@@ -51,7 +55,8 @@ class Game:
         self.r = False
 
         self.background_music = pygame.mixer.Sound('../sound/game/day.wav')
-        self.background_music.set_volume(game_mus_val)
+        self.background_music.set_volume(self.config.game_mus_val)
+        self.config.update_values()
 
     # def rndm_pos(self):
     #     """Потом доделаю"""
@@ -72,27 +77,36 @@ class Game:
         for i in ae:
             i.update()
 
+        # if not self.sky.pause:
         if not self.sky.back:
             self.sky.display(self.deltatime)
         else:
             self.sky.display_back(self.deltatime)
 
+        self.config.update_values()
+        self.background_music.set_volume(self.config.game_mus_val)
         self.clock.tick(fps)
         self.level.current_fps = self.clock.get_fps()
 
         pygame.display.flip()
-        # pygame.display.update()
 
     def events(self):
         """События игры"""
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
+            if event.type == pygame.QUIT:
                 self.r = True
             if event.type == pygame.KEYDOWN:
-                if event.key == config.hit and self.tool.stop_key(*config.move):
+                if event.key == self.config.pause:
+                    self.sky.pause = True
+                    chanel0.pause()
+                    sett = Settings()
+                    sett.run()
+
+                    # нужно сделать чтобы курсор появился
+                if event.key == self.config.hit and self.tool.stop_key(*config.move):
                     self.tool.hitting = True
 
-                if event.key == config.hide_hud and not self.ui.show[1]:
+                if event.key == self.config.hide_hud and not self.ui.show[1]:
                     self.ui.show[0] = not self.ui.show[0]
                 if event.key == config.inventory and self.ui.show[0]:
                     self.ui.show[1] = not self.ui.show[1]
@@ -110,17 +124,21 @@ class Game:
                     for i in loot:
                         for item in i:
                             if item[0] is None:
-                                loot[loot.index(i)][i.index(item)] = (random.choice([wood, charcoal, iron_piece, gold_ingot, mask]), random.randint(1, 100))
+                                loot[loot.index(i)][i.index(item)] = (
+                                    random.choice([wood, charcoal, iron_piece, gold_ingot, mask]),
+                                    random.randint(1, 100))
                                 return
 
                 if event.key in config.hotbar and config.hotbar.index(event.key) + 1 <= len(self.ui.hb_things):
                     if self.ui.hb_things:
                         self.tool.current_pic = self.ui.hb_things[config.hotbar.index(event.key)]
+        # pygame.mixer.Channel(0).play(self.background_music, loops=-1)
 
     def run(self):
         """Главный цикл"""
-        pygame.mixer.Channel(0).play(self.background_music)
-        while not not not not not self.r:
+        # self.config.update_values()
+        chanel0.play(self.background_music, loops=-1)
+        while not self.r:
             arr = [self.draw, self.update, self.events]
             for i in arr:
                 i()

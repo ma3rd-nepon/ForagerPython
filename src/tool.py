@@ -1,8 +1,9 @@
 from settings import *
 from imgs import *
-import config
+from config import Configuration
 
 pl_pos = (width // 2, height // 2)
+config = Configuration()
 w, a, s, d = config.up, config.left, config.down, config.right
 
 
@@ -20,8 +21,9 @@ class Tool(pygame.sprite.Sprite):
         self.hit_index = 0
         self.animation_speed = 0.48
         self.hitting = False
+        self.config = Configuration()
         self.hit_sound = pygame.mixer.Sound('../sound/player/hit.wav')
-        self.hit_sound.set_volume(config.sound_ef_val)
+        self.hit_sound.set_volume(self.config.sound_ef_val)
 
         self.key = pygame.key.get_pressed()
 
@@ -76,7 +78,9 @@ class Tool(pygame.sprite.Sprite):
             self.hit_index += 0.5
 
             if self.hit_index >= len(hit_none):
-                pygame.mixer.Channel(2).play(self.hit_sound)
+                self.config.update_values()
+                self.hit_sound.set_volume(self.config.sound_ef_val)
+                chanel2.play(self.hit_sound)
                 self.hit_index = 0
                 self.hitting = False
                 return
@@ -93,7 +97,7 @@ class Tool(pygame.sprite.Sprite):
 
     def hit_pickaxe(self):
         if self.hitting and self.can_hit:
-            pygame.mixer.Channel(2).play(pygame.mixer.Sound('../sound/player/hit.wav'))
+            chanel2.play(pygame.mixer.Sound('../sound/player/hit.wav'))
             if self.can_hit and self.stop_key(w, a, s, d):
                 self.hit_index += self.animation_speed
                 i = 2

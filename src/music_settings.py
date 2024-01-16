@@ -1,9 +1,9 @@
 import pygame
 
 from settings import width, height, resolution, fps
-from config import sound_ef_val, menu_mus_val, game_mus_val
 from support import transformation
 from Button import Button, KeyButtons, Slider
+from config import Configuration
 
 pygame.init()
 
@@ -28,6 +28,10 @@ class MusicSettings:
         self.game_mus_text = text_font.render('game background music:', 1, '#000000')
         self.sound_ef_text = text_font.render('sound effects:', 1, '#000000')
         self.text_list = [self.menu_mus_text, self.game_mus_text, self.sound_ef_text]
+
+        self.config = Configuration()
+        sound_ef_val, menu_mus_val, game_mus_val = (self.config.sound_ef_val,
+                                                    self.config.menu_mus_val, self.config.game_mus_val)
 
         self.key_bttns = KeyButtons(self.surface, click_sound)
 
@@ -84,7 +88,6 @@ class MusicSettings:
                 for slider in self.sliders_list:
                     slider.move_slider(event.pos)
 
-
     def save(self):
         sound_values = []
         for slider in self.sliders_list:
@@ -93,6 +96,9 @@ class MusicSettings:
         with open('sounds_value.txt', 'w') as file:
             for val in sound_values:
                 file.write(f'{val}\n')
+        self.config.update_values()
+        # MainMenu().menu_mus_val = self.config.menu_mus_val
+
 
     def update(self):
         self.surface.fill('#FFFFFF')

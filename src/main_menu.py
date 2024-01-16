@@ -1,15 +1,15 @@
 import sys
 import pygame
 
-from settings import width, height, resolution, fps
+from settings import width, height, fps
 from support import transformation
 from Button import Button
 from settings_menu import Settings
 from game import Game
-from config import menu_mus_val
+from config import Configuration
 
 pygame.init()
-font = pygame.font.Font('../../../OneDrive/Рабочий стол/da/src/font/custom/HOOG0554.TTF', 30)
+font = pygame.font.Font('../src/font/custom/HOOG0554.TTF', 30)
 click_sound = '../sound/menu/click.mp3'
 back_music = '../sound/menu/background.wav'
 background1 = pygame.image.load('../sprites/menu/game_title.png')
@@ -34,8 +34,11 @@ class MainMenu:
                                 (width // 2 + 305, height // 2 + 200), self.surface, 10, click_sound)
         self.buttons_list = [self.play_bttn, self.settings_bttn, self.exit_bttn, self.support_bttn]
 
+        self.config = Configuration()
+        self.menu_mus_val = self.config.menu_mus_val
+
         self.menu_music = pygame.mixer.Sound(back_music)
-        self.menu_music.set_volume(menu_mus_val)
+        self.menu_music.set_volume(self.menu_mus_val)
         # self.menu_music.play(loops= -1)
         # title_font = pygame.font.Font('font/custom/HOOG0554.TTF', 90)
         # self.title = title_font.render('menu', 1, '#000000')
@@ -87,6 +90,9 @@ class MainMenu:
         for bttn in self.buttons_list:
             bttn.draw()
         # self.surface.blit(self.title, (width // 2 - 160, 200))
+        self.config.update_values()
+        self.menu_mus_val = self.config.menu_mus_val
+        self.menu_music.set_volume(self.menu_mus_val)
         pygame.display.update()
         self.clock.tick(fps)
 

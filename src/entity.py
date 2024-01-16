@@ -1,6 +1,6 @@
 import random
-import config
 
+from config import Configuration
 from level import *
 
 
@@ -178,6 +178,7 @@ class Object(pygame.sprite.Sprite):
         self.image = id
         self.rect = self.image.get_rect()
         self.draw_m = draw
+        self.config = Configuration()
 
     def draw(self):
         if self.draw_m:
@@ -189,7 +190,7 @@ class Object(pygame.sprite.Sprite):
             self.rect.y = self.y * tilesize
             if self.rect.colliderect(self.game.plyr.rect):
                 self.draw_text()
-                if pygame.key.get_pressed()[config.hit]:
+                if pygame.key.get_pressed()[self.config.hit]:
                     self.action(self.image)
                     self.rect.x, self.rect.y = 2147483646, 2147483646
                     self.draw_m = False

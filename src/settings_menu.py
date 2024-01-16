@@ -1,18 +1,16 @@
-import pygame
-
-from settings import width, height, resolution, fps
+from settings import *
 from support import transformation
 from Button import Button
 from keyboard_settings import KeyboardSettings
 from music_settings import MusicSettings
+from config import Configuration
+from day_night_time import Sky
 
 pygame.init()
 
-font = pygame.font.Font('../../../OneDrive/Рабочий стол/da/src/font/custom/HOOG0554.TTF', 30)
+font = pygame.font.Font('../src/font/custom/HOOG0554.TTF', 30)
 click_sound = '../sound/menu/click.mp3'
-
-
-# background2 = pygame.image.load('../sprites/menu/background2.png')
+config = Configuration()
 
 
 class Settings:
@@ -21,8 +19,11 @@ class Settings:
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("settings")
 
-        title_font = pygame.font.Font('../../../OneDrive/Рабочий стол/da/src/font/custom/HOOG0554.TTF', 70)
+        title_font = pygame.font.Font('../src/font/custom/HOOG0554.TTF', 70)
         self.title = title_font.render('settings', 1, '#000000')
+
+        self.background_music = pygame.mixer.Sound('../sound/game/day.wav')
+        self.background_music.set_volume(config.game_mus_val)
 
         self.exit_bttn = Button('exit', 300, 80,
                                 (width // 2 - 150, height // 2 + 200), self.surface, 10, click_sound)
@@ -33,12 +34,16 @@ class Settings:
 
         self.buttons_list = [self.music_bttn, self.keyboard_bttn, self.exit_bttn]
 
+        # self.sky_pause = Sky().pause
+
         self.running = True
 
     def run(self):
         while self.running:
             self.update()
             self.events()
+        config.update_values()
+        chanel0.unpause()
 
     def events(self):
         for event in pygame.event.get():

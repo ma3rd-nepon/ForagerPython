@@ -3,10 +3,7 @@ import pygame.mixer
 from imgs import *
 from settings import *
 
-import config
-import sprite_cut
-
-w, a, s, d = config.up, config.left, config.down, config.right
+from config import Configuration
 
 pon = []
 
@@ -22,6 +19,10 @@ class Player(pygame.sprite.Sprite):
 
         self.game = game
 
+        self.config = Configuration()
+        self.up, self.left, self.down, self.right = (self.config.up, self.config.left,
+                                                     self.config.down, self.config.right)
+
         self.direction = pygame.math.Vector2()
         self.speed = 5
         self.barrier_sprites = barrier_sprites
@@ -30,7 +31,7 @@ class Player(pygame.sprite.Sprite):
         self.tx, self.ty = False, False
         self.sound_wait = 0
         self.step_sound = pygame.mixer.Sound('../sound/player/03_Step_grass_03.wav')
-        self.step_sound.set_volume(config.sound_ef_val)
+        self.step_sound.set_volume(self.config.sound_ef_val)
 
         self.can_animate = True
 
@@ -39,20 +40,23 @@ class Player(pygame.sprite.Sprite):
     def movement(self):
         """Движение по WASD"""
         key = pygame.key.get_pressed()
-        if any([key[w], key[a], key[s], key[d]]) and not self.game.ui.show[1]:
+        self.config.update_values()
+        self.up, self.left, self.down, self.right = (self.config.up, self.config.left,
+                                                     self.config.down, self.config.right)
+        if any([key[self.up], key[self.left], key[self.down], key[self.right]]) and not self.game.ui.show[1]:
             self.animate('walk')
-            if key[d] and not key[a]:
+            if key[self.right] and not key[self.left]:
                 self.tx = False
                 self.direction.x = 1
 
-            if key[a] and not key[d]:
+            if key[self.left] and not key[self.right]:
                 self.tx = True
                 self.direction.x = -1
 
-            if key[w] and not key[s]:
+            if key[self.up] and not key[self.down]:
                 self.direction.y = -1
 
-            if key[s] and not key[w]:
+            if key[self.down] and not key[self.up]:
                 self.direction.y = 1
 
         else:
@@ -105,7 +109,9 @@ class Player(pygame.sprite.Sprite):
 
             if int(self.sound_wait) >= 1 and type_animation == 'walk':
                 self.sound_wait = 0
-                pygame.mixer.Channel(1).play(self.step_sound)
+                self.config.update_values()
+                self.step_sound.set_volume(self.config.sound_ef_val)
+                chanel1.play(self.step_sound)
 
             if type_animation == 'idle':
                 self.curr_img = self.idle[int(self.index)]

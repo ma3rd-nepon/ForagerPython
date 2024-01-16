@@ -3,7 +3,7 @@ import pygame
 from settings import width, ALL_KEYS
 
 pygame.init()
-font = pygame.font.Font('../../../OneDrive/Рабочий стол/da/src/font/custom/HOOG0554.TTF', 30)
+font = pygame.font.Font('../src/font/custom/HOOG0554.TTF', 30)
 
 
 class Button:
@@ -95,7 +95,7 @@ class KeyButtons:
             self.keyboard = [(x.rstrip().rsplit(' ', 1)) for x in file.readlines()[:9:] if x]
 
     def update_keys(self):
-        key_font = pygame.font.Font('../../../OneDrive/Рабочий стол/da/src/font/custom/HOOG0554.TTF', 20)
+        key_font = pygame.font.Font('../src/font/custom/HOOG0554.TTF', 20)
         for num, button in enumerate(self.key_bttns_list):
             text = key_font.render(self.keyboard[num][1].split('_')[1].upper(), 1, '#FFFFFF')
             text_rect = text.get_rect(center=button.center)
