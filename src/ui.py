@@ -44,6 +44,7 @@ class Player_UI:
         self.percentage = 100
 
         # timer
+        self.days = 10
         self.time = [12, 0]
         self.imdxxx = 0
 
@@ -103,6 +104,7 @@ class Player_UI:
             self.imdxxx = 0
             if self.time[0] == 24:
                 self.time[0] = 0
+                self.days += 1
 
     def draw_health(self, health):
         perc = float(health / 100)
@@ -135,8 +137,10 @@ class Player_UI:
 
     def draw_timer(self):
         """Отображает игровое время"""
+        days = self.fps_font.render(f"day {self.days}", False, textcolor, bgcolor)
         timee = self.fps_font.render(f"{self.time[0]}:{str(self.time[1])}", False, textcolor, bgcolor)
-        self.game.screen.blit(timee, (width - 80, 40))
+        self.game.screen.blit(days, (width - 80, 40))
+        self.game.screen.blit(timee, (width - 80, 70))
 
     def draw_crosshair(self, flag):
         if flag:
