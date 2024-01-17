@@ -1,157 +1,136 @@
-import random
+import pygame.mixer
 
-import pygame
-
-from src import config
-from settings import *
 from imgs import *
+from settings import *
+from config import Configuration
 
-pl_speed = 0.003
-pll = 6, 3
-pl_pos = [6, 3]
-scaling = 1
-
-particles = []
-
-w, a, s, d = config.up, config.left, config.down, config.right
+pon = []
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game):
-        super().__init__()
+    def __init__(self, game, pos, groups, barrier_sprites):
+        super().__init__(groups)
+        pygame.mixer.init()
+        self.idle, self.walk, self.hit = player
+        self.image = self.idle[0]
+        self.curr_img = self.image
+        self.rect = self.image.get_rect(topleft=pos)
+        self.config = Configuration()
+
+        self.w, self.a, self.s, self.d = self.config.up, self.config.left, self.config.down, self.config.right
+
         self.game = game
-        self.x, self.y = pl_pos
-        self.player = pygame.transform.rotozoom(pl_base.convert_alpha(), 0, scaling)
-        self.hitbox_rect = self.player.get_rect(center=pll)
-        self.m_pos = pygame.mouse.get_pos()
-        self.angle = 0
 
-        self.key = pygame.key.get_pressed()
+        self.direction = pygame.math.Vector2()
+        self.speed = 5
+        self.barrier_sprites = barrier_sprites
 
-        self.index_walk = 0  # индекс анимации движения
-        self.index_idle = 0  #
-        self.index_dash = 0  # индекс анимации рывка (в будущем будет)
-        self.hehe = 0  # я без понятия что это но для работы оно надо
-        self.curr_img = pl_base
+        self.index = 0
+        self.tx, self.ty = False, False
+        self.sound_wait = 0
+        self.step_sound = pygame.mixer.Sound('../sound/player/03_Step_grass_03.wav')
+        self.step_sound.set_volume(self.config.sound_ef_val)
 
-        self.tx, self.ty = False, False  # поворот игрока по х у
+        self.can_animate = True
 
-        self.a = 0.5  # ускорение игрока
-        self.walk_speed = 0.2  # скорость обновления спрайтов при движении
-
-    def movement(self):
-        """Движение игрока по нажатию кнопок"""
-        speed = pl_speed * self.game.delta_time * self.a  # скорость игрока
-
-        if self.key[pygame.K_0]:  # незнаю что это но для работы необходимо
-            pass
-
-        elif self.key[d] and (not self.key[a]):
-            if self.tx:
-                self.tx = False
-                self.a = 0.5
-            if self.x * 100 <= width - 50:
-                self.x += speed
-            self.animate_walk()
-
-        elif self.key[a] and (not self.key[d]):
-            if not self.tx:
-                self.tx = True
-                self.a = 0.5
-            if self.x * 100 > 30:
-                self.x -= speed
-            self.animate_walk()
-
-        elif self.key[w] and (not self.key[s]):
-            if self.y * 100 > 30:
-                self.y -= speed
-            self.animate_walk()
-
-        elif self.key[s] and (not self.key[w]):
-            if self.y * 100 <= height - 80:
-                self.y += speed
-            self.animate_walk()
-
-        else:
-            self.animate_idle()
-
-        pl_pos.clear()
-        pl_pos.append(self.x * 100)
-        pl_pos.append(self.y * 100)
-
-        self.hitbox_rect.x = pl_pos[0] - 30
-        self.hitbox_rect.y = pl_pos[1] - 30
-
-    def draw(self):
-        """Рисует игрока"""
-        self.game.screen.blit(self.player, self.hitbox_rect)
-
-    def update(self):
-        """Обновление отрисовки игрока"""
         self.movement()
 
-        self.key = pygame.key.get_pressed()
+    def movement(self):
+        """Движение по WASD"""
+        key = pygame.key.get_pressed()
+        self.config.update_values()
+        self.w, self.a, self.s, self.d = (self.config.up, self.config.left,
+                                                     self.config.down, self.config.right)
+        if any([key[self.w], key[self.a], key[self.s], key[self.d]]) and not self.game.ui.show[1]:
+            self.animate('walk')
+            if key[self.d] and not key[self.a]:
+                self.tx = False
+                self.direction.x = 1
 
-    def animate_walk(self):
-        """Анимация при движении"""
-        self.index_walk += self.walk_speed
+            if key[self.a] and not key[self.d]:
+                self.tx = True
+                self.direction.x = -1
 
-        self.a += 0.015
+            if key[self.w] and not key[self.s]:
+                self.direction.y = -1
 
-        if self.a > 1:
-            self.walk_speed = 0.3
-            self.a = 1
+            if key[self.s] and not key[self.w]:
+                self.direction.y = 1
 
-        if self.index_walk >= len(im_w) or self.index_idle < 0:
-            self.index_walk = 0
-
-        self.curr_img = im_w[int(self.index_walk)]
-        self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
-
-    def animate_idle(self):
-        """Анимация когда игрок ничего не делает"""
-        self.index_idle += 0.15
-
-        self.walk_speed = 0.2
-        self.a = 0.5
-
-        if self.index_idle >= len(im_i):
-            self.index_idle = 0
-
-        self.curr_img = im_i[int(self.index_idle)]
-        self.player = pygame.transform.flip(self.curr_img, self.tx, self.ty)
-
-    def dash(self):
-        print(self.hitbox_rect)
-        self.a = 1
-        dash = pl_speed * self.game.delta_time * 10
-        if self.key[w]:
-            self.y -= dash
-
-        if self.key[a]:
-            self.x -= dash
-
-        if self.key[s]:
-            self.y += dash
-
-        if self.key[d]:
-            self.x += dash
-
-    def draw_particles(self, x: int, y: int):
-        """Рисует партиклы пыли при движении игрока"""
-        if self.a == 1:
-            rad = (5, 20)
         else:
-            rad = (0, 1)
+            self.direction.y = 0
+            self.direction.x = 0
+            self.animate('idle')
 
-        particles.append([[x, y], [random.randint(0, 20) / 10 - 1, -1], random.randint(rad[0], rad[1])])
+        if self.direction.magnitude() != 0:  # длина вектора
+            self.direction = self.direction.normalize()  # делаем его длину = 1
+        self.rect.x += self.direction.x * self.speed
+        self.collision('горизонтально')
+        self.rect.y += self.direction.y * self.speed
+        self.collision('вертикально')
 
-        for p in particles:
-            p[0][0] += p[1][0]
-            p[0][1] += p[1][1]
-            p[2] -= 0.2
-            p[1][1] += 0.1
-            # pygame.draw.circle(self.game.screen, '#dede98', p[0], int(p[2]), 5)
-            pygame.draw.rect(self.game.screen, '#dede98', (p[0][0], p[0][1], p[2], p[2]))
-            if p[2] <= 0:
-                particles.remove(p)
+        pon.clear()
+        pon.append(self.rect.x)
+        pon.append(self.rect.y)  # position on screen (pixels)
+
+    def collision(self, direction):
+        """Коллизия с другими обьектами"""
+        rect = pygame.Rect(self.rect.topleft[0], self.rect.midleft[1], 80, 55)
+
+        if direction == 'горизонтально':
+            for sprite in self.barrier_sprites:
+                if sprite.rect.colliderect(rect):
+                    if self.direction.x > 0:  # чел движется вправо
+                        self.rect.right = sprite.rect.left
+                    elif self.direction.x < 0:  # чел движется влево
+                        self.rect.left = sprite.rect.right
+        if direction == 'вертикально':
+            for sprite in self.barrier_sprites:
+                if sprite.rect.colliderect(rect):
+                    if self.direction.y > 0:  # чел движется вниз
+                        self.rect.bottom = sprite.rect.top
+                    elif self.direction.y < 0:  # чел движется вверх
+                        if sprite.rect.top <= self.rect.centery <= sprite.rect.bottom:
+                            self.rect.centery = sprite.rect.bottom
+
+    def update(self):
+        self.movement()
+
+    def animate(self, type_animation):
+        """Анимация игрока"""
+        if self.can_animate:
+            self.index += 0.15
+            self.sound_wait += 0.05
+
+            if self.index >= len(self.idle):
+                self.index = 0
+
+            if int(self.sound_wait) >= 1 and type_animation == 'walk':
+                self.sound_wait = 0
+                self.config.update_values()
+                self.step_sound.set_volume(self.config.sound_ef_val)
+                chanel1.play(self.step_sound)
+
+            if type_animation == 'idle':
+                self.curr_img = self.idle[int(self.index)]
+
+            if type_animation == 'walk':
+                self.curr_img = self.walk[int(self.index)]
+
+            self.image = pygame.transform.flip(self.curr_img, self.tx, self.ty)
+
+            # self.a += 0.015
+            #
+            # if self.a > 1:
+            #     self.walk_speed = 0.3
+            #     self.a = 1
+
+    def stop_key(self, *args):
+        if any([pygame.key.get_pressed()[arg] for arg in args]):
+            return False
+        return True
+
+    def player_on_map(self):
+        """Координата игрока на карте"""
+        size = self.image.get_size()
+        return [i // tilesize for i in [pon[0] + size[0] // 2, pon[1] + size[1] // 2]]  # position on map
