@@ -83,7 +83,6 @@ class Game:
         ae = [self.ui, self.level, self.tool]
         for i in ae:
             i.update()
-        print(self.player_health, self.resources_num, self.monsters_num, self.first_boss_hp)
 
         if self.ui.health <= 0:  # персонаж умер
             self.add_amounts()
