@@ -4,7 +4,6 @@ from Button import Button
 from keyboard_settings import KeyboardSettings
 from music_settings import MusicSettings
 from config import Configuration
-from day_night_time import Sky
 
 pygame.init()
 
@@ -31,11 +30,7 @@ class Settings:
                                     (width // 2 - 150, height // 2 + 100), self.surface, 10, click_sound)
         self.music_bttn = Button('music', 300, 80,
                                  (width // 2 - 150, height // 2), self.surface, 10, click_sound)
-
         self.buttons_list = [self.music_bttn, self.keyboard_bttn, self.exit_bttn]
-
-        # self.sky_pause = Sky().pause
-
         self.running = True
 
     def run(self):
@@ -79,11 +74,9 @@ class Settings:
 
     def update(self):
         self.surface.fill('#FFFFFF')
-        # self.surface.blit(background2, (0, 0))
         for bttn in self.buttons_list:
             bttn.draw()
 
         self.surface.blit(self.title, (width // 2 - 200, 50))
-        # pygame.display.flip()
         pygame.display.update()
         self.clock.tick(fps)

@@ -4,13 +4,15 @@ pygame.init()
 
 resolution = width, height = 1296, 720
 fps = 60
-
 tilesize = 80
 
 font = '../src/font/custom/HOOG0554.ttf'
-chanel0 = pygame.mixer.Channel(0)
-chanel2 = pygame.mixer.Channel(2)
-chanel1 = pygame.mixer.Channel(1)
+
+chanel0 = pygame.mixer.Channel(0)  # игровая музыка
+chanel1 = pygame.mixer.Channel(1)  # ходьба
+chanel2 = pygame.mixer.Channel(2)  # удар
+chanel3 = pygame.mixer.Channel(3)  # менюшная музыка
+chanel4 = pygame.mixer.Channel(4)  # завершение игры
 
 ALL_KEYS = ['K_BACKSPACE', 'K_TAB', 'K_CLEAR', 'K_RETURN', 'K_PAUSE', 'K_ESCAPE',
             'K_SPACE', 'K_EXCLAIM', 'K_QUOTEDBL', 'K_HASH', 'K_DOLLAR',

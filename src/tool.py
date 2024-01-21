@@ -1,4 +1,3 @@
-from settings import *
 from imgs import *
 from config import Configuration
 

@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.config = Configuration()
 
-        self.w, self.a, self.s, self.d = self.config.up, self.config.left, self.config.down, self.config.right
+        self.up, self.left, self.down, self.right = self.config.up, self.config.left, self.config.down, self.config.right
 
         self.game = game
 
@@ -39,22 +39,22 @@ class Player(pygame.sprite.Sprite):
         """Движение по WASD"""
         key = pygame.key.get_pressed()
         self.config.update_values()
-        self.w, self.a, self.s, self.d = (self.config.up, self.config.left,
+        self.up, self.left, self.down, self.right = (self.config.up, self.config.left,
                                                      self.config.down, self.config.right)
-        if any([key[self.w], key[self.a], key[self.s], key[self.d]]) and not self.game.ui.show[1]:
+        if any([key[self.up], key[self.left], key[self.down], key[self.right]]) and not self.game.ui.show[1]:
             self.animate('walk')
-            if key[self.d] and not key[self.a]:
+            if key[self.right] and not key[self.left]:
                 self.tx = False
                 self.direction.x = 1
 
-            if key[self.a] and not key[self.d]:
+            if key[self.left] and not key[self.right]:
                 self.tx = True
                 self.direction.x = -1
 
-            if key[self.w] and not key[self.s]:
+            if key[self.up] and not key[self.down]:
                 self.direction.y = -1
 
-            if key[self.s] and not key[self.w]:
+            if key[self.down] and not key[self.up]:
                 self.direction.y = 1
 
         else:
@@ -118,12 +118,6 @@ class Player(pygame.sprite.Sprite):
                 self.curr_img = self.walk[int(self.index)]
 
             self.image = pygame.transform.flip(self.curr_img, self.tx, self.ty)
-
-            # self.a += 0.015
-            #
-            # if self.a > 1:
-            #     self.walk_speed = 0.3
-            #     self.a = 1
 
     def stop_key(self, *args):
         if any([pygame.key.get_pressed()[arg] for arg in args]):

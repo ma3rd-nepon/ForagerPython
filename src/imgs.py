@@ -1,5 +1,3 @@
-import pygame
-
 from sprite_cut import cut_sprite
 from settings import *
 

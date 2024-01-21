@@ -6,6 +6,7 @@ class Configuration:
         self.menu_mus_val, self.game_mus_val, self.sound_ef_val = None, None, None
         self.move = self.up, self.left, self.down, self.right = None, None, None, None
         self.hit, self.dash, self.hide_hud, self.console, self.pause = None, None, None, None, None
+        self.game_end = False
         self.skip_title = 13  # enter
         self.hotbar = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5]
         self.inventory = 9

@@ -62,9 +62,6 @@ class Button:
             self.scope = self.original_scope  # можно и убрать
             self.upper_color = '#D2D2D2'
 
-    def debug(self):
-        print(self.pressed)
-
 
 class KeyButtons:
     def __init__(self, surface, sound=None):
@@ -165,9 +162,7 @@ class Slider:
 
         self.initial_val = (self.slider_right - self.slider_left) * initial_val  # процент
 
-        # self.container_color = '#D2D2D2'
         self.container_color = '#5B5C5E'
-        # self.button_color = '#90D71D'
         self.button_color = '#5F9600'
 
         self.container_rect = pygame.Rect((self.slider_left, self.slider_top), (self.width, self.height))

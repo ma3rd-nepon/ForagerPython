@@ -1,30 +1,29 @@
-import pygame
-
-from settings import *
 from imgs import *
+from config import Configuration
 
 bgcolor = 'black'
 textcolor = 'white'
 none = None
 
-loot = [[[none, 1], [none, 1], [none, 1], [none, 1], [none, 1]],
-        [[none, 1], [none, 1], [none, 1], [none, 1], [none, 1]]]  # пакет с пакетами
-
 
 class Player_UI:
-    def __init__(self, game):
+    def __init__(self, game, player_health, resources_num):
         pygame.font.init()
         self.game = game
 
         self.pause_ui = pygame.Surface((width, height), pygame.SRCALPHA)
-
         self.hotbar_scr = pygame.Surface((width, height), pygame.SRCALPHA)
 
         self.coin_image = pygame.transform.rotozoom(coin.convert_alpha(), 0, 0.5)
         self.coin_hb = self.coin_image.get_rect()
         self.coin_hb.x, self.coin_hb.y = 20, height - 70
 
-        self.health = 100
+        self.loot = [[[none, 0], [none, 0], [none, 0], [none, 0], [none, 0]],
+                     [[none, 0], [none, 0], [none, 0], [none, 0], [none, 0]]]  # пакет с пакетами
+        self.resources_num = resources_num
+
+        self.health = player_health
+        self.defoult_health = player_health
         self.heart_image = pygame.transform.rotozoom(heart.convert_alpha(), 0, 0.35)
         self.heart_hb = self.heart_image.get_rect()
         self.heart_hb.move_ip(10, 10)
@@ -49,14 +48,13 @@ class Player_UI:
         self.imdxxx = 0
 
         self.hb_things = []
-
         self.key = pygame.key.get_pressed()
-
         self.show = [False, False]  # 1 - show hud, 2 - show inventory
 
         self.inv = pygame.Surface((width, height), pygame.SRCALPHA)
         self.animate_player = 0
-
+        self.attempt_num = 1
+        self.config = Configuration()
         self.boss_bar = False
 
     def draw(self):
@@ -125,12 +123,10 @@ class Player_UI:
             rect1 = (900, 30, 200, 50)
             rect2 = (905, 35, 190 * perc, 40)
         else:
-            rect1 = (50, 15, 105, 30)
+            rect1 = (50, 15, self.defoult_health, 30)
             rect2 = (55, 20, 95 * perc, 20)
         pygame.draw.rect(self.game.screen, 'black', rect1)
         pygame.draw.rect(self.game.screen, 'red', rect2)
-        if health == 0:
-            pygame.quit()
 
     def draw_energy(self, percent: int):
         """Отрисовка полоски энергии"""
@@ -177,7 +173,8 @@ class Player_UI:
     def draw_tasks(self):
         fontt = pygame.font.Font(None, 30)
         name = fontt.render("Текущие задачи:", False, 'white')
-        task1 = fontt.render("Собрать 7 железа и 4 дерева", False, 'white')
+        task1 = fontt.render(f"Собрать {self.resources_num} железа, {self.resources_num} "
+                             f"золота и {self.resources_num} дерева", False, 'white')
         task2 = fontt.render("Убить чертилу", False, 'white')
         arr = [name, task1, task2]
         self.game.screen.blit(arr[0], (100, 500))
@@ -195,7 +192,7 @@ class Player_UI:
             arr_imgs = []
             mos = pygame.mouse.get_pos()
 
-            for i in range(len(loot[0]) * 2):
+            for i in range(len(self.loot[0]) * 2):
                 cw = 115 + (i * 90) + wid
                 if i >= 5:
                     x = 2
@@ -204,12 +201,10 @@ class Player_UI:
                 ssize = 80
 
                 rect = pygame.Rect((cw, ch, ssize + wid, ssize + wid))
-
                 arr_rect.append(rect)
-
                 pygame.draw.rect(self.inv, (0, 0, 0), rect, wid)
 
-            for stroka in loot:
+            for stroka in self.loot:
                 for i in stroka:
                     img = i[0]
                     arr_imgs.append(img)
@@ -219,7 +214,7 @@ class Player_UI:
                         count = i[1]
                         text = self.fps_font.render(f"{count}", False, textcolor)
 
-                        ch = (90 + wid) * (loot.index(stroka) + 1)  # cell height
+                        ch = (90 + wid) * (self.loot.index(stroka) + 1)  # cell height
                         cw = 115 + coff * 90 + wid  # cell width
                         ssize = 80  # item sprites size
 

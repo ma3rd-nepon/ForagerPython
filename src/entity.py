@@ -34,7 +34,8 @@ class Entity(pygame.sprite.Sprite):
 
         self.can_attack = can_attack
 
-        self.uid = f'{self.rect.x}{self.rect.y}{self.rect.width}{self.rect.height}{"".join(random.sample("1234567890", 2))}'
+        self.uid = (f'{self.rect.x}{self.rect.y}{self.rect.width}{self.rect.height}'
+                    f'{"".join(random.sample("1234567890", 2))}')
 
         self.def_pos(coords)
 
@@ -63,7 +64,7 @@ class Entity(pygame.sprite.Sprite):
 
     def move(self):
         """Движение сущности"""
-        cof = 2
+        cof = 4
         if self.action[0] == 'стоим':
             self.animate(self.idle)
             self.index += 1
@@ -206,9 +207,10 @@ class Object(pygame.sprite.Sprite):
 
 
 class Boss(pygame.sprite.Sprite):
-    def __init__(self, game, coords: tuple, anims: list):
+    def __init__(self, game, coords: tuple, anims: list, limit):
         super().__init__()
         self.game = game
+        self.limit = limit
         self.coords = coords
         self.idle, self.walk, self.hit = anims
         self.image = self.idle[0]
@@ -230,9 +232,10 @@ class Boss(pygame.sprite.Sprite):
 
         self.flipx, self.flipy = False, False
 
-        self.uid = f'{self.rect.x}{self.rect.y}{self.rect.width}{self.rect.height}{"".join(random.sample("1234567890", 2))}boss'
+        self.uid = (f'{self.rect.x}{self.rect.y}{self.rect.width}{self.rect.height}'
+                    f'{"".join(random.sample("1234567890", 2))}boss')
 
-        self.health = 150
+        self.health = self.limit
         self.letsgo = False
         self.x, self.y = -10000, -10000
 
@@ -246,17 +249,17 @@ class Boss(pygame.sprite.Sprite):
                 self.letsgo = False
             self.move()
             self.flip()
-            if self.health != 150:
+            if self.health != self.limit:
                 self.chase()
 
-            if pygame.Rect.colliderect(self.rect, self.game.plyr.rect) and self.health != 150:
+            if pygame.Rect.colliderect(self.rect, self.game.plyr.rect) and self.health != self.limit:
                 self.action[0] = 'кусаем'
             if self.health <= 0:
                 self.rect.x, self.rect.y = -10000 * tilesize, -10000 * tilesize
 
     def move(self):
         """Движение сущности"""
-        cof = 2
+        cof = 3
         if self.action[0] == 'стоим':
             self.animate(self.idle)
             self.index += 1
@@ -296,21 +299,6 @@ class Boss(pygame.sprite.Sprite):
             self.flipx = True
         elif self.action[1] == 1:
             self.flipx = False  # asjfk
-
-    # def collision(self, direct):
-    #     for sprite in self.barrier_group:
-    #         if sprite.rect.colliderect(self.rect):
-    #             if direct == 'x':
-    #                 if self.action[1] == -1:
-    #                     self.rect.left = sprite.rect.right
-    #                 if self.action[1] == 1:
-    #                     self.rect.right = sprite.rect.left
-    #
-    #             if direct == 'y':
-    #                 if self.action[2] == -1:
-    #                     self.rect.top = sprite.rect.bottom
-    #                 if self.action[2] == 1:
-    #                     self.rect.bottom = sprite.rect.top
 
     def animate(self, anim: list):
         if anim:

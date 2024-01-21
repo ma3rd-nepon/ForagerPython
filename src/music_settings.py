@@ -97,8 +97,6 @@ class MusicSettings:
             for val in sound_values:
                 file.write(f'{val}\n')
         self.config.update_values()
-        # MainMenu().menu_mus_val = self.config.menu_mus_val
-
 
     def update(self):
         self.surface.fill('#FFFFFF')
