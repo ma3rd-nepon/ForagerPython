@@ -71,7 +71,7 @@ class LevelsMenu:
                 elif self.hard_bttn.no_click(event.pos):
                     transformation(self.surface)
                     chanel3.pause()
-                    game = Game(100, 7, 4, 150)
+                    game = Game(100, 8, 4, 150)
                     game.run()
             '''обработка событий движения курсора'''
             if event.type == pygame.MOUSEMOTION:

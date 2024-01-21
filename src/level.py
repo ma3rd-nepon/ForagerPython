@@ -29,17 +29,6 @@ class Level:
                 wmp.append(row)
         return wmp
 
-    def load_folder(self, file):
-        """Загрузить файлы из папки"""
-        textures_list = []
-        for data in walk(file):
-            _, __, images_list = data
-            for image in images_list:
-                image_file = file + '/' + image
-                texture = pygame.image.load(image_file).convert_alpha()
-                textures_list.append(texture)
-        return textures_list
-
     def create_map(self):
         wmp = self.load_layer('../sprites/tiles/items.csv')
         for row_index, row in enumerate(wmp):
@@ -54,6 +43,7 @@ class Level:
                     Tile((x, y), (self.barrier_sprites,), sprites[col])
                     continue
                 Tile((x, y), (self.visible_sprites, self.barrier_sprites), sprites[col])
+
         trwmp = self.load_layer('../sprites/tiles/trees.csv')
         for row_index, row in enumerate(trwmp):
             for col_index, col in enumerate(row):
